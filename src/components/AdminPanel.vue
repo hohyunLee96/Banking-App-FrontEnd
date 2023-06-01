@@ -68,6 +68,7 @@
   
   <style>
   .sidebar {
+    margin-top: -50px; /* Adjust the value to remove the row gap */
     width: 200px;
     background-color: #1F456E;
     height: 100%;
@@ -127,5 +128,11 @@
   .menu li ul li a:hover {
     background-color: #597882;
   }
+
+  @media (max-width: 1200px) {
+  .sidebar {
+    margin-top: -24px; /* Adjust the margin value for tablet mode */
+  }
+}
   </style>
   
