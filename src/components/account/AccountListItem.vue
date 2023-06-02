@@ -3,10 +3,16 @@
       <div class="card product-card h-100">
         <div class="card-body">
           <div class="float-start">
-            <!-- <p>{{ account.accountId }}</p> -->
+            <p>{{ account.accountId }}</p>
+            <p>{{ account.user.firstName + " " + account.user.lastName}}</p>
             <p>
               <small>{{ account.iban }}</small>
             </p>
+            <p>
+            <small :class="{'text-success': account.active, 'text-danger': !account.active}">
+              {{ "activation  " + account.active }}
+            </small>
+          </p>
           </div>
           <span class="price float-end">{{ account.absoluteLimit }}</span>
         </div>
