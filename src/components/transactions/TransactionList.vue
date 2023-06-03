@@ -28,6 +28,11 @@ export default {
     props: {
         transaction: Object,
     },
+    data() {
+      return {
+        transactions: [],
+      };
+    },
     mounted() {
       this.getAllTransactions();
     },
