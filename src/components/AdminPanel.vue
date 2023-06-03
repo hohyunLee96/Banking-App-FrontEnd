@@ -51,7 +51,7 @@ export default {
           isActive: false,
           submenus: [
             { title: 'All transactions', link: '/transactions' },
-            { title: 'Create new Transaction', link: '/newTransaction' },
+            { title: 'Create new Transaction', link: '/createTransaction' },
             { title: 'ATM', link: '/atm' }
           ]
         }

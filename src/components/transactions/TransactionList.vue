@@ -1,43 +1,49 @@
 <template>
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 p-2">
-        <div class="card product-card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Transaction id: {{ transaction.transactionId }}</h5>
-                <div class="float-start">
-                    <h4>{{ transaction.transactionId }}</h4>
-                    <p>{{ account.user.firstName + " " + account.user.lastName }}</p>
-                    <p>
-                        <small>{{ account.iban }}</small>
-                    </p>
-                    <p>
-                        <small :class="{ 'text-success': account.active, 'text-danger': !account.active }">
-                            {{ "activation " + account.active }}
-                        </small>
-                    </p>
-                </div>
-                <span class="price float-end">{{ account.absoluteLimit }}</span>
-            </div>
-            <div class="card-footer">
-                <!-- <button class="btn btn-warning" @click="editAccount(account.id)">Edit</button>&nbsp;&nbsp; -->
-                <button class="btn btn-danger" @click="deleteAccount(account.accountId)">Delete</button>
-            </div>
+    <section>
+      <div class="admin-panel">
+        <AdminPanel />
+      </div>
+      <div class="container">
+        <h2 class="mt-3 mt-lg-5">Transasctions
+        </h2>
+        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createTransaction');">
+          Create Transaction
+        </button>
+        <div class="row mt-3">
+          <account-list-item
+            v-for="transaction in transactions"
+            :key="transaction.transactionId"
+            :transaction="transaction"
+          />
         </div>
-    </div>
-</template>
-  
+      </div>
+    </section>
+  </template>
+    
 <script>
 import axios from '../../axios-auth'
 
 export default {
-    name: "AccountListItem",
+    name: "TransactionListItem",
     props: {
         transaction: Object,
     },
-    methods: {
-
-
+    mounted() {
+      this.getAllTransactions();
     },
-};
+    methods: {
+      getAllTransactions() {
+        axios
+          .get("http://localhost:8080/transactions")
+          .then((result) => {
+            console.log(result);
+            this.transaction = result.data;
+          })
+          .catch((error) => console.log(error));
+      },
+    },
+  };
+  
 </script>
   
 <style></style>
