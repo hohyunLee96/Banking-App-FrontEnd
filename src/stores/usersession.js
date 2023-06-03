@@ -1,61 +1,85 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
+import { defineStore } from "pinia";
+import axios from "../axios-auth.js";
 
-export const userSessionStore = defineStore('userSession', {
-    state() {
-        return {
-            jwt: null,
-            token_type: null,
-            expires_at: null,
-            email: null,
-            roles: null,
+export const useUserSessionStore = defineStore("userSession", {
+  state: () => ({
+    jwt: "",
+    email: "",
+    userId: "",
+    isAdmin: false,
+  }),
+  getters: {
+    isAuthenticated: (state) => state.jwt !== "",
+    isUserAdmin: (state) => state.isAdmin,
+  },
+  actions: {
+    async localLogin() {
+      if (localStorage.getItem("jwt")) {
+        this.jwt = localStorage.getItem("jwt");
+        this.email = localStorage.getItem("email");
+        this.userId = localStorage.getItem("id");
+        axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
+        // Call the checkAdmin method to determine the user's admin status
+        try {
+          const response = await this.checkAdmin(this.jwt, this.userId);
+          this.isAdmin = response.data.isAdmin;
+          console.log("Admin status: " + response.data.isAdmin);
+        } catch (error) {
+          console.error(error);
         }
+      }
     },
-    getters: {
-        isAuthenticated(state) {
-            return state.jwt != null;
-        },
-        isEmployee(state) {
-            return state.roles.includes("ROLE_EMPLOYEE")
-        }
+    login(email, password) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/login", {
+            email: email,
+            password: password,
+          })
+          .then((response) => {
+            console.log(response);
+            this.jwt = response.data.jwt;
+            this.email = response.data.email;
+            this.userId = response.data.id;
+
+            try {
+              const response = this.checkAdmin(this.jwt, this.userId);
+              this.isAdmin = response.data.isAdmin;
+              console.log("Admin status: " + response.data.isAdmin);
+            } catch (error) {
+              console.error(error);
+            }
+
+            localStorage.setItem("jwt", this.jwt);
+            localStorage.setItem("email", this.email);
+            localStorage.setItem("id", this.userId);
+
+            axios.defaults.headers.common["Authorization"] =
+              "Bearer " + this.jwt;
+            console.log("logged in automatically");
+            console.log(response.data.jwt);
+            resolve();
+          })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
+      });
     },
-    actions: {
-        localLogin() {
-            this.jwt = localStorage["jwt"];
-            this.token_type = localStorage["token_type"];
-            this.expires_at = localStorage["expires_at"];
-            this.email = localStorage["email"];
-            this.roles = localStorage["roles"];
-
-            this.email = localStorage["email"];
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-            console.log("Logged in automatically");
+    logout() {
+      this.jwt = "";
+      this.email = "";
+      this.userId = "";
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("email");
+      delete axios.defaults.headers.common["Authorization"];
+    },
+    checkAdmin(jwt, id) {
+      return axios.post("/users/checkAdmin/" + id, null, {
+        headers: {
+          Authorization: "Bearer " + jwt,
         },
-
-        login(email, password) {
-            return new Promise((resolve, reject) => {
-                axios.post('users/login', {
-                    email: email,
-                    password: password
-                })
-                    .then(response => {
-                        this.jwt = response.data.token;
-                        this.email = response.data.email;
-
-                        //keeps logged in after refresh
-                        localStorage["jwt"] = this.jwt;
-                        localStorage.setItem('email', this.email);
-
-
-                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-                        console.log(this.jwt);
-                        resolve();
-                    })
-                    .catch(error => {
-                        reject(error.response.data.errorMessage);
-                        console.log(error); //shows Axios error
-                    });
-            });
-        },
-    }
+      });
+    },
+  },
 });
