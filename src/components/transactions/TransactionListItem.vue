@@ -10,9 +10,7 @@
                     <p>
                         <small>{{ transaction.amount }}</small>
                     </p>
-
                 </div>
-                <span class="price float-end">{{ account.absoluteLimit }}</span>
             </div>
             <div class="card-footer">
             </div>
@@ -21,8 +19,7 @@
 </template>
   
   <script>
-import axios from '../../axios-auth'
-  
+
   export default {
     name: "TransactionListItem",
     props: {
