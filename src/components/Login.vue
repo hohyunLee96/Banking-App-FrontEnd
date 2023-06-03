@@ -1,81 +1,97 @@
 <template>
-  <section class="container mt-5 p-5 col-10 col-md-6 col-lg-4 col-xl-3">
-    <div class="container">
-      <div v-if="errorMessage" class="alert alert-danger" role="alert">
-        {{ errorMessage }}
+  <section class="vh-100 gradient-custom">
+    <div class="alert alert-danger" v-if="this.errorMessage">{{ errorMessage }}</div>
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+
+              <div class="mb-md-5 mt-md-4 pb-5">
+
+                <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                <br>
+                <div class="form-outline form-white mb-4">
+                  <input id="inputemail" v-model="email" type="text" class="form-control" />
+                  <label class="form-label" for="email">Email</label>
+                </div>
+
+
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="password" v-model="password" class="form-control" id="inputPassword" />
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-secondary ml-2" @click="togglePassword()"
+                        id="passwordToggleButton">
+                        Show password
+                      </button>
+                    </div>
+                  </div>
+                  <label for="password" class="form-control-label">Password</label>
+                </div>
+
+                <button class="btn btn-outline-light btn-lg px-5" name="loginButton" id="loginButton" @click="login"
+                  type="submit">Login</button>
+              </div>
+              <div>
+                <p class="mb-0">Don't have an account?
+                  <a @click="register()" class="text-white-50 fw-bold">Sign Up</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <form>
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">Email</span>
-          <input
-              type="text"
-              class="form-control"
-              id="floatingInput"
-              v-model="this.email"
-              placeholder="Enter your email..."
-          />
-        </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">Password</span>
-          <input
-              type="password"
-              class="form-control"
-              id="floatingInput"
-              v-model="this.password"
-              placeholder="Enter your password.."
-              autocomplete="off"
-          />
-        </div>
-        <button type="button" @click="login()" class="btn btn-primary mt-3">
-          Sign in
-        </button>
-      </form>
     </div>
   </section>
 </template>
 
 <script>
-import { userSessionStore } from "@/stores/usersession";
 
+
+import { useUserSessionStore } from '../stores/usersession';
 export default {
   setup() {
-    const store = userSessionStore();
-
     return {
-      store,
+      store: useUserSessionStore()
+    }
+  },
+  name: "Login",
+  data() {
+    return {
       email: "",
       password: "",
-      errorMessage: "",
+      errorMessage: ""
     };
   },
-
-  name: "Login",
-  // data() {
-  //   return {
-  //     email: "",
-  //     password: "",
-  //     errorMessage: "",
-  //   };
-  // },
   methods: {
     login() {
-      this.store
-          .login({
-            email: this.email,
-            password: this.password,
-          })
-          .then(() => {
-            this.$router.replace("/products");
-          })
-          .catch((error) => {
-            this.errorMessage = "Invalid credentials";
-            console.log(error);
-          });
-    },
+      this.store.login(this.email, this.password).then(() => {
+        if (this.store.isAuthenticated) {
+          this.$router.push('/home');
+        } else {
+          this.errorMessage = "Login failed";
+        }
 
-  }
+      }).catch((error) => {
+        this.errorMessage = error;
+      });
+    },
+    register() {
+      this.$router.push('/register');
+    },
+    togglePassword() {
+      var x = document.getElementById("inputPassword");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+  },
 };
 </script>
+
+<style>
+
+</style>

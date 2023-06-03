@@ -1,86 +1,85 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
+import { defineStore } from "pinia";
+import axios from "../axios-auth.js";
 
-export const userSessionStore = defineStore('userSession', {
-    state: () => ({
-        jwt: null,
-        token_type: null,
-        issued_at: null,
-        expires_at: null,
-        email: null,
-        auth: null,
-    }),
-    getters: {
-        // Checks if the jwt property is not null, indicating that the user is authenticated
-        isAuthenticated(state) {
-            return state.jwt != null;
-        },
-        // Checks if the roles property includes the role "ROLE_EMPLOYEE"
-        isEmployee(state) {
-            return state.auth.includes("ROLE_EMPLOYEE");
-        },
-        isCustomer(state) {
-            return state.auth.includes("ROLE_CUSTOMER");
-        },
-        isUser(state) {
-            return state.auth.includes("ROLE_USER");
+export const useUserSessionStore = defineStore("userSession", {
+  state: () => ({
+    jwt: "",
+    email: "",
+    userId: "",
+    isAdmin: false,
+  }),
+  getters: {
+    isAuthenticated: (state) => state.jwt !== "",
+    isUserAdmin: (state) => state.isAdmin,
+  },
+  actions: {
+    async localLogin() {
+      if (localStorage.getItem("jwt")) {
+        this.jwt = localStorage.getItem("jwt");
+        this.email = localStorage.getItem("email");
+        this.userId = localStorage.getItem("id");
+        axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
+        // Call the checkAdmin method to determine the user's admin status
+        try {
+          const response = await this.checkAdmin(this.jwt, this.userId);
+          this.isAdmin = response.data.isAdmin;
+          console.log("Admin status: " + response.data.isAdmin);
+        } catch (error) {
+          console.error(error);
         }
+      }
     },
-    // modify the state of the store
-    mutations: {
-        authenticateUser(state, { jwt, token_type, issued_at, expires_at, email, auth }) {
-            state.jwt = jwt;
-            state.token_type = token_type;
-            state.issued_at = issued_at;
-            state.expires_at = expires_at;
-            state.email = email;
-            state.auth = auth;
-        },
+    login(email, password) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/login", {
+            email: email,
+            password: password,
+          })
+          .then((response) => {
+            console.log(response);
+            this.jwt = response.data.jwt;
+            this.email = response.data.email;
+            this.userId = response.data.id;
+
+            try {
+              const response = this.checkAdmin(this.jwt, this.userId);
+              this.isAdmin = response.data.isAdmin;
+              console.log("Admin status: " + response.data.isAdmin);
+            } catch (error) {
+              console.error(error);
+            }
+
+            localStorage.setItem("jwt", this.jwt);
+            localStorage.setItem("email", this.email);
+            localStorage.setItem("id", this.userId);
+
+            axios.defaults.headers.common["Authorization"] =
+              "Bearer " + this.jwt;
+            console.log("logged in automatically");
+            console.log(response.data.jwt);
+            resolve();
+          })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
+      });
     },
-    // Functions that perform asynchronous operations and can call mutations to modify the state
-    actions: {
-        login({ commit }, parameters) {
-            return new Promise((resolve, reject) => {
-                // sending a login request to the server using Axios
-                axios.post('http://localhost:8080/auth/login', {
-                    email: parameters.email,
-                    password: parameters.password,
-                })
-                    .then((result) => {
-                        this.jwt = result.data.jwt;
-                        this.email = result.data.email;
-
-                        // Store the bearer token in the browser to stay logged in after refresh
-                        localStorage.setItem('jwt', this.jwt);
-                        localStorage.setItem('email', this.email);
-
-                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.jwt;
-                        // this mutation updates the state with the authenticated user information
-                        commit('authenticateUser', {
-                            jwt: result.data.jwt,
-                            token_type: result.data.token_type,
-                            expires_at: result.data.expires_at,
-                            userID: result.data.userID,
-                            auth: result.data.auth,
-                        });
-
-                        resolve();
-                    })
-                    .catch((error) => {
-                        this.errorMessage = error.response.data.message;
-                        reject(error);
-                    });
-            });
-        },
-        logout() {
-            localStorage.clear();
-            axios.defaults.headers.common['Authorization'] = '';
-            this.jwt = null;
-            this.email = null;
-            this.token_type = null;
-            this.issued_at = null;
-            this.expires_at = null;
-            this.auth = null;
-        },
+    logout() {
+      this.jwt = "";
+      this.email = "";
+      this.userId = "";
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("email");
+      delete axios.defaults.headers.common["Authorization"];
     },
+    checkAdmin(jwt, id) {
+      return axios.post("/users/checkAdmin/" + id, null, {
+        headers: {
+          Authorization: "Bearer " + jwt,
+        },
+      });
+    },
+  },
 });
