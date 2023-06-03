@@ -115,9 +115,8 @@ export default {
     };
   },
   methods: {
-    methods: {
     updateUser() {
-        axios
+      axios
         .put("http://localhost:8080/users/" + this.id, this.user)
         .then((res) => {
           console.log(res.data);
@@ -125,7 +124,6 @@ export default {
           this.$router.push("/users");
         })
         .catch((error) => console.log(error));
-      },
     },
   },
   mounted() {
