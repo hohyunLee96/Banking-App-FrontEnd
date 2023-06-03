@@ -38,47 +38,44 @@
 </template>
 
 <script>
-import axios from "axios";
 import { userSessionStore } from "@/stores/usersession";
 
 export default {
-
   setup() {
     const store = userSessionStore();
 
-    // Method for automatic login
-    const localLogin = () => {
-      store.localLogin();
-    };
-
-    // Call the automatic login method when the component is created
-    localLogin();
-
     return {
       store,
-    };
-  },
-
-  name: "Login",
-  data() {
-    return {
       email: "",
       password: "",
       errorMessage: "",
     };
   },
+
+  name: "Login",
+  // data() {
+  //   return {
+  //     email: "",
+  //     password: "",
+  //     errorMessage: "",
+  //   };
+  // },
   methods: {
     login() {
-      this.store.login(this.email, this.password)
-          .then((result) => {
-            console.log(result);
-            this.$router.push("/products");
+      this.store
+          .login({
+            email: this.email,
+            password: this.password,
+          })
+          .then(() => {
+            this.$router.replace("/products");
           })
           .catch((error) => {
+            this.errorMessage = "Invalid credentials";
             console.log(error);
-            this.errorMessage = error;
           });
     },
+
   }
 };
 </script>

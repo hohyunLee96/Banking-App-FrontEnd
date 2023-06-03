@@ -5,11 +5,15 @@
 
 <script>
 import Navigation from './components/Navigation.vue'
+import Home from "@/components/Home.vue";
+import Login from "@/components/Login.vue";
 
 export default {
   name: "App",
   components: {
-    Navigation
+    Navigation,
+    Login,
+    Home
   }
 };
 </script>
