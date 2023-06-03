@@ -9,49 +9,73 @@
         <h5 class="mb-4"></h5>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Name</span>
-          <input type="text" class="form-control" v-model="product.name" />
+          <span class="input-group-text">First Name</span>
+          <input type="text" class="form-control" v-model="user.firstName" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Price</span>
-          <input type="number" class="form-control" v-model="product.price" />
+          <span class="input-group-text">Last Name</span>
+          <input type="text" class="form-control" v-model="user.lastName" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Description</span>
-          <textarea
-            class="form-control"
-            v-model="product.description"
-          ></textarea>
+          <span class="input-group-text">Email</span>
+          <input type="email" class="form-control" v-model="user.email" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Image URL</span>
-          <input type="text" class="form-control" v-model="product.image" />
+          <span class="input-group-text">Password</span>
+          <input type="password" class="form-control" v-model="user.password" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Category</span>
-          <select class="form-select" v-model="product.category_id">
-            <option
-              v-for="category in categories"
-              :key="category.id"
-              :value="category.id"
-            >
-              {{ category.name }}
-            </option>
-          </select>
+          <span class="input-group-text">Confirm Password</span>
+          <input type="password" class="form-control" v-model="user.passwordConfirm" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Birth Date</span>
+          <input type="date" class="form-control" v-model="user.birthDate" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Postal Code</span>
+          <input type="text" class="form-control" v-model="user.postalCode" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Address</span>
+          <input type="text" class="form-control" v-model="user.address" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">City</span>
+          <input type="text" class="form-control" v-model="user.city" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Phone Number</span>
+          <input type="text" class="form-control" v-model="user.phoneNumber" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">User Type</span>
+          <input type="text" class="form-control" v-model="user.userType" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Has Account</span>
+          <input type="checkbox" class="form-check-input" v-model="user.hasAccount" />
         </div>
 
         <div class="input-group mt-4">
-          <button type="button" class="btn btn-primary" @click="updateProduct">
+          <button type="button" class="btn btn-primary" @click="updateUser">
             Save changes
           </button>
           <button
             type="button"
             class="btn btn-danger"
-            @click="this.$router.push('/products')">
+            @click="this.$router.push('/users')">
               Cancel
           </button>
         </div>
@@ -59,6 +83,7 @@
     </div>
   </section>
 </template>
+
 <script>
 import axios from "axios";
 import AdminPanel from "./../AdminPanel.vue";
@@ -73,42 +98,42 @@ export default {
   },
   data() {
     return {
-      product: {
-        id: 0,
-        name: "",
-        price: 0.0,
-        description: "",
-        image: "",
-        category_id: 0,
+      user: {
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        postalCode: "",
+        address: "",
+        city: "",
+        phoneNumber: "",
+        userType: "",
+        hasAccount: false,
       },
-      categories: [],
     };
   },
   methods: {
-    updateProduct() {
-      axios
-        .put("http://localhost/products/" + this.product.id, this.product)
+    methods: {
+    updateUser() {
+        axios
+        .put("http://localhost:8080/users/" + this.id, this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
-          this.$router.push("/products");
+          this.$router.push("/users");
         })
         .catch((error) => console.log(error));
+      },
     },
   },
   mounted() {
     axios
-      .get("http://localhost/categories")
+      .get("http://localhost:8080/users/" + this.id)
       .then((result) => {
         console.log(result);
-        this.categories = result.data;
-        axios
-          .get("http://localhost/products/" + this.id)
-          .then((result) => {
-            console.log(result);
-            this.product = result.data;
-          })
-          .catch((error) => console.log(error));
+        this.user = result.data;
       })
       .catch((error) => console.log(error));
   },

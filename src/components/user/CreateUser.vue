@@ -1,55 +1,82 @@
 <template>
   <section>
+    <div class="admin-panel">
+      <AdminPanel />
+    </div>
     <div class="container">
       <form ref="form">
-        <h2 class="mt-3 mt-lg-5">Register Here</h2>
+        <h2 class="mt-3 mt-lg-5">Edit User</h2>
         <h5 class="mb-4"></h5>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Name</span>
-          <input type="text" class="form-control" v-model="product.name" />
+          <span class="input-group-text">First Name</span>
+          <input type="text" class="form-control" v-model="user.firstName" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Surname</span>
-          <input type="number" class="form-control" v-model="product.price" />
+          <span class="input-group-text">Last Name</span>
+          <input type="text" class="form-control" v-model="user.lastName" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Description</span>
-          <textarea
-            class="form-control"
-            v-model="product.description"
-          ></textarea>
+          <span class="input-group-text">Email</span>
+          <input type="email" class="form-control" v-model="user.email" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Image URL</span>
-          <input type="text" class="form-control" v-model="product.image" />
+          <span class="input-group-text">Password</span>
+          <input type="password" class="form-control" v-model="user.password" />
         </div>
 
         <div class="input-group mb-3">
-          <span class="input-group-text">Category</span>
-          <select class="form-select" v-model="product.category_id">
-            <option
-              v-for="category in categories"
-              :key="category.id"
-              :value="category.id">
-              {{ category.name }}
-            </option>
-          </select>
+          <span class="input-group-text">Confirm Password</span>
+          <input type="password" class="form-control" v-model="user.passwordConfirm" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Birth Date</span>
+          <input type="date" class="form-control" v-model="user.birthDate" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Postal Code</span>
+          <input type="text" class="form-control" v-model="user.postalCode" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Address</span>
+          <input type="text" class="form-control" v-model="user.address" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">City</span>
+          <input type="text" class="form-control" v-model="user.city" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Phone Number</span>
+          <input type="text" class="form-control" v-model="user.phoneNumber" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">User Type</span>
+          <input type="text" class="form-control" v-model="user.userType" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Has Account</span>
+          <input type="checkbox" class="form-check-input" v-model="user.hasAccount" />
         </div>
 
         <div class="input-group mt-4">
-          <button type="button" class="btn btn-primary" @click="addProduct">
-            Create product
+          <button type="button" class="btn btn-primary" @click="updateUser">
+            Save changes
           </button>
           <button
             type="button"
             class="btn btn-danger"
-            @click="this.$router.push('/products')"
-          >
-            Cancel
+            @click="this.$router.push('/users')">
+              Cancel
           </button>
         </div>
       </form>
@@ -58,13 +85,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import AdminPanel from "./../AdminPanel.vue";
 
 export default {
-  name: "CreateProduct",
+  name: "CreateUser",
   data() {
     return {
-      product: {
+      user: {
         name: "",
         price: "",
         description: "",
