@@ -24,7 +24,7 @@
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+          <router-link to="/auth/login" class="nav-link" active-class="active">Login</router-link>
         </li>
       </ul>
     </div>
