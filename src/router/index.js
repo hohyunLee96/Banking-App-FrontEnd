@@ -3,10 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue';
 import ProductList from '../components/products/ProductList.vue';
 import AccountList from '../components/account/AccountList.vue';
-import CreateAccount from '../components/account/CreateAccount.vue';
 import UserList from '../components/user/UserList.vue';
 import EditUser from '../components/user/EditUser.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
+import CreateAccount from '../components/account/CreateAccount.vue';
 import EditProduct from '../components/products/EditProduct.vue';
 import Login from '../components/Login.vue';
 import AdminPanel from '../components/AdminPanel.vue';
@@ -17,9 +17,12 @@ const router = createRouter({
     { path: '/', component: Home },
 
     { path: '/users', component: UserList },
-    { path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
-
+    {
+      path: '/createaccount/:userId',
+      name: 'CreateAccount',
+      component: CreateAccount
+    },    
     { path: '/products', component: ProductList },
     { path: '/accounts', component: AccountList },
     { path: '/login', component: Login },

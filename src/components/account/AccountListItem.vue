@@ -3,10 +3,10 @@
       <div class="card product-card h-100">
         <div class="card-body">
           <div class="float-start">
-            <p>{{ account.accountId }}</p>
+            <p>{{ "user ID " + account.userId }}</p>
             <!-- <p>{{ account.user.firstName + " " + account.user.lastName}}</p> -->
             <p>
-              <small>{{ account.IBAN }}</small>
+              {{ account.IBAN }}
             </p>
             <p>
               <small>{{ account.accountType }}</small>

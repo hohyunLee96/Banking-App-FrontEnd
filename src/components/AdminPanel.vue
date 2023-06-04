@@ -68,7 +68,7 @@
   
   <style>
   .sidebar {
-    margin-top: -50px; /* Adjust the value to remove the row gap */
+    margin-top: -25px; /* Adjust the value to remove the row gap */
     width: 200px;
     background-color: #1F456E;
     height: 100%;
