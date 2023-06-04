@@ -13,13 +13,18 @@
           >
         </li>
         <li class="nav-item">
-          <router-link to="/auth/login" class="nav-link" active-class="active"
-            >Login</router-link
+          <router-link to="/register" class="nav-link" active-class="active"
+            >Register</router-link
           >
         </li>
         <li class="nav-item" v-if="this.store.isAuthenticated">
           <router-link to="/adminPanel" class="nav-link" active-class="active"
             >Admin Panel</router-link>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
         </li>
       </ul>
     </div>
