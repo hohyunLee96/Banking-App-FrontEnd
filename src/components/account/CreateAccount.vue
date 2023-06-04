@@ -135,8 +135,8 @@
       methods: {
         update() {
           axios
-           .get("http://localhost:8080/users", { params: { hasAccount: false }})
-            // .get("http://localhost:8080/users?hasAccount=false")
+          //  .get("http://localhost:8080/users", { params: { hasAccount: false }})
+            .get("http://localhost:8080/users?hasAccount=false")
             .then((result) => {
               console.log(result);
               this.users = result.data;

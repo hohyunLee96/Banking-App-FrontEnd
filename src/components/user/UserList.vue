@@ -5,12 +5,19 @@
     </div>
     <div class="container">
       <h2 class="mt-3 mt-lg-5">Users</h2>
-        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
-            Add User
-          </button>
+      <div class="filter-bar mt-3">
+        <label for="filter">Filter:</label>
+        <select id="filter" v-model="filterOption" @change="applyFilter">
+          <option value="all">All Users</option>
+          <option value="withoutAccount">Without Account</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
+        Add User
+      </button>
       <div class="row mt-3">
         <user-list-item
-          v-for="user in users"
+          v-for="user in filteredUsers"
           :key="user.id"
           :user="user"
           @update="update"
@@ -34,10 +41,25 @@ export default {
   data() {
     return {
       users: [],
+      filterOption: "all",
     };
   },
   mounted() {
     this.update();
+    // Check the query parameter on initial load
+    const hasAccountParam = this.$route.query.hasAccount;
+    if (hasAccountParam === "false") {
+      this.filterOption = "withoutAccount";
+    }
+  },
+  computed: {
+    filteredUsers() {
+      if (this.filterOption === "all") {
+        return this.users;
+      } else if (this.filterOption === "withoutAccount") {
+        return this.users.filter(user => !user.hasAccount);
+      }
+    },
   },
   methods: {
     update() {
@@ -49,9 +71,19 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+    applyFilter() {
+      if (this.filterOption === "all") {
+        // Remove the query parameter from the URL
+        this.$router.replace({ query: null });
+      } else if (this.filterOption === "withoutAccount") {
+        // Set the query parameter to filter users without an account
+        this.$router.replace({ query: { hasAccount: false } });
+      }
+      // Call the update method to fetch the latest data from the server
+      this.update();
+    },
   },
 };
-
 </script>
 
 <style>

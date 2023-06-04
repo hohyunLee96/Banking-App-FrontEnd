@@ -17,11 +17,11 @@ const router = createRouter({
     { path: '/', component: Home },
 
     { path: '/users', component: UserList },
+    { path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
 
     { path: '/products', component: ProductList },
     { path: '/accounts', component: AccountList },
-    { path: '/users', component: CreateAccount },
     { path: '/login', component: Login },
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
