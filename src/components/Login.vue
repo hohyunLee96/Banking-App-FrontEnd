@@ -4,7 +4,6 @@
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card bg-dark text-white" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
 
               <div class="mb-md-5 mt-md-4 pb-5">
@@ -30,7 +29,7 @@
                   <label for="password" class="form-control-label">Password</label>
                 </div>
 
-                <button class="btn btn-outline-light btn-lg px-5" name="loginButton" id="loginButton" @click="login"
+                <button class="btn btn-dark btn-lg px-5" name="loginButton" id="loginButton" @click="login"
                   type="submit">Login</button>
               </div>
               <div>
@@ -42,21 +41,20 @@
           </div>
         </div>
       </div>
-    </div>
   </section>
 </template>
 
 <script>
 
 
-import { useUserSessionStore } from '../stores/usersession';
+import { useUserSessionStore } from '@/stores/usersession';
 export default {
+  name: "Login",
   setup() {
     return {
       store: useUserSessionStore()
     }
   },
-  name: "Login",
   data() {
     return {
       email: "",
@@ -66,20 +64,20 @@ export default {
   },
   methods: {
     login() {
+      console.log("logging in!")
       this.store.login(this.email, this.password).then(() => {
-        if (this.store.isAuthenticated) {
-          this.$router.push('/home');
-        } else {
-          this.errorMessage = "Login failed";
-        }
-
+        // if (this.store.isAuthenticated) {
+          this.$router.push('/');
+        // } else {
+        //   this.errorMessage = "Login failed";
+        // }
       }).catch((error) => {
         this.errorMessage = error;
       });
     },
-    register() {
-      this.$router.push('/register');
-    },
+    // register() {
+    //   this.$router.push('/register');
+    // },
     togglePassword() {
       var x = document.getElementById("inputPassword");
       if (x.type === "password") {

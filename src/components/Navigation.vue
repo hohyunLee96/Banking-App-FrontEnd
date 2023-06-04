@@ -23,12 +23,19 @@
         </li>
       </ul>
     </div>
+    <button class="btn btn-dark btn-lg px-5" @click="logout" type="button">Logout</button>
   </nav>
 </template>
 
 <script>
 export default {
   name: "Navigation",
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+      this.$router.push("/auth/login");
+    }
+  }
 };
 </script>
 
