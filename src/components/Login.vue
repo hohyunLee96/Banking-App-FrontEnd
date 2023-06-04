@@ -66,11 +66,11 @@ export default {
     login() {
       console.log("logging in!")
       this.store.login(this.email, this.password).then(() => {
-        // if (this.store.isAuthenticated) {
+        if (this.store.isAuthenticated) {
           this.$router.push('/');
-        // } else {
-        //   this.errorMessage = "Login failed";
-        // }
+        } else {
+          this.errorMessage = "Login failed";
+        }
       }).catch((error) => {
         this.errorMessage = error;
       });
