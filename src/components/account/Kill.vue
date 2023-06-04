@@ -3,25 +3,19 @@
       <div class="card product-card h-100">
         <div class="card-body">
           <div class="float-start">
-            <p>{{ account.accountId }}</p>
+            <p>{{ user.firstName }}</p>
             <!-- <p>{{ account.user.firstName + " " + account.user.lastName}}</p> -->
             <p>
-              <small>{{ account.IBAN }}</small>
+              <small>{{ user.lastName }}</small>
             </p>
             <p>
-              <small>{{ account.accountType }}</small>
+              <small>{{ user.hasAccount }}</small>
             </p>
-            <p>
-            <small :class="{'text-success': account.isActive, 'text-danger': !account.isActive}">
-              {{ "activation  " + account.isActive }}
-            </small>
-          </p>
           </div>
-          <span class="price float-end">{{ account.absoluteLimit }}</span>
         </div>
         <div class="card-footer">
           <!-- <button class="btn btn-warning" @click="editAccount(account.id)">Edit</button>&nbsp;&nbsp; -->
-          <button class="btn btn-danger" @click="deleteAccount(account.accountId)">Delete</button>
+          <button class="btn btn-danger" @click="deleteUser(user.id)">Delete</button>
         </div>
       </div>
     </div>
@@ -31,14 +25,14 @@
   import axios from "axios";
   
   export default {
-    name: "AccountListItem",
+    name: "Kill.vue",
     props: {
-      account: Object,
+      user: Object,
     },
     methods: {
-      deleteAccount(id) {
+      deleteUser(id) {
         axios
-          .put("http://localhost:8080/accounts" + id)
+          .put("http://localhost:8080/users" + id)
           .then((result) => {
             console.log(result);
             this.$emit('update')

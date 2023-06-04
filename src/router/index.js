@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue';
 import ProductList from '../components/products/ProductList.vue';
 import AccountList from '../components/account/AccountList.vue';
+import CreateAccount from '../components/account/CreateAccount.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
 import EditProduct from '../components/products/EditProduct.vue';
 import Login from '../components/Login.vue';
@@ -14,6 +15,7 @@ const router = createRouter({
     { path: '/', component: Home },
     { path: '/products', component: ProductList },
     { path: '/accounts', component: AccountList },
+    { path: '/users', component: CreateAccount },
     { path: '/login', component: Login },
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
