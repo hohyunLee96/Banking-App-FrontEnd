@@ -13,11 +13,6 @@
           >
         </li>
         <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active"
-            >Login</router-link
-          >
-        </li>
-        <li class="nav-item">
           <router-link to="/register" class="nav-link" active-class="active"
             >Register</router-link
           >
@@ -25,6 +20,11 @@
         <li class="nav-item">
           <router-link to="/AdminPanel" class="nav-link" active-class="active"
             >Admin Panel</router-link>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
         </li>
       </ul>
     </div>
