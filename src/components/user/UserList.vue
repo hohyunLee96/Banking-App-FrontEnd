@@ -42,12 +42,15 @@ export default {
   methods: {
     update() {
       axios
-        .get("http://localhost:8080/users")
-        .then((result) => {
-          console.log(result);
-          this.users = result.data;
-        })
-        .catch((error) => console.log(error));
+        .get("http://localhost:8080/users", {
+          headers: {
+            Authorization: `Bearer ${"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTkxMjc1NiwiZXhwIjoxNjg1OTE2MzU2fQ.CEeyFBcy9tYUfbiOnzu4kOeLsaOTfCcTC-ZpDE9rlKecsLtH1HJrIKvCsnGzEgj0nA4BYrHlpYRqp4Kad9xl0x68xcgx0x3EcDusCn_a03U-Rlqu-0tJTR0Yh42XxNDTlIC7d4py0cdjAJbthUEMrgeT0qhfuUnULEMYAspensMVibCbkUysISsmujU31nduHO2yaX0H7AsvC6dWyjf0NziO36JvrHKrc5vwMk34WtEfNXy24Mhz8tUIkoKm0tGezCJZJtFp7RCKOBVTALO0XKbDrDFdY_44bwZfHcRX3kteL64UXlmOrIuuJ5DrXlrfqVW0u3Y3veyAWxv2v_uUmA"}`
+          }
+          }).then((result) => {
+            console.log(result);
+            this.users = result.data;
+          })
+          .catch((error) => console.log(error));
     },
   },
 };
