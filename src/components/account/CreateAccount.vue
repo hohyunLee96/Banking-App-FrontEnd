@@ -102,7 +102,7 @@
           Add Users
         </button>
         <div class="row mt-3">
-          <kill
+          <CreateAccountUserItem
             v-for="user in users"
             :key="user.id"
             :user="user"
@@ -116,13 +116,13 @@
     <script>
     import axios from "axios";
     import AdminPanel from "./../AdminPanel.vue";
-    import Kill from "./Kill.vue";
+    import CreateAccountUserItem from "./CreateAccountUserItem.vue";
     
     export default {
       name: "CreateAccount",
       components: {
         AdminPanel,
-        Kill,
+        CreateAccountUserItem,
       },
       data() {
         return {
