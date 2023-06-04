@@ -1,11 +1,8 @@
 <template>
   <section>
-    <div class="admin-panel">
-      <AdminPanel />
-    </div>
-    <div class="container">
-      <form ref="form">
-        <h2 class="mt-3 mt-lg-5">Edit User</h2>
+    <div style="display: flex; width: 100%; justify-content: center; margin-bottom: 30px;">
+      <form ref="form" style="width: 80% !important">
+        <h2 class="mt-3 mt-lg-5">Register</h2>
         <h5 class="mb-4"></h5>
 
         <div class="input-group mb-3">
@@ -69,7 +66,7 @@
         </div>
 
         <div class="input-group mt-4">
-          <button type="button" class="btn btn-primary" @click="updateUser">
+          <button type="button" class="btn btn-primary" @click="addUser()">
             Save changes
           </button>
           <button
@@ -86,43 +83,40 @@
 
 <script>
 import axios from "axios";
-import AdminPanel from "./../AdminPanel.vue";
 
 export default {
   name: "CreateUser",
   data() {
     return {
       user: {
-        name: "",
-        price: "",
-        description: "",
-        image: "",
-        category_id: 0,
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        birthDate: "",
+        postalCode: "",
+        address: "",
+        city: "",
+        phoneNumber: "",
+        userType: "",
+        hasAccount: "",
       },
       categories: [],
     };
   },
   methods: {
-    addProduct() {
+    addUser() {
       axios
-        .post("http://localhost/products", this.product)
+        .post("http://localhost:8080/users", this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
-          this.$router.push("/products");
+          this.$router.push("/users");
         })
         .catch((error) => console.log(error));
     },
-  },
-  mounted() {
-    axios
-      .get("http://localhost/categories")
-      .then((result) => {
-        console.log(result);
-        this.categories = result.data;
-      })
-      .catch((error) => console.log(error));
-  },
+  }
 };
 </script>
 

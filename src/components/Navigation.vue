@@ -18,6 +18,11 @@
           >
         </li>
         <li class="nav-item">
+          <router-link to="/register" class="nav-link" active-class="active"
+            >Register</router-link
+          >
+        </li>
+        <li class="nav-item">
           <router-link to="/AdminPanel" class="nav-link" active-class="active"
             >Admin Panel</router-link>
         </li>
