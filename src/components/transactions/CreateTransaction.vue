@@ -67,7 +67,7 @@ export default {
             amount: '',
             performingUser: 1,
             errorMessage: "",
-            token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTkwNzY1OCwiZXhwIjoxNjg1OTExMjU4fQ.Dsk03SeqdBrmHRN4VQ8yUUhHc790K8IBG48NeohT5-SXbC7NqPQImf_nRCIJBiUSrPWGLeW9jSnCrOStkIEJhFDHv4UCxfuz4rMEWCUwfEBODZ3rKU2okncSiKlG17b8y8W7Vb2FqGoalOPznhJQ-tP0ZyzRaAxAsx82bn2qrfZkZn2oGyDyvUEIi9IAgjvCN2PoIWga-sagecSWebCOr1HUQjMX1SxtNe3uGvR_-m87wVgpKsvUFuYCIrCt3GLagXdNDSquazVbO-EosENCCyqQzzwLvZICc6xhyGiGjoyO5DbM2P9fCVPyjpOlWXtZDEShdRurfwi-17pkm2DOEQ"
+            token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTkxMjk4MiwiZXhwIjoxNjg1OTE2NTgyfQ.JENtnki76lAiWqEnB_x-UDle12pyOT2y9UiAyP9KJLRuBomC3lyVPldjphLCiJM0yimmwwdEmUL84O-W05l8wSHttC7th8dzO_tZ_ffQNJaAZ8RLaIl4cLRLSSKFHt5ikZn37mnmdN1vMKaHiLDYWzRt_vtvOfurT42UCyS3c3C0-_EgIM0oCLMPwv63as7oRtLJqHbajQQ-3-ydwQKsgzucTUOIPuZknK433LdjsSQwgJE3E0fFGGEnGO7yFNukX6EHSv8SLQJtv1-eAr2tudlU46nChhoqEug9L_a3IUR99xfOcLtc_nAvIcAMrPs4v97XajlQLliaH43ESt4Qbw"
         }
     },
     methods: {
