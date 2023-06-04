@@ -24,7 +24,7 @@ const router = createRouter({
     { path: '/:notFound(.*)', component: Home},
     { path: '/products', component: ProductList },
     { path: '/accounts', component: AccountList },
-    { path: '/login', component: Login },
+    { path: '/auth/login', component: Login },
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},

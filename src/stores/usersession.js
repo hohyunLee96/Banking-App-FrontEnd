@@ -1,38 +1,23 @@
 import { defineStore } from "pinia";
-import axios from "../axios-auth.js";
+import axios from "axios";
 
 export const useUserSessionStore = defineStore("userSession", {
   state: () => ({
     jwt: "",
     email: "",
-    userId: "",
-    isAdmin: false,
+    id: null,
+    isEmployee: false,
   }),
   getters: {
-    isAuthenticated: (state) => state.jwt !== "",
-    isUserAdmin: (state) => state.isAdmin,
+    isAuthenticated(state) {
+      return state.jwt !== "";
+    },
   },
   actions: {
-    async localLogin() {
-      if (localStorage.getItem("jwt")) {
-        this.jwt = localStorage.getItem("jwt");
-        this.email = localStorage.getItem("email");
-        this.userId = localStorage.getItem("id");
-        axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
-        // Call the checkAdmin method to determine the user's admin status
-        try {
-          const response = await this.checkAdmin(this.jwt, this.userId);
-          this.isAdmin = response.data.isAdmin;
-          console.log("Admin status: " + response.data.isAdmin);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
     login(email, password) {
       return new Promise((resolve, reject) => {
         axios
-          .post("/login", {
+          .post("http://localhost:8080/auth/login", {
             email: email,
             password: password,
           })
@@ -40,46 +25,45 @@ export const useUserSessionStore = defineStore("userSession", {
             console.log(response);
             this.jwt = response.data.jwt;
             this.email = response.data.email;
-            this.userId = response.data.id;
+            this.id = response.data.id;
 
-            try {
-              const response = this.checkAdmin(this.jwt, this.userId);
-              this.isAdmin = response.data.isAdmin;
-              console.log("Admin status: " + response.data.isAdmin);
-            } catch (error) {
-              console.error(error);
-            }
+            // try {
+            //   const response = this.checkEmployee(this.jwt, this.id);
+            //   this.isEmployee = response.data.isEmployee;
+            //   console.log("Admin status: " + response.data.isEmployee);
+            // } catch (error) {
+            //   console.error(error);
+            // }
 
             localStorage.setItem("jwt", this.jwt);
             localStorage.setItem("email", this.email);
-            localStorage.setItem("id", this.userId);
+            localStorage.setItem("id", this.id);
 
-            axios.defaults.headers.common["Authorization"] =
-              "Bearer " + this.jwt;
-            console.log("logged in automatically");
-            console.log(response.data.jwt);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
+            console.log(response);
             resolve();
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
-            reject(error);
+            reject(error.response);
           });
       });
     },
     logout() {
       this.jwt = "";
       this.email = "";
-      this.userId = "";
+      this.id = "";
       localStorage.removeItem("jwt");
       localStorage.removeItem("email");
+      localStorage.removeItem("id");
       delete axios.defaults.headers.common["Authorization"];
     },
-    checkAdmin(jwt, id) {
-      return axios.post("/users/checkAdmin/" + id, null, {
-        headers: {
-          Authorization: "Bearer " + jwt,
-        },
-      });
-    },
+    // checkEmployee(jwt, id) {
+    //   return axios.post("http://localhost:8080/users/" + id, null, {
+    //     headers: {
+    //       Authorization: "Bearer " + jwt,
+    //     },
+    //   });
+    // },
   },
 });

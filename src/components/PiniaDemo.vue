@@ -1,25 +1,26 @@
-<template>
-    <div>
-        <h1>{{ store.doubleCount }}</h1>
-        <button type="button" @click="increase"></button>
-    </div>
-</template>
+<!--<template>-->
+<!--    <div>-->
+<!--        <h1>{{ store.doubleCount }}</h1>-->
+<!--        <button type="button" @click="increase"></button>-->
+<!--    </div>-->
+<!--</template>-->
 
-<script>
-import { useCounterStore } from '@/stores/counter'
-export default {
-    setup() {
-        const store = useCounterStore()
-    },
-    methods: {
-        increase() {
-            store.increment();
-        }
-    },
+<!--<script>-->
+<!--import { useCounterStore } from '@/stores/counter'-->
 
-}
-</script>
+<!--export default {-->
+<!--    setup() {-->
+<!--        const store = useCounterStore()-->
+<!--    },-->
+<!--    methods: {-->
+<!--        increase() {-->
+<!--            store.increment();-->
+<!--        },-->
+<!--    },-->
 
-<style scoped>
+<!--}-->
+<!--</script>-->
 
-</style>
+<!--<style scoped>-->
+
+<!--</style>-->
