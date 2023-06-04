@@ -1,6 +1,6 @@
 <template lang="">
     <form ref="form">
-  <section class="h-100 bg-dark">s
+  <section class="h-100 bg-dark">
       <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
               <div class="col">
