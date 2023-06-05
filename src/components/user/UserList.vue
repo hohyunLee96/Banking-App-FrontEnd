@@ -5,9 +5,12 @@
     </div>
     <div class="container">
       <h2 class="mt-3 mt-lg-5">Users</h2>
-        <div class="input-group mb-3" style="width: 80%; margin-top: 20px;">
-          <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2" @input="applyFilter">
-        </div>
+      <div class="input-group mb-3" style="width: 80%; margin-top: 20px;">
+        <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" @input="applyFilter">
+      </div>
+      <div class="input-group mb-3" style="width: 80%; margin-top: 20px;">
+        <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2" @input="applyFilter" ref="dateInput">
+      </div>
       <div class="filter-bar mt-3">
         <label for="filter">Filter: &nbsp;</label>
         <select id="filter" v-model="filterOption" @change="applyFilter">
@@ -45,7 +48,8 @@ export default {
     return {
       users: [],
       filterOption: "all",
-      searchKeyword: ""
+      searchKeyword: "",
+      birthDate: "",
     };
   },
   mounted() {
@@ -55,6 +59,9 @@ export default {
     if (hasAccountParam === "false") {
       this.filterOption = "withoutAccount";
     }
+
+    const dateInput = this.$refs.dateInput;
+    dateInput.addEventListener('input', this.handleDateInput);
   },
   computed: {
     filteredUsers() {
@@ -67,14 +74,24 @@ export default {
     },
   },
   methods: {
+    handleDateInput(event) {
+    if (!event.target.value) {
+      if (this.filterOption === "all") {
+        this.$router.replace({ query: { keyword: this.searchKeyword} });
+      }
+      else if (this.filterOption === "withoutAccount") {
+        this.$router.replace({ query: { keyword: this.searchKeyword, hasAccount: false } });
+      }
+      this.update();
+    }},
     update() {
       axios
         .get("http://localhost:8080/users", {
           params: {
-            keyword: this.searchKeyword, // Pass the search keyword as a parameter to the backend
+            keyword: this.searchKeyword,
           },
           headers: {
-            Authorization: `Bearer ${"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTk2MTE5MSwiZXhwIjoxNjg1OTY0NzkxfQ.Z8oeYJhMcJczFWPabImkyJbWgBF-5jzssqbNFMvCL8sVfp6HlXJnCMCjGQ3LPPVUXKSGEgOVoBx1biqaQZ3YOcIgXb7IqySoIEG016xXORvQm69OqQ5Wze_a5m5mfRD3piVfuJabBxdRVwyAmCYTSUky__gwJAprDeQJ4-IEepW50PGuwwj6dHDlW9bpcfBhyZ0fwDfqNYOI0ki0zxoRQfaTFY7Y-JIdAXqDWw51XVBQdM7BW39fj89vjYqurkKplVMcl0Ki3clXc_kRUvmNDeOi8nFYsJB5708CjVBik9Vw4urX0Ne3lxldjiOn45_KU6P-N9gcmgMnhLL41Atz7A"}`
+            Authorization: `Bearer ${"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTk4NTU4MCwiZXhwIjoxNjg1OTg5MTgwfQ.Tw73SRyvY-dYpDHwRZEWYgjAH5WqgUwYxK3fK90HAg_uNVrgUl5V7h75UTlkUp_AUAhDOeGxhmQqJXUbCZKrfJPrYQFIfJfzLn3hDE69au-DQaGJKIrsNhHyUn_doa1uArGsyr-epblT5c2uazD3HZ_-A5WNLSNnfEwMrT9o-yLsga33K_RrVuZl1v56OVM8felB4t7KcLKUBQRAWGdU4G1DVuggc71nKERXp-l_aksojxBGmk6uhNWPxeZRzz3wXUg-yOX4eFCfFWWteqioIXx88RyANeTVT7U4aN0RiGKBIoTz5aRtmBxEfNWi8kamcB1YtwMyKLL8kRHHAUh7Gw"}`
           }
           }).then((result) => {
             console.log(result);
@@ -83,23 +100,20 @@ export default {
           .catch((error) => console.log(error));
     },
     applyFilter() {
-
-      this.searchKeyword = event.target.value;
+      this.searchKeyword = document.getElementById('search').value;
+      this.birthDate = document.getElementById('date-search').value;
 
       if (this.filterOption === "all") {
-        console.log("Keyword: "+this.searchKeyword);
-        this.$router.replace({ query: { keyword: this.searchKeyword } });
-      } 
-      else if (this.filterOption === "withoutAccount") {       
-        this.$router.replace({ query: { keyword: this.searchKeyword, hasAccount: false } });
+        this.$router.replace({ query: { keyword: this.searchKeyword, birthDate: this.birthDate } });
       }
-
-
-      // Call the update method to fetch the latest data from the server
+      else if (this.filterOption === "withoutAccount") {
+        this.$router.replace({ query: { keyword: this.searchKeyword, birthDate: this.birthDate, hasAccount: false } });
+      }
       this.update();
     },
   },
 };
+
 </script>
 
 <style>
