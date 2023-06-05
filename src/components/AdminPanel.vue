@@ -32,7 +32,7 @@ export default {
           isExpanded: false,
           isActive: false,
           submenus: [
-            { title: 'Submenu 1.1', link: '/accounts' },
+            { title: 'View Accounts', link: '/accounts' },
             { title: 'Submenu 1.2', link: '/submenu2' },
           ]
         },
@@ -41,7 +41,7 @@ export default {
           isExpanded: false,
           isActive: false,
           submenus: [
-            { title: 'Submenu 2.1', link: '/submenu3' },
+            { title: 'View Users', link: '/users' },
             { title: 'Submenu 2.2', link: '/submenu4' }
           ]
         },

@@ -74,8 +74,6 @@ import axios from 'axios';
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Access-Control-Allow-Origin': '*',
-       'Content-type': 'application/json',
                 }
             };
   this.account.userId = this.users.id; // Assign the user ID to the account object
@@ -88,7 +86,7 @@ import axios from 'axios';
       this.$router.push("/accounts");
     }, config)
                 .then(response => {
-                    alert("Transaction sent!")
+                    alert("Account sent!")
                     console.log(response)
                     this.$router.push('/accounts')
                 })
