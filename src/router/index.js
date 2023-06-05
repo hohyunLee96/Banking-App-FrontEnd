@@ -41,6 +41,8 @@ const router = createRouter({
     {path: '/createtransaction', component: CreateTransaction}
    
   ]
-})
+});
 
-export default router
+export default router;
+
+

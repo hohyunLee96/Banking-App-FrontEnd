@@ -3,23 +3,19 @@
     <div class="container-fluid">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item" v-if="this.store.isAuthenticated">
-          <router-link to="/" class="nav-link" active-class="active"
-            >Home</router-link
-          >
-        </li>      
+          <router-link to="/" class="nav-link" active-class="active">Home</router-link>
+        </li>
         <li class="nav-item" v-if="this.store.isAuthenticated">
-          <router-link to="/products" class="nav-link" active-class="active"
-            >Products</router-link
-          >
+          <router-link to="/products" class="nav-link" active-class="active">Products</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/register" class="nav-link" active-class="active"
-            >Register</router-link
-          >
+          <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
         </li>
         <li class="nav-item" v-if="this.store.isAuthenticated">
-          <router-link to="/adminPanel" class="nav-link" active-class="active"
-            >Admin Panel</router-link>
+          <router-link to="/adminPanel" class="nav-link" active-class="active">Admin Panel</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/transactions" class="nav-link" active-class="active">Transactions</router-link>
         </li>
       </ul>
       <ul class="navbar-nav">
@@ -28,7 +24,7 @@
         </li>
       </ul>
     </div>
-    <button class="btn btn-dark btn-lg px-5" @click="logout" type="button">Logout</button>
+    <button class="btn btn-dark btn-lg px-5" @click="logout()" type="button">Logout</button>
   </nav>
 </template>
 
@@ -45,16 +41,13 @@ export default {
   methods: {
     logout() {
       this.store.logout()
-          .then(() => {
-            this.$router.push("http://localhost:8080/auth/login");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      this.$router.push("/auth/login").
+        catch((error) => {
+          console.log(error);
+        });
     },
   }
 };
 </script>
 
-<style>
-</style>
+<style></style>
