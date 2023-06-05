@@ -89,11 +89,8 @@ export default {
         .get("http://localhost:8080/users", {
           params: {
             keyword: this.searchKeyword,
-          },
-          headers: {
-            Authorization: `Bearer ${"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTk4NTU4MCwiZXhwIjoxNjg1OTg5MTgwfQ.Tw73SRyvY-dYpDHwRZEWYgjAH5WqgUwYxK3fK90HAg_uNVrgUl5V7h75UTlkUp_AUAhDOeGxhmQqJXUbCZKrfJPrYQFIfJfzLn3hDE69au-DQaGJKIrsNhHyUn_doa1uArGsyr-epblT5c2uazD3HZ_-A5WNLSNnfEwMrT9o-yLsga33K_RrVuZl1v56OVM8felB4t7KcLKUBQRAWGdU4G1DVuggc71nKERXp-l_aksojxBGmk6uhNWPxeZRzz3wXUg-yOX4eFCfFWWteqioIXx88RyANeTVT7U4aN0RiGKBIoTz5aRtmBxEfNWi8kamcB1YtwMyKLL8kRHHAUh7Gw"}`
-          }
-          }).then((result) => {
+          
+          }}).then((result) => {
             console.log(result);
             this.users = result.data;
           })
