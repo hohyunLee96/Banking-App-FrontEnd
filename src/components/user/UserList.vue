@@ -6,10 +6,10 @@
     <div class="container">
       <h2 class="mt-3 mt-lg-5">Users</h2>
         <div class="input-group mb-3" style="width: 80%; margin-top: 20px;">
-          <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2" @input="applyFilter">
         </div>
       <div class="filter-bar mt-3">
-        <label for="filter">Filter:</label>
+        <label for="filter">Filter: &nbsp;</label>
         <select id="filter" v-model="filterOption" @change="applyFilter">
           <option value="all">All Users</option>
           <option value="withoutAccount">Without Account</option>
@@ -45,6 +45,7 @@ export default {
     return {
       users: [],
       filterOption: "all",
+      searchKeyword: ""
     };
   },
   mounted() {
@@ -59,7 +60,8 @@ export default {
     filteredUsers() {
       if (this.filterOption === "all") {
         return this.users;
-      } else if (this.filterOption === "withoutAccount") {
+      } 
+      else if (this.filterOption === "withoutAccount") {
         return this.users.filter(user => !user.hasAccount);
       }
     },
@@ -68,6 +70,9 @@ export default {
     update() {
       axios
         .get("http://localhost:8080/users", {
+          params: {
+            keyword: this.searchKeyword, // Pass the search keyword as a parameter to the backend
+          },
           headers: {
             Authorization: `Bearer ${"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTk2MTE5MSwiZXhwIjoxNjg1OTY0NzkxfQ.Z8oeYJhMcJczFWPabImkyJbWgBF-5jzssqbNFMvCL8sVfp6HlXJnCMCjGQ3LPPVUXKSGEgOVoBx1biqaQZ3YOcIgXb7IqySoIEG016xXORvQm69OqQ5Wze_a5m5mfRD3piVfuJabBxdRVwyAmCYTSUky__gwJAprDeQJ4-IEepW50PGuwwj6dHDlW9bpcfBhyZ0fwDfqNYOI0ki0zxoRQfaTFY7Y-JIdAXqDWw51XVBQdM7BW39fj89vjYqurkKplVMcl0Ki3clXc_kRUvmNDeOi8nFYsJB5708CjVBik9Vw4urX0Ne3lxldjiOn45_KU6P-N9gcmgMnhLL41Atz7A"}`
           }
@@ -78,13 +83,18 @@ export default {
           .catch((error) => console.log(error));
     },
     applyFilter() {
+
+      this.searchKeyword = event.target.value;
+
       if (this.filterOption === "all") {
-        // Remove the query parameter from the URL
-        this.$router.replace({ query: null });
-      } else if (this.filterOption === "withoutAccount") {
-        // Set the query parameter to filter users without an account
-        this.$router.replace({ query: { hasAccount: false } });
+        console.log("Keyword: "+this.searchKeyword);
+        this.$router.replace({ query: { keyword: this.searchKeyword } });
+      } 
+      else if (this.filterOption === "withoutAccount") {       
+        this.$router.replace({ query: { keyword: this.searchKeyword, hasAccount: false } });
       }
+
+
       // Call the update method to fetch the latest data from the server
       this.update();
     },
