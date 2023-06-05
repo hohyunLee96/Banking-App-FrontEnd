@@ -28,24 +28,25 @@
       user: Object,
     },
     methods: {
-      deleteUser(id) {
-        axios
-          .delete("http://localhost:8080/users/" + id)
-          .then((result) => {
-            console.log(result);
-            this.$emit("update");
-          })
-          .catch((error) => console.log(error));
-      },
-      editUser(id) {
-        this.$router.push('/edituser/' + id);
-      },
-      createAccount(id) {
-        // Perform the necessary action to create an account for the user
-        console.log("Create account for user:", id);
-      },
+    deleteUser(id) {
+      axios
+        .delete("http://localhost:8080/users/" + id)
+        .then((result) => {
+          console.log(result);
+          this.$emit("update");
+        })
+        .catch((error) => console.log(error));
     },
-  };
+    editUser(id) {
+      this.$router.push('/edituser/' + id);
+    },
+    createAccount(id) {
+      // Perform the necessary action to create an account for the user
+      console.log("Create account for user:", id);
+      this.$router.push({ name: 'CreateAccount', params: { userId: 4 } });
+    },
+  },
+};
   </script>
   
   <style>

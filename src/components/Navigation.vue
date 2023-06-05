@@ -17,6 +17,9 @@
         <li class="nav-item">
           <router-link to="/transactions" class="nav-link" active-class="active">Transactions</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/useraccounts" class="nav-link" active-class="active">test accounts</router-link>
+        </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -29,7 +32,6 @@
 </template>
 
 <script>
-
 import { useUserSessionStore } from '@/stores/usersession';
 export default {
   name: "Navigation",
