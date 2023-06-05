@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axios from "../axios-auth.js";
 
 export const useUserSessionStore = defineStore("userSession", {
   state: () => ({
     jwt: "",
     email: "",
-    id: null,
+    userId: null,
     isEmployee: false,
   }),
   getters: {
@@ -14,10 +14,26 @@ export const useUserSessionStore = defineStore("userSession", {
     },
   },
   actions: {
+    async localLogin() {
+      if (localStorage.getItem("jwt")) {
+        this.jwt = localStorage.getItem("jwt");
+        this.email = localStorage.getItem("email");
+        this.userId = localStorage.getItem("id");
+        axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
+        // Call the checkAdmin method to determine the user's admin status
+          // try {
+          //   const response = await this.checkAdmin(this.jwt, this.userId);
+          //   this.isAdmin = response.data.isAdmin;
+          //   console.log("Admin status: " + response.data.isAdmin);
+          // } catch (error) {
+          //   console.error(error);
+          // }
+      }
+    },
     login(email, password) {
       return new Promise((resolve, reject) => {
         axios
-          .post("http://localhost:8080/auth/login", {
+          .post("auth/login", {
             email: email,
             password: password,
           })
@@ -27,14 +43,6 @@ export const useUserSessionStore = defineStore("userSession", {
             this.email = response.data.email;
             this.id = response.data.id;
 
-            // try {
-            //   const response = this.checkEmployee(this.jwt, this.id);
-            //   this.isEmployee = response.data.isEmployee;
-            //   console.log("Admin status: " + response.data.isEmployee);
-            // } catch (error) {
-            //   console.error(error);
-            // }
-
             localStorage.setItem("jwt", this.jwt);
             localStorage.setItem("email", this.email);
             localStorage.setItem("id", this.id);
@@ -43,12 +51,13 @@ export const useUserSessionStore = defineStore("userSession", {
             console.log(response);
             resolve();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             reject(error.response);
           });
       });
     },
+
     logout() {
       this.jwt = "";
       this.email = "";
@@ -58,12 +67,22 @@ export const useUserSessionStore = defineStore("userSession", {
       localStorage.removeItem("id");
       delete axios.defaults.headers.common["Authorization"];
     },
-    // checkEmployee(jwt, id) {
-    //   return axios.post("http://localhost:8080/users/" + id, null, {
-    //     headers: {
-    //       Authorization: "Bearer " + jwt,
-    //     },
-    //   });
-    // },
+
+    getLoggedInUserRole() {
+      const jwt = this.jwt;
+      const id = this.id;
+
+      return axios
+        .get('users/'+id, 
+        { headers: { Authorization: `Bearer ${jwt}` } })
+        .then((response) => {
+          console.log(response.data);
+          return response.data.userType;
+        })
+        .catch((error) => {
+          console.error(error);
+          throw error;
+        });
+    },
   },
 });

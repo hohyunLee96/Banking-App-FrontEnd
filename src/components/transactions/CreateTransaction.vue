@@ -67,7 +67,7 @@ export default {
             amount: '',
             performingUser: 1,
             errorMessage: "",
-            token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTgyMDAxOSwiZXhwIjoxNjg1ODIzNjE5fQ.OAkErELw04SVM1hUmQPh09CICkcau0cPjBnvzPbtP7DyAC3eN1_gdzV-e-j7an_2oaigR8ASVlzUTh0227FtdV1nDlAtHI9fnxYPDAerhPUfhylGV-AfLOjg_HTjPGbv0wDNFJGcnhAezs_P9MwPxSzkSb-AoZsiDV1QK69-EcRf3oH2rODkmDzaYH-CVghJZ96WWrzEBjk1Cdb5cBqWtKBBRt4TOCwYPhbs0whqGIbKBj1s67hYEl2Kt1s2BPeOxO70P4zOGAxMIMH5g28EjmSTULogakLSM1k0IBLuxH2JUSlXck2FlphzQUGikcKgqv5WJCkAnjo95ZYdoSLpdg"
+            token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTkxMjk4MiwiZXhwIjoxNjg1OTE2NTgyfQ.JENtnki76lAiWqEnB_x-UDle12pyOT2y9UiAyP9KJLRuBomC3lyVPldjphLCiJM0yimmwwdEmUL84O-W05l8wSHttC7th8dzO_tZ_ffQNJaAZ8RLaIl4cLRLSSKFHt5ikZn37mnmdN1vMKaHiLDYWzRt_vtvOfurT42UCyS3c3C0-_EgIM0oCLMPwv63as7oRtLJqHbajQQ-3-ydwQKsgzucTUOIPuZknK433LdjsSQwgJE3E0fFGGEnGO7yFNukX6EHSv8SLQJtv1-eAr2tudlU46nChhoqEug9L_a3IUR99xfOcLtc_nAvIcAMrPs4v97XajlQLliaH43ESt4Qbw"
         }
     },
     methods: {
@@ -98,7 +98,7 @@ export default {
                         this.errorMessage = error.response.data.message;
                     }
                     setTimeout(() => {
-                        this.errorMessage = "";
+                        this.errorMessage = ""; 
                     }, 8000);
                     console.log(error);
                 });
