@@ -115,7 +115,11 @@ export default {
   methods: {
     updateUser() {
       axios
-        .put("http://localhost:8080/users/" + this.id, this.user)
+        .put("http://localhost:8080/users/" + this.id, this.user,{
+          headers: {
+            Authorization: `Bearer ${"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTk2MTE5MSwiZXhwIjoxNjg1OTY0NzkxfQ.Z8oeYJhMcJczFWPabImkyJbWgBF-5jzssqbNFMvCL8sVfp6HlXJnCMCjGQ3LPPVUXKSGEgOVoBx1biqaQZ3YOcIgXb7IqySoIEG016xXORvQm69OqQ5Wze_a5m5mfRD3piVfuJabBxdRVwyAmCYTSUky__gwJAprDeQJ4-IEepW50PGuwwj6dHDlW9bpcfBhyZ0fwDfqNYOI0ki0zxoRQfaTFY7Y-JIdAXqDWw51XVBQdM7BW39fj89vjYqurkKplVMcl0Ki3clXc_kRUvmNDeOi8nFYsJB5708CjVBik9Vw4urX0Ne3lxldjiOn45_KU6P-N9gcmgMnhLL41Atz7A"}`
+          }
+        })
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
