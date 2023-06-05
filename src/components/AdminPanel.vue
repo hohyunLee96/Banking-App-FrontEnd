@@ -32,7 +32,7 @@ export default {
           isExpanded: false,
           isActive: false,
           submenus: [
-            { title: 'Submenu 1.1', link: '/accounts' },
+            { title: 'View Accounts', link: '/accounts' },
             { title: 'Submenu 1.2', link: '/submenu2' },
           ]
         },
@@ -41,7 +41,7 @@ export default {
           isExpanded: false,
           isActive: false,
           submenus: [
-            { title: 'Submenu 2.1', link: '/submenu3' },
+            { title: 'View Users', link: '/users' },
             { title: 'Submenu 2.2', link: '/submenu4' }
           ]
         },
@@ -63,11 +63,32 @@ export default {
       menu.isExpanded = !menu.isExpanded;
       menu.isActive = !menu.isActive;
     }
-  }
+  }, // <- Replace the semicolon (;) with a comma (,)
 };
 </script>
   
-<style>
+  <style>
+  .sidebar {
+    margin-top: -25px; /* Adjust the value to remove the row gap */
+    width: 200px;
+    background-color: #1F456E;
+    height: 100%;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: 1000px;
+  }
+  
+  .menu li {
+    padding: 8px;
+    border-bottom: 1px solid #fff;
+  }
+
 .sidebar {
   margin-top: -50px;
   /* Adjust the value to remove the row gap */

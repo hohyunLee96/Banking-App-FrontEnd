@@ -55,6 +55,7 @@
   
   <style>
 .admin-panel {
+  margin-top: 0px; /* Adjust the value to remove the row gap */
   width: 200px;
   float: left;
   /* Add any additional styling for the admin panel here */
@@ -71,5 +72,6 @@
   display: table;
   clear: both;
 }
+
 </style>
   

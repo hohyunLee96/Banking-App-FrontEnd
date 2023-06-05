@@ -4,6 +4,7 @@ import Home from '../components/Home.vue';
 import ProductList from '../components/products/ProductList.vue';
 import AccountList from '../components/account/AccountList.vue';
 import CreateAccount from '../components/account/CreateAccount.vue';
+import UserAccountList from '../components/account/UserAccountList.vue';
 
 
 //USER IMPORTS/////////////////////////////////////////////////////////
@@ -25,6 +26,13 @@ const router = createRouter({
 
     { path: '/', component: Home },
     { path: '/users', component: UserList },
+    { path: '/edituser/:id', component: EditUser, props: true  },
+    {
+      path: '/createaccount/:userId',
+      name: 'CreateAccount',
+      component: CreateAccount
+    }, 
+    { path: '/useraccounts', component: UserAccountList },   
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: CreateUser },
