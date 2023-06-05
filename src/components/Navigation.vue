@@ -33,7 +33,6 @@
 </template>
 
 <script>
-
 import { useUserSessionStore } from '@/stores/usersession';
 export default {
   name: "Navigation",

@@ -17,7 +17,7 @@ export const useUserSessionStore = defineStore("userSession", {
     login(email, password) {
       return new Promise((resolve, reject) => {
         axios
-          .post("http://localhost:8080/auth/login", {
+          .post("http://localhost:8080/users/login", {
             email: email,
             password: password,
           })

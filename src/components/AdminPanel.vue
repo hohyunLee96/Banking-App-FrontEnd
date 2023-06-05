@@ -63,8 +63,9 @@ export default {
       menu.isExpanded = !menu.isExpanded;
       menu.isActive = !menu.isActive;
     }
-  };
-  </script>
+  }, // <- Replace the semicolon (;) with a comma (,)
+};
+</script>
   
   <style>
   .sidebar {
@@ -87,10 +88,7 @@ export default {
     padding: 8px;
     border-bottom: 1px solid #fff;
   }
-};
-</script>
-  
-<style>
+
 .sidebar {
   margin-top: -50px;
   /* Adjust the value to remove the row gap */

@@ -12,7 +12,6 @@ import EditUser from '../components/user/EditUser.vue';
 import CreateUser from '../components/user/CreateUser.vue';
 
 import CreateProduct from '../components/products/CreateProduct.vue';
-import CreateAccount from '../components/account/CreateAccount.vue';
 import EditProduct from '../components/products/EditProduct.vue';
 import Login from '../components/Login.vue';
 import AdminPanel from '../components/AdminPanel.vue';
