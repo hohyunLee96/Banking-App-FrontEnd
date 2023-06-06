@@ -54,7 +54,7 @@ export default {
   },
   mounted() {
     this.update();
-    // Check the query parameter on initial load
+    
     const hasAccountParam = this.$route.query.hasAccount;
     if (hasAccountParam === "false") {
       this.filterOption = "withoutAccount";
@@ -74,6 +74,7 @@ export default {
     },
   },
   methods: {
+
     handleDateInput(event) {
     if (!event.target.value) {
       if (this.filterOption === "all") {
@@ -84,18 +85,17 @@ export default {
       }
       this.update();
     }},
+
     update() {
       axios
-        .get("http://localhost:8080/users", {
-          params: {
-            keyword: this.searchKeyword,
-          
-          }}).then((result) => {
-            console.log(result);
-            this.users = result.data;
-          })
-          .catch((error) => console.log(error));
+        .get("http://localhost:8080/users")
+        .then((result) => {
+          console.log(result);
+          this.users = result.data;
+        })
+        .catch((error) => console.log(error));
     },
+
     applyFilter() {
       this.searchKeyword = document.getElementById('search').value;
       this.birthDate = document.getElementById('date-search').value;
