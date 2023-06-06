@@ -3,7 +3,7 @@
     <div class="card product-card h-100">
       <div class="card-body">
         <div class="float-start">
-          <p>{{ "user ID " + account.userId }}</p>
+          <p>{{ "user ID " + account.user }}</p>
           <!-- <p>{{ account.user.firstName + " " + account.user.lastName}}</p> -->
           <p>
             {{ account.IBAN }}
@@ -20,7 +20,6 @@
         <span class="price float-end">{{ account.absoluteLimit }}</span>
       </div>
       <div class="card-footer">
-        <!-- <button class="btn btn-warning" @click="editAccount(account.id)">Edit</button>&nbsp;&nbsp; -->
         <button class="btn btn-danger" @click="deactivateAccount(account.accountId)">Deactivate</button>
       </div>
     </div>
@@ -28,7 +27,7 @@
 </template>
   
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
 
 export default {
   name: "AccountListItem",
@@ -37,16 +36,8 @@ export default {
   },
   methods: {
     deactivateAccount(id) {
-      const token = localStorage.getItem("jwt");
-
-            // Include the token in the request headers
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            };
             axios
-        .put("http://localhost:8080/accounts/" + id, { isActive: false }, config)
+        .put("accounts/" + id, { isActive: false })
         .then((result) => {
           console.log(result);
           this.account.isActive = false;

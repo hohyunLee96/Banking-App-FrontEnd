@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
 import UserListItem from "./UserListItem.vue";
 
@@ -64,7 +64,7 @@ export default {
   methods: {
     update() {
       axios
-        .get("http://localhost:8080/users")
+        .get("users")
         .then((result) => {
           console.log(result);
           this.users = result.data;

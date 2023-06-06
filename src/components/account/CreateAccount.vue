@@ -47,7 +47,7 @@
   </template>
   
   <script>
-import axios from 'axios';
+import axios from "../../axios-auth";
   
   export default {
     name: "CreateAccount",
@@ -60,7 +60,6 @@ import axios from 'axios';
           absoluteLimit: "",
           accountType: "",
           userId: 0,
-          // token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYXZpZEBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTkxNjQ5MywiZXhwIjoxNjg1OTIwMDkzfQ.CWDJAVlXUMP5_Qg0UG2ZLK2jOhTGdc9tK3eN9695qMV41I49n34fUJpxutSYRK9jkpXLeg2eEslva-zIpwVJvg0maYL7lYyMzjlmv0dATTFudYfZeTI3ZlnzrVSDux3B1QzoR2Kq-_bc-wS8Tg9Tac_h2Nv_qHPpGy2tOVM6FVPEwCt0t78pvH9OqgZUoIepOdbAJC3jyznHA6pMYtYoZkl5VPJcgEZyM7GSfqlA6n5ZmbIpV9Uku7jZhO6mWW2tUo_hfG5uuu5ecFmVuKrTQGWEL0IDmocLh21mFBAS5H_y6DOzUgWNREwOs5MAHXXXSlv__QkzkUSqrJuoBEkcww"
         },
         users: [],
         accounts: [],
@@ -68,18 +67,18 @@ import axios from 'axios';
     },
     methods: {
       addAccount() {
-        const token = this.token;
+  //       const token = this.token;
 
-            // Include the token in the request headers
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            };
-  this.account.userId = this.users.id; // Assign the user ID to the account object
+  //           // Include the token in the request headers
+  //           const config = {
+  //               headers: {
+  //                   Authorization: `Bearer ${token}`,
+  //               }
+  //           };
+  // this.account.userId = this.users.id; // Assign the user ID to the account object
 
   axios
-    .post("http://localhost:8080/accounts", this.account)
+    .post("accounts", this.account)
     .then((res) => {
       console.log(res.data);
       this.$refs.form.reset();
@@ -96,7 +95,7 @@ import axios from 'axios';
     },
     mounted() {
   axios
-    .get("http://localhost:8080/users/" + this.$route.params.userId) // Use $route.params.userId to get the ID from the route
+    .get("users/" + this.$route.params.userId) // Use $route.params.userId to get the ID from the route
     .then((result) => {
       console.log(result);
       this.users = result.data;
