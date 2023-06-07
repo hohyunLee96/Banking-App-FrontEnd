@@ -18,7 +18,7 @@ import Login from '../components/Login.vue';
 import AdminPanel from '../components/AdminPanel.vue';
 import CreateTransaction from '../components/transactions/CreateTransaction.vue';
 import TransactionList from '../components/transactions/TransactionList.vue';
-
+import ATM from '../components/transactions/ATM.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +46,7 @@ const router = createRouter({
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},
     {path: '/transactions', component: TransactionList},
+    {path: '/atm', component: ATM},
     {path: '/createtransaction', component: CreateTransaction}
    
   ]

@@ -5,25 +5,28 @@
     </div>
 
     <div class="container">
-<h3>Filter</h3>
+      <h3>Filter</h3>
       <div class="filter-bar mt-3">
         <div class="filter-group" v-for="param in filterParameters" :key="param">
           <label :for="param">{{ getParamLabel(param) }}</label>
           <template v-if="param === 'fromIban' || param === 'toIban'">
-            <input type="text" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)" @input="applyFilter" />
+            <input type="text" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
+              @input="applyFilter" />
           </template>
           <template v-else-if="param === 'amount'">
-            <select class="m-2" v-model="amountFilterOptions[param]" @change="applyFilter">
-              <option value="lessThan">Less Than</option>
-              <option value="greaterThan">Greater Than</option>
-              <option value="equalTo">Equal To</option>
+            <select class="m-2" v-model="amountFilterOptions[param]" @change="updateAmountFilter">
+              <option value="lessThanAmount">Less Than</option>
+              <option value="greaterThanAmount">Greater Than</option>
+              <option value="equalToAmount">Equal To</option>
             </select>
-            <input type="number" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)" @input="applyFilter" />
+            <input type="number" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
+              @input="applyFilter" />
           </template>
           <template v-else-if="param === 'performingUser'">
             <select v-model="filterValues[param]" @change="applyFilter">
               <option value="" disabled>Select User</option>
-              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstName }} {{ user.lastName }}</option>
+              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstName }} {{ user.lastName }}
+              </option>
             </select>
           </template>
         </div>
@@ -35,11 +38,8 @@
       <div class="mt-5" v-for="date in orderedTransactionDates" :key="date">
         <h3>{{ formatDate(date) }}</h3>
         <div class="row mt-3">
-          <TransactionListItem
-            v-for="transaction in filteredTransactions[date]"
-            :key="transaction.transactionId"
-            :transaction="transaction"
-          />
+          <TransactionListItem v-for="transaction in filteredTransactions[date]" :key="transaction.transactionId"
+            :transaction="transaction" />
         </div>
       </div>
     </div>
@@ -65,11 +65,13 @@ export default {
         toIban: "",
         amount: "",
         performingUser: "",
+        transactionId: "",
+        type: "",
       },
       amountFilterOptions: {
-        amount: "lessThan",
-        amount: "greaterThan",
-        amount: "equalTo",
+        amount: "lessThanAmount",
+        amount: "greaterThanAmount",
+        amount: "equalToAmount",
       },
       users: [], // Holds the list of users
     };
@@ -111,6 +113,12 @@ export default {
                 return this.applyAmountFilter(transaction.amount, this.filterValues[param]);
               case "performingUser":
                 return transaction.performingUserId === this.filterValues[param];
+              case "lessThanAmount":
+                return transaction.amount < this.filterValues[param];
+              case "greaterThanAmount":
+                return transaction.amount > this.filterValues[param];
+              case "equalToAmount":
+                return transaction.amount === this.filterValues[param];
               default:
                 return true;
             }
@@ -122,21 +130,27 @@ export default {
   },
   methods: {
     getAllTransactions() {
-      const params = {};
-      Object.keys(this.filterValues).forEach((param) => {
-        if (this.filterValues[param] !== "") {
-          params[param] = this.filterValues[param];
-        }
-      });
+  const params = {};
+  Object.keys(this.filterValues).forEach((param) => {
+    if (this.filterValues[param] !== "") {
+      params[param] = this.filterValues[param];
+    }
+  });
 
-      axios
-        .get("transactions", { params })
-        .then((result) => {
-          console.log(result);
-          this.transactions = result.data;
-        })
-        .catch((error) => console.log(error));
-    },
+  if (this.filterParameter !== "all") {
+    params[this.filterParameter] = params.amount;
+    delete params.amount;
+  }
+
+  axios
+    .get("transactions", { params })
+    .then((result) => {
+      console.log(result);
+      this.transactions = result.data;
+    })
+    .catch((error) => console.log(error));
+},
+
     getAllUsers() {
       axios
         .get("users")
@@ -156,15 +170,33 @@ export default {
     applyAmountFilter(amount, filterValue) {
       const numericFilterValue = Number(filterValue);
       switch (this.amountFilterOptions.amount) {
-        case "lessThan":
+        case "lessThanAmount":
           return amount < numericFilterValue;
-        case "greaterThan":
+        case "greaterThanAmount":
           return amount > numericFilterValue;
-        case "equalTo":
+        case "equalToAmount":
           return amount === numericFilterValue;
         default:
           return true;
       }
+    },
+    updateAmountFilter() {
+      const selectedOption = this.amountFilterOptions.amount;
+      switch (selectedOption) {
+        case "lessThanAmount":
+          this.filterParameter = "lessThanAmount";
+          break;
+        case "greaterThanAmount":
+          this.filterParameter = "greaterThanAmount";
+          break;
+        case "equalToAmount":
+          this.filterParameter = "equalToAmount";
+          break;
+        default:
+          this.filterParameter = "all";
+          break;
+      }
+      this.applyFilter();
     },
     getParamPlaceholder(param) {
       switch (param) {

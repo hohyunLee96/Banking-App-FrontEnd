@@ -5,31 +5,42 @@ export const useUserSessionStore = defineStore("userSession", {
   state: () => ({
     jwt: "",
     email: "",
-    userId: null,
+    id: null,
     isEmployee: false,
+    userRole: "",
+    loggedInUser: null,
   }),
   getters: {
     isAuthenticated(state) {
       return state.jwt !== "";
     },
+    getUserRole(state) {
+      return state.loggedInUser.userType;
+    },
+    getUser(state) {
+      return state.loggedInUser;
+    },
+    getUserId(state) {
+      return state.id;
+    }
   },
   actions: {
     async localLogin() {
       if (localStorage.getItem("jwt")) {
         this.jwt = localStorage.getItem("jwt");
         this.email = localStorage.getItem("email");
-        this.userId = localStorage.getItem("id");
+        this.id = localStorage.getItem("id");
         axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
-        // Call the checkAdmin method to determine the user's admin status
-          // try {
-          //   const response = await this.checkAdmin(this.jwt, this.userId);
-          //   this.isAdmin = response.data.isAdmin;
-          //   console.log("Admin status: " + response.data.isAdmin);
-          // } catch (error) {
-          //   console.error(error);
-          // }
+
+        try {
+          const loggedInUser = await this.getLoggedInUser();
+          this.loggedInUser = loggedInUser.data;
+        } catch (error) {
+          console.error(error.message);
+        }
       }
     },
+
     login(email, password) {
       return new Promise((resolve, reject) => {
         axios
@@ -47,7 +58,8 @@ export const useUserSessionStore = defineStore("userSession", {
             localStorage.setItem("email", this.email);
             localStorage.setItem("id", this.id);
 
-            axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
+            axios.defaults.headers.common["Authorization"] =
+              "Bearer " + this.jwt;
             console.log(response);
             resolve();
           })
@@ -66,18 +78,16 @@ export const useUserSessionStore = defineStore("userSession", {
       localStorage.removeItem("email");
       localStorage.removeItem("id");
       delete axios.defaults.headers.common["Authorization"];
+      this.loggedInUser = null; // Clear the logged-in user
     },
 
-    getLoggedInUserRole() {
-      const jwt = this.jwt;
+    getLoggedInUser() {
       const id = this.id;
-
       return axios
-        .get('users/'+id, 
-        { headers: { Authorization: `Bearer ${jwt}` } })
+        .get("users/" + id)
         .then((response) => {
           console.log(response.data);
-          return response.data.userType;
+          return response.data;
         })
         .catch((error) => {
           console.error(error);
