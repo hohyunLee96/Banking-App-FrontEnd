@@ -35,11 +35,7 @@
           </router-link>
         </li>
       </ul>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <router-link to="" @click="logout()" v-if="this.store.isAuthenticated" class="nav-link">Logout</router-link>
-        </li>
-      </ul>
+
     </div>
     <button v-if="store.isAuthenticated" class="btn btn-dark btn-lg px-5" @click="logout()" type="button">
       <i class="fas fa-sign-out-alt"></i> Logout
@@ -59,11 +55,8 @@ export default {
   },
   methods: {
     logout() {
-      this.store.logout().then(() => {
-        this.$router.push("/login");
-      }).catch((error) => {
-        console.log(error);
-      });
+     this.store.logout()
+     this.$router.push('/login')
     },
   }
 };
