@@ -1,6 +1,6 @@
 <template lang="">
     <form ref="form">
-  <section class="h-100 bg-dark">s
+  <section class="h-100 bg-dark">
       <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
               <div class="col">
@@ -67,7 +67,7 @@ export default {
             amount: '',
             performingUser: 1,
             errorMessage: "",
-            token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTc5OTAwNiwiZXhwIjoxNjg1ODAyNjA2fQ.XK2nkS2Tj06pOoD1iL-x555hlxXzJR-Gipg4_4yzk6_SanoTh0laQFeRCjiNweU1fBWpAdGsKIsZYTNQm_TbUfKcMEbLevJRtERRETx4u9kPBbWP0LGAUqktuy2Xd9TEy9dtpWWRBIr_FuUx4HzHeAu5VdxSyM--8tv4SyGI5SZniQE4_ra483N7CRDGjbFThBB7P0Kyt0HPohABRaJTM1KMyoZKZzERwsDM2uTM3Z__qeKzjMRDcgloAVzpxYGb-XWBfqf7tIBY5W4sXU9_oj8kNNnRA0-LMknmkYC2sXQNyGp3oaWT50rU1SfZRmmCUma3g09AkfAXgxE9faPjCw"
+            token :"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUBlbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9FTVBMT1lFRSIsImlhdCI6MTY4NTgyMDAxOSwiZXhwIjoxNjg1ODIzNjE5fQ.OAkErELw04SVM1hUmQPh09CICkcau0cPjBnvzPbtP7DyAC3eN1_gdzV-e-j7an_2oaigR8ASVlzUTh0227FtdV1nDlAtHI9fnxYPDAerhPUfhylGV-AfLOjg_HTjPGbv0wDNFJGcnhAezs_P9MwPxSzkSb-AoZsiDV1QK69-EcRf3oH2rODkmDzaYH-CVghJZ96WWrzEBjk1Cdb5cBqWtKBBRt4TOCwYPhbs0whqGIbKBj1s67hYEl2Kt1s2BPeOxO70P4zOGAxMIMH5g28EjmSTULogakLSM1k0IBLuxH2JUSlXck2FlphzQUGikcKgqv5WJCkAnjo95ZYdoSLpdg"
         }
     },
     methods: {
@@ -108,7 +108,6 @@ export default {
         }
     },
 }
-
 </script>
 <style lang="">
 

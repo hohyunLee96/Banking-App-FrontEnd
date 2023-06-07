@@ -2,34 +2,33 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 p-2">
         <div class="card product-card h-100">
             <div class="card-body">
-                <h5 class="card-title">Transaction id: {{ transaction.transactionId }}</h5>
+                <h5 class="card-title">Transaction  {{ transaction.transactionId }}</h5>
                 <div class="float-start">
-                    <h4>{{ transaction.transactionId }}</h4>
-                    <p>Sender: {{ transaction.fromIban }}</p>
-                    <p>Receipient: {{ transaction.toIban }}</p>
-                    <p>
-                        <small>{{ transaction.amount }}</small>
-                    </p>
+                    <h4> &#8364; {{ transaction.amount }}</h4>
+                    <p><strong>Sender: </strong>{{ transaction.fromIban }}</p>
+                    <p><strong>Receipient: </strong> {{ transaction.toIban }}</p>
+                    <p><strong>Type: </strong>{{ transaction.type }}</p>
+                    <p><strong>Time: </strong>{{ getTime(transaction.timeStamp) }}</p>
 
                 </div>
-                <span class="price float-end">{{ account.absoluteLimit }}</span>
             </div>
-            <div class="card-footer">
-            </div>
+      
         </div>
     </div>
 </template>
   
   <script>
-import axios from '../../axios-auth'
-  
+
   export default {
     name: "TransactionListItem",
     props: {
       transaction: Object,
     },
     methods: {
-      
+        getTime(timestamp) {
+            const time = new Date(timestamp).toLocaleTimeString();
+            return time;
+        }
    
     },
   };

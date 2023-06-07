@@ -1,14 +1,14 @@
-<template>
+<!-- <template>
     <section>
       <div class="container">
         <form ref="form">
           <h2 class="mt-3 mt-lg-5">Create an account</h2>
           <h5 class="mb-4"></h5>
   
-          <!-- <div class="input-group mb-3">
+          <div class="input-group mb-3">
             <span class="input-group-text">Name</span>
             <input type="text" class="form-control" v-model="product.name" />
-          </div> -->
+          </div>
   
           <div class="input-group mb-3">
             <span class="input-group-text">Account Type</span>
@@ -90,4 +90,80 @@ import axios from 'axios';
   </script>
   
   <style>
+  </style> -->
+  <template>
+    <section>
+      <div class="admin-panel">
+        <AdminPanel />
+      </div>
+      <div class="container">
+        <h2 class="mt-3 mt-lg-5">Users</h2>
+        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createaccount');">
+          Add Users
+        </button>
+        <div class="row mt-3">
+          <CreateAccountUserItem
+            v-for="user in users"
+            :key="user.id"
+            :user="user"
+            @update="update"
+          />
+        </div>
+      </div>
+    </section>
+  </template>
+    
+    <script>
+    import axios from "axios";
+    import AdminPanel from "./../AdminPanel.vue";
+    import CreateAccountUserItem from "./CreateAccountUserItem.vue";
+    
+    export default {
+      name: "CreateAccount",
+      components: {
+        AdminPanel,
+        CreateAccountUserItem,
+      },
+      data() {
+        return {
+          users: [],
+        };
+      },
+      mounted() {
+        this.update();
+      },
+      methods: {
+        update() {
+          axios
+          //  .get("http://localhost:8080/users", { params: { hasAccount: false }})
+            .get("http://localhost:8080/users?hasAccount=false")
+            .then((result) => {
+              console.log(result);
+              this.users = result.data;
+            })
+            .catch((error) => console.log(error));
+        },
+      },
+    };
+    </script>
+    
+    <style>
+  .admin-panel {
+    width: 200px;
+    float: left;
+    /* Add any additional styling for the admin panel here */
+  }
+  
+  .container {
+    margin-left: 200px; /* Adjust the value to match the admin panel width */
+    /* Add any additional styling for the container here */
+  }
+  
+  /* Clear the float to prevent container collapsing */
+  .container::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
   </style>
+    
