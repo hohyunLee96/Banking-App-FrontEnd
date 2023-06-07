@@ -24,13 +24,13 @@
               <input type="number" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
                 @input="getAllTransactions" />
             </template>
-            <template v-else-if="param === 'performingUser'">
-              <select v-model="filterValues[param]" @change="getAllTransactionsWithUser">
-                <option value="" disabled>Select User</option>
-                <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstName }} {{ user.lastName }}
-                </option>
-              </select>
+            <template v-else-if="param === 'fromDate' || param === 'toDate'">
+              <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
             </template>
+            <template v-else-if="param === 'dateFrom' || param === 'dateTo'">
+              <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
+            </template>
+
           </div>
         </div>
       </div>
@@ -76,13 +76,15 @@ export default {
   data() {
     return {
       transactions: [],
-      filterParameters: ["fromIban", "toIban", "amount", "performingUser"],
+      filterParameters: ["fromIban", "toIban", "amount", "performingUser", "fromDate", "toDate"],
       filterValues: {
         fromIban: "",
         toIban: "",
         amount: "",
         performingUser: "",
         transactionId: "",
+        toDate: "",
+        fromDate: "",
         type: "",
       },
       amountFilterOptions: {
@@ -133,8 +135,12 @@ export default {
           return "To IBAN";
         case "amount":
           return "Amount";
-        case "performingUser":
-          return "Performing User";
+        case "fromDate":
+          return "From Date";
+        case "toDate":
+          return "To Date";
+
+
         default:
           return "";
       }
@@ -147,46 +153,48 @@ export default {
           return "Enter to IBAN";
         case "amount":
           return "Enter amount";
-        case "performingUser":
-          return "Select performing user";
+
         default:
           return "";
       }
     },
     getAllTransactions() {
-  const queryParams = {};
-  if (this.filterValues.fromIban) {
-    queryParams.fromIban = this.filterValues.fromIban;
-  }
-  if (this.filterValues.toIban) {
-    queryParams.toIban = this.filterValues.toIban;
-  }
-  if (this.filterValues.amount) {
-    switch (this.amountFilterOptions.amount) {
-      case "lessThanAmount":
-        queryParams.lessThanAmount = this.filterValues.amount;
-        break;
-      case "greaterThanAmount":
-        queryParams.greaterThanAmount = this.filterValues.amount;
-        break;
-      case "equalToAmount":
-        queryParams.equalToAmount = this.filterValues.amount;
-        break;
-    }
-  }
-  if (this.filterValues.performingUser) {
-    queryParams.performingUser = this.filterValues.performingUser;
-  }
+      const queryParams = {};
+      if (this.filterValues.fromIban) {
+        queryParams.fromIban = this.filterValues.fromIban;
+      }
+      if (this.filterValues.toIban) {
+        queryParams.toIban = this.filterValues.toIban;
+      }
+      if (this.filterValues.amount) {
+        switch (this.amountFilterOptions.amount) {
+          case "lessThanAmount":
+            queryParams.lessThanAmount = this.filterValues.amount;
+            break;
+          case "greaterThanAmount":
+            queryParams.greaterThanAmount = this.filterValues.amount;
+            break;
+          case "equalToAmount":
+            queryParams.equalToAmount = this.filterValues.amount;
+            break;
+        }
+      }
+      if(this.filterValues.fromDate) {
+        queryParams.fromDate = this.filterValues.fromDate;
+      }
+      if (this.filterValues.toDate) {
+        queryParams.toDate = this.filterValues.toDate;
+      }
 
-  axios
-    .get("/transactions", { params: queryParams })
-    .then((response) => {
-      this.transactions = response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-},
+      axios
+        .get("/transactions", { params: queryParams })
+        .then((response) => {
+          this.transactions = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
     getAllUsers() {
       axios
@@ -308,4 +316,5 @@ h2 {
 h3 {
   font-size: 18px;
   margin-bottom: 10px;
-}</style>
+}
+</style>
