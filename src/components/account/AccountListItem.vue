@@ -3,7 +3,7 @@
     <div class="card product-card h-100">
       <div class="card-body">
         <div class="float-start">
-          <p>{{ "user ID " + account.userId }}</p>
+          <p>{{ "user ID " + account.user }}</p>
           <!-- <p>{{ account.user.firstName + " " + account.user.lastName}}</p> -->
           <p>
             {{ account.IBAN }}
@@ -20,33 +20,38 @@
         <span class="price float-end">{{ account.absoluteLimit }}</span>
       </div>
       <div class="card-footer">
-        <!-- <button class="btn btn-warning" @click="editAccount(account.id)">Edit</button>&nbsp;&nbsp; -->
-        <button class="btn btn-danger" @click="deactivateAccount(account.accountId)">Deactivate</button>
+        <button class="btn btn-danger" @click="deactivateAccount(account.accountId)" v-if="isUserRoleEmployee">Deactivate</button>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
+import jwtDecode from "jwt-decode";
 
 export default {
   name: "AccountListItem",
   props: {
-    account: Object,
+    account: Object
+  },
+  computed: {
+    userRole() {
+      const token = localStorage.getItem('jwt'); // Retrieve the token from localStorage
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.auth; // Assuming the user role is stored as "auth" in the JWT payload
+      }
+      return null;
+    },
+    isUserRoleEmployee() {
+      return this.userRole === "ROLE_EMPLOYEE" || this.userRole === "EMPLOYEE";
+    }
   },
   methods: {
     deactivateAccount(id) {
-      const token = localStorage.getItem("jwt");
-
-            // Include the token in the request headers
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            };
-            axios
-        .put("http://localhost:8080/accounts/" + id, { isActive: false }, config)
+      axios
+        .put("accounts/" + id, { isActive: false })
         .then((result) => {
           console.log(result);
           this.account.isActive = false;
@@ -57,5 +62,3 @@ export default {
   }
 };
 </script>
-  
-<style></style>

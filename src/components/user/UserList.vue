@@ -18,10 +18,12 @@
             <select id="filter" v-model="filterOption" @change="applyFilter">
               <option value="all">All Users</option>
               <option value="withoutAccount">Without Account</option>
+              <option value="withoutSavingsAccount">Without Savings Account</option>
+              <option value="withoutCurrentAccount">Without Current Account</option>
             </select>
           </div>
         </div>
-        <button type="button" class="btn btn-primary mt-3" @click="$router.push('/createuser');" style="margin-left: 10px;">
+        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
           Add User
         </button>
         <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
@@ -62,23 +64,12 @@ export default {
   },
   mounted() {
     this.update();
-    
-    const hasAccountParam = this.$route.query.hasAccount;
-    if (hasAccountParam === "false") {
-      this.filterOption = "withoutAccount";
-    }
-
     const dateInput = this.$refs.dateInput;
     dateInput.addEventListener('input', this.handleDateInput);
   },
   computed: {
     filteredUsers() {
-      if (this.filterOption === "all") {
-        return this.users;
-      } 
-      else if (this.filterOption === "withoutAccount") {
-        return this.users.filter(user => !user.hasAccount);
-      }
+      return this.users;
     },
   },
   methods: {
@@ -113,10 +104,21 @@ export default {
     },
     applyFilter() {
       this.update();
+      const params = {
+        hasAccount: this.filterOption === "withoutAccount" ? false : undefined,
+        excludedAccountType:
+          this.filterOption === "withoutSavingsAccount" ? "SAVINGS" :
+            this.filterOption === "withoutCurrentAccount" ? "CURRENT" : undefined,
+      };
+      axios
+        .get("users", { params })
+        .then((result) => {
+          console.log(result);
+          this.users = result.data;
+        })
+        .catch((error) => console.log(error));
     },
   },
 };
 </script>
 
-<style>
-</style>
