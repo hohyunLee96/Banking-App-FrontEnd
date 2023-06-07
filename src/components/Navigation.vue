@@ -60,7 +60,7 @@ export default {
   methods: {
     logout() {
       this.store.logout().then(() => {
-        this.$router.push("/auth/login");
+        this.$router.push("/login");
       }).catch((error) => {
         console.log(error);
       });
