@@ -1,8 +1,11 @@
-<template>
-  <section>
-    <div class="container">
-      <h2 class="mt-3 mt-lg-5">THE BANKING API</h2>
-      <h3>{{ msg }}</h3>
+<template class="bg-light">
+  <section style="width: 100%; height: 100%">
+    <div style="width: 100%; height: 35vw; background-image: url('../../../home-page-background-image.jpg'); background-size: cover; background-position: 0px; background-repeat: no-repeat;">
+      <div id="title-section" style="margin-left: 3vw;">
+        <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Frank Bank</p>
+        <h5 style="color: white; ">Online banking anywhere, anytime.</h5>
+        <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;">Open Account</button>
+      </div>
     </div>
   </section>
 </template>

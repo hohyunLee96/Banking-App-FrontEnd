@@ -1,7 +1,7 @@
 <template>
   <section>
     <div style="width: 100%; display: flex;" id="admin-panel">
-      <div class="admin-panel" style="flex-grow: 0;">
+      <div class="admin-panel" style="flex-grow: 0; margin-top: 26px;">
         <AdminPanel />
       </div>
       <div style="flex-grow: 1;" id="users-view">
