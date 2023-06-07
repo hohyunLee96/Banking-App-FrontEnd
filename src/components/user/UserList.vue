@@ -169,7 +169,7 @@ export default {
       if (this.filterOption === "all") {
         this.$router.replace({ query: null });
       } else if (this.filterOption === "withoutAccount") {
-        this.$router.replace({ query: { excludedAccountType: "withoutAccount" } });
+        this.$router.replace({ query: { hasAccount: "false" } });
       } else if (this.filterOption === "withoutSavingsAccount") {
         this.$router.replace({ query: { excludedAccountType: "SAVINGS" } });
       } else if (this.filterOption === "withoutCurrentAccount") {
