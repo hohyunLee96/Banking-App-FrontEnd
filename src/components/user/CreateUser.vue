@@ -108,7 +108,7 @@ export default {
   methods: {
     addUser() {
       axios
-        .post("users", this.user)
+        .put("users", this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
