@@ -4,8 +4,6 @@ import Home from '../components/Home.vue';
 import ProductList from '../components/products/ProductList.vue';
 import AccountList from '../components/account/AccountList.vue';
 import CreateAccount from '../components/account/CreateAccount.vue';
-import UserAccountList from '../components/account/UserAccountList.vue';
-
 
 //USER IMPORTS/////////////////////////////////////////////////////////
 import UserList from '../components/user/UserList.vue';
@@ -32,7 +30,6 @@ const router = createRouter({
       name: 'CreateAccount',
       component: CreateAccount
     }, 
-    { path: '/useraccounts', component: UserAccountList },   
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: CreateUser },
@@ -46,7 +43,8 @@ const router = createRouter({
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},
     {path: '/transactions', component: TransactionList},
-    {path: '/createtransaction', component: CreateTransaction}
+    {path: '/createtransaction', component: CreateTransaction},
+    {path: '/myaccount', component: AccountList}
    
   ]
 });
