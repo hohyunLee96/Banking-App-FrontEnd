@@ -22,6 +22,11 @@
             <i class="fas fa-user"></i> My Account
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/atm" class="nav-link" active-class="active">
+          <i class="fas fa-money-bill"></i>ATM
+        </router-link>
+      </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item" v-if="!store.isAuthenticated">

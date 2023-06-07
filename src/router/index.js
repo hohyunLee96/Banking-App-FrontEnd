@@ -51,7 +51,9 @@ const router = createRouter({
     {path: '/myaccount', component: AccountList}
    
   ]
+  
 });
+
 
 export default router;
 
