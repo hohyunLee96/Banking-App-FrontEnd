@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
 
 export default {
@@ -115,7 +115,7 @@ export default {
   methods: {
     updateUser() {
       axios
-        .put("http://localhost:8080/users/" + this.id, this.user)
+        .put("users/" + this.id, this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
@@ -126,7 +126,7 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:8080/users/" + this.id)
+      .get("users/" + this.id)
       .then((result) => {
         console.log(result);
         this.user = result.data;

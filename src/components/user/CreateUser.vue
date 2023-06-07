@@ -72,7 +72,7 @@
           <button
             type="button"
             class="btn btn-danger"
-            @click="this.$router.push('/users')">
+            @click="this.$router.push('/')">
               Cancel
           </button>
         </div>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
 
 export default {
   name: "CreateUser",
@@ -108,11 +108,11 @@ export default {
   methods: {
     addUser() {
       axios
-        .post("http://localhost:8080/users", this.user)
+        .put("users", this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
-          this.$router.push("/users");
+          this.$router.push("/");
         })
         .catch((error) => console.log(error));
     },

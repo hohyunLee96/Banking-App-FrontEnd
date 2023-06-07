@@ -5,38 +5,41 @@
     </div>
 
     <div class="container">
-      <h3>Filter</h3>
+      <h3 class="filter-heading">Filter</h3>
       <div class="filter-bar mt-3">
         <div class="filter-group" v-for="param in filterParameters" :key="param">
-          <label :for="param">{{ getParamLabel(param) }}</label>
+          <label :for="param" class="filter-label">{{ getParamLabel(param) }}</label>
           <template v-if="param === 'fromIban' || param === 'toIban'">
             <input type="text" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-              @input="applyFilter" />
+              @input="applyFilter" class="filter-input" />
           </template>
           <template v-else-if="param === 'amount'">
-            <select class="m-2" v-model="amountFilterOptions[param]" @change="updateAmountFilter">
+            <select class="filter-select" v-model="amountFilterOptions[param]" @change="updateAmountFilter">
               <option value="lessThanAmount">Less Than</option>
               <option value="greaterThanAmount">Greater Than</option>
               <option value="equalToAmount">Equal To</option>
             </select>
             <input type="number" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-              @input="applyFilter" />
+              @input="applyFilter" class="filter-input" />
           </template>
           <template v-else-if="param === 'performingUser'">
-            <select v-model="filterValues[param]" @change="applyFilter">
+            <select v-model="filterValues[param]" @change="applyFilter" class="filter-select">
               <option value="" disabled>Select User</option>
-              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstName }} {{ user.lastName }}
-              </option>
+              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstName }} {{ user.lastName }}</option>
             </select>
+          </template>
+          <template v-else-if="param === 'hasDateEqualTo' || param === 'hasDateLessThan' || param === 'hasDateGreaterThan'">
+            <input type="datetime-local" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
+              @input="applyFilter" class="filter-input" />
           </template>
         </div>
       </div>
-      <h2 class="mt-3 mt-lg-5">Transactions</h2>
-      <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createTransaction');">
+      <h2 class="transaction-heading">Transactions</h2>
+      <button type="button" class="btn btn-primary create-transaction-btn" @click="this.$router.push('/createTransaction');">
         Create Transaction
       </button>
-      <div class="mt-5" v-for="date in orderedTransactionDates" :key="date">
-        <h3>{{ formatDate(date) }}</h3>
+      <div class="transaction-group" v-for="date in orderedTransactionDates" :key="date">
+        <h3 class="transaction-date">{{ formatDate(date) }}</h3>
         <div class="row mt-3">
           <TransactionListItem v-for="transaction in filteredTransactions[date]" :key="transaction.transactionId"
             :transaction="transaction" />
@@ -49,6 +52,7 @@
 <script>
 import axios from "../../axios-auth";
 import TransactionListItem from "./TransactionListItem.vue";
+import { useUserSessionStore } from '@/stores/usersession';
 
 export default {
   name: "TransactionList",
@@ -59,19 +63,20 @@ export default {
     return {
       transactions: [],
       filterParameter: "all",
-      filterParameters: ["fromIban", "toIban", "amount", "performingUser"],
+      filterParameters: ["fromIban", "toIban", "amount", "performingUser", "hasDateEqualTo", "hasDateLessThan", "hasDateGreaterThan"],
       filterValues: {
         fromIban: "",
         toIban: "",
         amount: "",
         performingUser: "",
+        hasDateEqualTo: "",
+        hasDateLessThan: "",
+        hasDateGreaterThan: "",
         transactionId: "",
         type: "",
       },
       amountFilterOptions: {
         amount: "lessThanAmount",
-        amount: "greaterThanAmount",
-        amount: "equalToAmount",
       },
       users: [], // Holds the list of users
     };
@@ -113,12 +118,12 @@ export default {
                 return this.applyAmountFilter(transaction.amount, this.filterValues[param]);
               case "performingUser":
                 return transaction.performingUserId === this.filterValues[param];
-              case "lessThanAmount":
-                return transaction.amount < this.filterValues[param];
-              case "greaterThanAmount":
-                return transaction.amount > this.filterValues[param];
-              case "equalToAmount":
-                return transaction.amount === this.filterValues[param];
+              case "hasDateEqualTo":
+                return this.hasDateEqualTo(transaction.timeStamp, this.filterValues[param]);
+              case "hasDateLessThan":
+                return this.hasDateLessThan(transaction.timeStamp, this.filterValues[param]);
+              case "hasDateGreaterThan":
+                return this.hasDateGreaterThan(transaction.timeStamp, this.filterValues[param]);
               default:
                 return true;
             }
@@ -130,26 +135,26 @@ export default {
   },
   methods: {
     getAllTransactions() {
-  const params = {};
-  Object.keys(this.filterValues).forEach((param) => {
-    if (this.filterValues[param] !== "") {
-      params[param] = this.filterValues[param];
-    }
-  });
+      const params = {};
+      Object.keys(this.filterValues).forEach((param) => {
+        if (this.filterValues[param] !== "") {
+          params[param] = this.filterValues[param];
+        }
+      });
 
-  if (this.filterParameter !== "all") {
-    params[this.filterParameter] = params.amount;
-    delete params.amount;
-  }
+      if (this.filterParameter !== "all") {
+        params[this.filterParameter] = params.amount;
+        delete params.amount;
+      }
 
-  axios
-    .get("transactions", { params })
-    .then((result) => {
-      console.log(result);
-      this.transactions = result.data;
-    })
-    .catch((error) => console.log(error));
-},
+      axios
+        .get("transactions", { params })
+        .then((result) => {
+          console.log(result);
+          this.transactions = result.data;
+        })
+        .catch((error) => console.log(error));
+    },
 
     getAllUsers() {
       axios
@@ -180,6 +185,21 @@ export default {
           return true;
       }
     },
+    hasDateEqualTo(transactionDate, filterValue) {
+      const filterDate = new Date(filterValue);
+      const transactionDateObj = new Date(transactionDate);
+      return transactionDateObj.getTime() === filterDate.getTime();
+    },
+    hasDateLessThan(transactionDate, filterValue) {
+      const filterDate = new Date(filterValue);
+      const transactionDateObj = new Date(transactionDate);
+      return transactionDateObj.getTime() < filterDate.getTime();
+    },
+    hasDateGreaterThan(transactionDate, filterValue) {
+      const filterDate = new Date(filterValue);
+      const transactionDateObj = new Date(transactionDate);
+      return transactionDateObj.getTime() > filterDate.getTime();
+    },
     updateAmountFilter() {
       const selectedOption = this.amountFilterOptions.amount;
       switch (selectedOption) {
@@ -205,6 +225,10 @@ export default {
           return "Enter IBAN";
         case "amount":
           return "Enter amount";
+        case "hasDateEqualTo":
+        case "hasDateLessThan":
+        case "hasDateGreaterThan":
+          return "Select date";
         default:
           return "";
       }
@@ -219,6 +243,12 @@ export default {
           return "Amount:";
         case "performingUser":
           return "Performing User:";
+        case "hasDateEqualTo":
+          return "Date Equal To:";
+        case "hasDateLessThan":
+          return "Date Less Than:";
+        case "hasDateGreaterThan":
+          return "Date Greater Than:";
         default:
           return "";
       }
@@ -228,38 +258,51 @@ export default {
 </script>
 
 <style>
-.admin-panel {
-  width: 200px;
-  float: left;
-}
+/* Existing styles */
 
-.container {
-  margin-left: 200px;
-}
-
-.container::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
+/* Styling for filter bar */
 .filter-bar {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
 }
 
 .filter-group {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-bottom: 10px;
 }
 
-.filter-group label {
-  margin-right: 5px;
+.filter-input,
+.filter-select {
+  margin-right: 10px;
 }
 
-.filter-group input,
-.filter-group select {
-  margin-right: 5px;
+/* Styling for date filter input */
+.filter-input[type="datetime-local"] {
+  max-width: 200px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Styling for create transaction button */
+.create-transaction-btn {
+  margin-top: 20px;
+}
+
+/* Styling for transaction groups */
+.transaction-group {
+  margin-top: 30px;
+}
+
+.transaction-date {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.row {
+  margin-left: -5px;
+  margin-right: -5px;
 }
 </style>

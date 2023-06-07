@@ -1,24 +1,39 @@
 <template>
   <section>
-    <div class="admin-panel">
-      <AdminPanel />
-    </div>
-    <div class="container">
-      <h2 class="mt-3 mt-lg-5">Users</h2>
-      <div class="filter-bar mt-3">
-        <label for="filter">Filter:</label>
-        <select id="filter" v-model="filterOption" @change="applyFilter">
-          <option value="all">All Users</option>
-          <option value="withoutAccount">Without Account</option>
-          <option value="withoutSavingsAccount">Without Savings Account</option>
-          <option value="withoutCurrentAccount">Without Current Account</option>
-        </select>
+    <div style="width: 100%; display: flex;" id="admin-panel">
+      <div class="admin-panel" style="flex-grow: 0;">
+        <AdminPanel />
       </div>
-      <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
-        Add User
-      </button>
-      <div class="row mt-3">
-        <user-list-item v-for="user in filteredUsers" :key="user.id" :user="user" @update="update" />
+      <div style="flex-grow: 1;" id="users-view">
+        <h2 class="">Users</h2>
+        <div style="display: flex; flex-direction: row; background-color: lightgrey; width: 100%;" id="filter-menu">
+          <div class="input-group mb-3" style="width: 100%; margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+            <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" v-model="filterValues.keyword" @input="applyFilter">
+          </div>
+          <div class="input-group mb-3" style="width: 100%; margin-top: 20px;">
+            <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2" v-model="filterValues.birthDate" @input="applyFilter" ref="dateInput">
+          </div>
+          <div class="filter-bar mt-3" style="margin-right: 20px;">
+            <label for="filter">Filter: &nbsp;</label>
+            <select id="filter" v-model="filterOption" @change="applyFilter">
+              <option value="all">All Users</option>
+              <option value="withoutAccount">Without Account</option>
+              <option value="withoutSavingsAccount">Without Savings Account</option>
+              <option value="withoutCurrentAccount">Without Current Account</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
+          Add User
+        </button>
+        <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
+          <user-list-item
+            v-for="user in filteredUsers"
+            :key="user.id"
+            :user="user"
+            @update="update"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -39,11 +54,18 @@ export default {
     return {
       users: [],
       filterOption: "all",
-      baseUrl: "/users",
+      filterParameters: ["keyword", "birthDate", "hasAccount"],
+      filterValues: {
+        keyword: "",
+        birthDate: "",
+        hasAccount: "",
+      },
     };
   },
   mounted() {
     this.update();
+    const dateInput = this.$refs.dateInput;
+    dateInput.addEventListener('input', this.handleDateInput);
   },
   computed: {
     filteredUsers() {
@@ -51,16 +73,37 @@ export default {
     },
   },
   methods: {
+    formatDate(dateString) {
+      const format = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
     update() {
+      const params = {};
+      Object.keys(this.filterValues).forEach((param) => {
+        if (this.filterValues[param] !== "") {
+          if (param === "birthDate") {
+            const date = new Date(this.filterValues[param]);
+            const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            params[param] = formattedDate;
+          } else {
+            params[param] = this.filterValues[param];
+          }
+        }
+      });
       axios
-        .get("users")
+        .get("users", {params})
         .then((result) => {
           console.log(result);
           this.users = result.data;
         })
         .catch((error) => console.log(error));
     },
+    handleDateInput() {
+      this.filterValues.birthDate = this.$refs.dateInput.value;
+      this.applyFilter();
+    },
     applyFilter() {
+      this.update();
       const params = {
         hasAccount: this.filterOption === "withoutAccount" ? false : undefined,
         excludedAccountType:

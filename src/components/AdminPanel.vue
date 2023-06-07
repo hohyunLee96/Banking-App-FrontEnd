@@ -41,8 +41,8 @@ export default {
           isExpanded: false,
           isActive: false,
           submenus: [
-            { title: 'View Users', link: '/users' },
-            { title: 'Submenu 2.2', link: '/submenu4' }
+            { title: 'View users', link: '/users' },
+            { title: 'Add user', link: '/register' }
           ]
         },
         {

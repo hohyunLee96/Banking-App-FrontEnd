@@ -33,12 +33,14 @@ const router = createRouter({
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: CreateUser },
+    { path: '/users', component: UserList },
+    //{ path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
 
     { path: '/:notFound(.*)', component: Home},
     { path: '/products', component: ProductList },
     { path: '/accounts', component: AccountList },
-    { path: '/auth/login', component: Login },
+    { path: '/login', component: Login },
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},
