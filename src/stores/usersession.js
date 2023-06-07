@@ -22,6 +22,9 @@ export const useUserSessionStore = defineStore("userSession", {
     },
     getUserId(state) {
       return state.id;
+    },
+    IsEmployee(state){
+      return state.userRole == "ROLE_EMPLOYEE"
     }
   },
   actions: {

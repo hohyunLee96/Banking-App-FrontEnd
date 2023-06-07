@@ -49,6 +49,7 @@
 <script>
 import axios from "../../axios-auth";
 import TransactionListItem from "./TransactionListItem.vue";
+import { useUserSessionStore } from '@/stores/usersession';
 
 export default {
   name: "TransactionList",
