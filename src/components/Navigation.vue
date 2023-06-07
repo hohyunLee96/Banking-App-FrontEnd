@@ -26,8 +26,13 @@
           <router-link to="/auth/login" class="nav-link" active-class="active">Login</router-link>
         </li>
       </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link to="" @click="logout()" v-if="this.store.isAuthenticated" class="nav-link">Logout</router-link>
+        </li>
+      </ul>
     </div>
-    <button class="btn btn-dark btn-lg px-5" @click="logout()" type="button">Logout</button>
+    
   </nav>
 </template>
 

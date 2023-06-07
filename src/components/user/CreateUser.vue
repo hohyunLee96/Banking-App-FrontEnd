@@ -60,11 +60,6 @@
           <input type="text" class="form-control" v-model="user.userType" />
         </div>
 
-        <div class="input-group mb-3">
-          <span class="input-group-text">Has Account</span>
-          <input type="checkbox" class="form-check-input" v-model="user.hasAccount" />
-        </div>
-
         <div class="input-group mt-4">
           <button type="button" class="btn btn-primary" @click="addUser()">
             Save changes
