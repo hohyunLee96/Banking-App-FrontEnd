@@ -33,6 +33,8 @@ const router = createRouter({
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: CreateUser },
+    { path: '/users', component: UserList },
+    //{ path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
 
     { path: '/:notFound(.*)', component: Home},
