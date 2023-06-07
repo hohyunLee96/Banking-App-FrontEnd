@@ -3,15 +3,16 @@
         <h1>ATM Interface</h1>
         <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
         <div class="card">
-            <h4 v-for="account in accounts"> {{ account.accountType }} account balance: € {{account.balance }}</h4>
-             
+            <h4 v-for="account in accounts"> {{ account.accountType }} account balance: € {{ account.balance }}</h4>
 
-            </div>
+
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <label for="accountSelect">Select Account:</label>
                 <select id="accountSelect" class="form-select" v-model="selectedAccount">
-                 <option v-for=" account in accounts" value="{{ account.IBAN }}"> ({{ account.accountType }}) {{ account.IBAN }}</option>
+                    <option v-for=" account in accounts" value="{{ account.IBAN }}"> ({{ account.accountType }}) {{
+                        account.IBAN }}</option>
                 </select>
             </div>
         </div>
@@ -28,8 +29,8 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-6">
-                <button class="btn btn-primary m-4" @click="sendTransaction">Deposit</button>
-                <button class="btn btn-primary m-4" @click="sendTransaction">Withdraw</button>
+                <button class="btn btn-primary m-4" @click="sendTransaction('deposit')">Deposit</button>
+                <button class="btn btn-primary m-4" @click="sendTransaction('withdraw')">Withdraw</button>
             </div>
         </div>
     </div>
@@ -71,19 +72,26 @@ export default {
                 });
         },
         deposit() {
-            // Logic for deposit functionality
+            const requestBody = {
+                toIban: this.selectedAccount,
+                amount: this.amount,
+            };
+
+            this.sendTransaction("/transactions/deposit", requestBody);
         },
+
         withdraw() {
-            // Logic for withdrawal functionality
+            const requestBody = {
+                fromIban: this.selectedAccount,
+                amount: this.amount,
+            };
+
+            this.sendTransaction("/transactions/withdraw", requestBody);
         },
-        sendTransaction(type) {
+
+        sendTransaction(url, requestBody) {
             axios
-                .post("http://localhost:8080/transactions", {
-                    fromIban: this.fromIban,
-                    toIban: this.toIban,
-                    type: type,
-                    amount: this.amount,
-                })
+                .post(url, requestBody)
                 .then((response) => {
                     alert("Transaction sent!");
                     console.log(response);
@@ -91,15 +99,14 @@ export default {
                 })
                 .catch((error) => {
                     if (error) {
-                        this.errorMessage = error.response.data.message;
+                        this.errorMessage = error.response;
                     }
                     setTimeout(() => {
                         this.errorMessage = "";
                     }, 8000);
                     console.log(error);
                 });
-
-        }
+        },
     },
 };
 </script>
