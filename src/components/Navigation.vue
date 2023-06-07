@@ -22,12 +22,22 @@
             <i class="fas fa-user"></i> My Account
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/atm" class="nav-link" active-class="active">
+          <i class="fas fa-money-bill"></i>ATM
+        </router-link>
+      </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item" v-if="!store.isAuthenticated">
           <router-link to="/login" class="nav-link" active-class="active">
             <i class="fas fa-sign-in-alt"></i> Login
           </router-link>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link to="" @click="logout()" v-if="this.store.isAuthenticated" class="nav-link">Logout</router-link>
         </li>
       </ul>
     </div>
