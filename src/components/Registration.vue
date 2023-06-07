@@ -1,97 +1,65 @@
 <template>
-  <section class="vh-100 gradient-custom">
-    <div class="alert alert-danger" v-if="this.errorMessage">{{ errorMessage }}</div>
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card-body p-5 text-center">
-
-            <div class="mb-md-5 mt-md-4 pb-5">
-
-              <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-              <br>
-              <div class="form-outline form-white mb-4">
-                <input id="inputemail" v-model="email" type="text" class="form-control" />
-                <label class="form-label" for="email">Email</label>
-              </div>
-
-
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="password" v-model="password" class="form-control" id="inputPassword" />
-                  <div class="input-group-append">
-                    <button type="button" class="btn btn-secondary ml-2" @click="togglePassword()"
-                            id="passwordToggleButton">
-                      Show password
-                    </button>
-                  </div>
-                </div>
-                <label for="password" class="form-control-label">Password</label>
-              </div>
-
-              <button class="btn btn-dark btn-lg px-5" name="loginButton" id="loginButton" @click="login"
-                      type="submit">Login</button>
-            </div>
-            <div>
-              <p class="mb-0">Don't have an account?
-                <a @click="register()" class="text-white-50 fw-bold">Sign Up</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+  <form @submit="submitForm">
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" v-model="email" required>
     </div>
-  </section>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" v-model="password" required>
+    </div>
+    <button type="submit">Register</button>
+  </form>
 </template>
 
 <script>
-
-
-import { useUserSessionStore } from '@/stores/usersession';
 export default {
-  name: "Login",
-  setup() {
-    return {
-      store: useUserSessionStore()
-    }
-  },
   data() {
     return {
-      email: "",
-      password: "",
-      errorMessage: ""
+      email: '',
+      password: ''
     };
   },
   methods: {
-    login() {
-      console.log("logging in!")
-      this.store.login(this.email, this.password).then(() => {
-        if (this.store.isAuthenticated) {
-          this.$router.push('/adminpanel');
-        } else {
-          this.errorMessage = "Login failed";
-        }
-        console.log(this.store.isAuthenticated)
-        console.log(this.store.isEmployee)
-      }).catch((error) => {
-        this.errorMessage = error;
-      });
-    },
-    // register() {
-    //   this.$router.push('/register');
-    // },
-    togglePassword() {
-      var x = document.getElementById("inputPassword");
-      if (x.type === "password") {
-        x.type = "text";
-      } else {
-        x.type = "password";
+    submitForm(event) {
+      event.preventDefault();
+      // Perform registration logic here
+      // You can access email and password values using this.email and this.password respectively
+
+      // Example registration logic:
+      if (this.validateForm()) {
+        // Simulate registration API call
+        this.registerUser()
+            .then(() => {
+              alert('Registration successful!');
+              // Reset form fields
+              this.email = '';
+              this.password = '';
+            })
+            .catch((error) => {
+              alert('Registration failed: ' + error.message);
+            });
       }
+    },
+    validateForm() {
+      // Perform any necessary form validation here
+      if (!this.email || !this.password) {
+        alert('Please fill in all fields');
+        return false;
+      }
+      return true;
+    },
+    registerUser() {
+      // Simulate an asynchronous registration API call (replace with your own logic)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate successful registration
+          resolve();
+          // Simulate registration failure
+          // reject(new Error('Registration failed. Please try again.'));
+        }, 1500);
+      });
     }
-  },
+  }
 };
 </script>
-
-<style>
-
-</style>

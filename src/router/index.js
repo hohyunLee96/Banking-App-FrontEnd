@@ -9,6 +9,7 @@ import Login from '../components/Login.vue';
 import AdminPanel from '../components/AdminPanel.vue';
 import CreateTransaction from '../components/transactions/CreateTransaction.vue';
 import TransactionList from '../components/transactions/TransactionList.vue';
+import Registration from "@/components/Registration.vue";
 
 
 const router = createRouter({
@@ -22,6 +23,7 @@ const router = createRouter({
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},
+    { path: '/register', component: Registration},
     {path: '/transactions', component: TransactionList},
     {path: '/createtransaction', component: CreateTransaction}
    

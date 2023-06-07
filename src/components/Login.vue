@@ -34,7 +34,7 @@
               </div>
               <div>
                 <p class="mb-0">Don't have an account?
-                  <a @click="register()" class="text-white-50 fw-bold">Sign Up</a>
+                  <a @click="register" class="text-white-50 fw-bold">Sign Up</a>
                 </p>
               </div>
             </div>
@@ -75,9 +75,9 @@ export default {
         this.errorMessage = error;
       });
     },
-    // register() {
-    //   this.$router.push('/register');
-    // },
+    register() {
+      this.$router.push('/register');
+    },
     togglePassword() {
       var x = document.getElementById("inputPassword");
       if (x.type === "password") {
