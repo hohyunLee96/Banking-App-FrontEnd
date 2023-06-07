@@ -1,40 +1,44 @@
 <template>
   <section>
-    <div class="admin-panel">
-      <AdminPanel />
-    </div>
-    <div class="container">
-      <h2 class="mt-3 mt-lg-5">Users</h2>
-      <div class="input-group mb-3" style="width: 80%; margin-top: 20px;">
-        <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" @input="applyFilter">
+    <div style="width: 100%; display: flex;" id="admin-panel">
+      <div class="admin-panel" style="flex-grow: 0;">
+        <AdminPanel />
       </div>
-      <div class="input-group mb-3" style="width: 80%; margin-top: 20px;">
-        <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2" @input="applyFilter" ref="dateInput">
-      </div>
-      <div class="filter-bar mt-3">
-        <label for="filter">Filter: &nbsp;</label>
-        <select id="filter" v-model="filterOption" @change="applyFilter">
-          <option value="all">All Users</option>
-          <option value="withoutAccount">Without Account</option>
-        </select>
-      </div>
-      <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
-        Add User
-      </button>
-      <div class="row mt-3">
-        <user-list-item
-          v-for="user in filteredUsers"
-          :key="user.id"
-          :user="user"
-          @update="update"
-        />
+      <div style="flex-grow: 1;" id="users-view">
+        <h2 class="">Users</h2>
+        <div style="display: flex; flex-direction: row; background-color: lightgrey; width: 100%;" id="filter-menu">
+          <div class="input-group mb-3" style="width: 100%; margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+            <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" v-model="filterValues.keyword" @input="applyFilter">
+          </div>
+          <div class="input-group mb-3" style="width: 100%; margin-top: 20px;">
+            <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2" v-model="filterValues.birthDate" @input="applyFilter" ref="dateInput">
+          </div>
+          <div class="filter-bar mt-3" style="margin-right: 20px;">
+            <label for="filter">Filter: &nbsp;</label>
+            <select id="filter" v-model="filterOption" @change="applyFilter">
+              <option value="all">All Users</option>
+              <option value="withoutAccount">Without Account</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary mt-3" @click="$router.push('/createuser');" style="margin-left: 10px;">
+          Add User
+        </button>
+        <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
+          <user-list-item
+            v-for="user in filteredUsers"
+            :key="user.id"
+            :user="user"
+            @update="update"
+          />
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
 import UserListItem from "./UserListItem.vue";
 
@@ -48,8 +52,12 @@ export default {
     return {
       users: [],
       filterOption: "all",
-      searchKeyword: "",
-      birthDate: "",
+      filterParameters: ["keyword", "birthDate", "hasAccount"],
+      filterValues: {
+        keyword: "",
+        birthDate: "",
+        hasAccount: "",
+      },
     };
   },
   mounted() {
@@ -74,43 +82,40 @@ export default {
     },
   },
   methods: {
-
-    handleDateInput(event) {
-    if (!event.target.value) {
-      if (this.filterOption === "all") {
-        this.$router.replace({ query: { keyword: this.searchKeyword} });
-      }
-      else if (this.filterOption === "withoutAccount") {
-        this.$router.replace({ query: { keyword: this.searchKeyword, hasAccount: false } });
-      }
-      this.update();
-    }},
-
+    formatDate(dateString) {
+      const format = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
     update() {
+      const params = {};
+      Object.keys(this.filterValues).forEach((param) => {
+        if (this.filterValues[param] !== "") {
+          if (param === "birthDate") {
+            const date = new Date(this.filterValues[param]);
+            const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            params[param] = formattedDate;
+          } else {
+            params[param] = this.filterValues[param];
+          }
+        }
+      });
       axios
-        .get("http://localhost:8080/users")
+        .get("users", {params})
         .then((result) => {
           console.log(result);
           this.users = result.data;
         })
         .catch((error) => console.log(error));
     },
-
+    handleDateInput() {
+      this.filterValues.birthDate = this.$refs.dateInput.value;
+      this.applyFilter();
+    },
     applyFilter() {
-      this.searchKeyword = document.getElementById('search').value;
-      this.birthDate = document.getElementById('date-search').value;
-
-      if (this.filterOption === "all") {
-        this.$router.replace({ query: { keyword: this.searchKeyword, birthDate: this.birthDate } });
-      }
-      else if (this.filterOption === "withoutAccount") {
-        this.$router.replace({ query: { keyword: this.searchKeyword, birthDate: this.birthDate, hasAccount: false } });
-      }
       this.update();
     },
   },
 };
-
 </script>
 
 <style>
