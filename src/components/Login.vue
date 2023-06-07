@@ -72,7 +72,7 @@ export default {
           this.errorMessage = "Login failed";
         }
       }).catch((error) => {
-        this.errorMessage = error;
+        this.errorMessage = error.data.message;
       });
     },
     // register() {
