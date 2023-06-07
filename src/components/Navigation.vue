@@ -5,9 +5,6 @@
         <li class="nav-item" v-if="this.store.isAuthenticated">
           <router-link to="/" class="nav-link" active-class="active">Home</router-link>
         </li>
-        <li class="nav-item" v-if="this.store.isAuthenticated">
-          <router-link to="/products" class="nav-link" active-class="active">Products</router-link>
-        </li>
         <li class="nav-item">
           <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
         </li>
