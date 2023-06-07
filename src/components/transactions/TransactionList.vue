@@ -8,11 +8,17 @@
       <h2>Filter</h2>
       <div class="filter-bar mt-3">
         <div class="filter-group" v-for="param in filterParameters" :key="param">
-          <label :for="param">{{ getParamLabel(param) }}</label>
+          <label :for="param">
+            <i class="fas" :class="getParamIcon(param)"></i> {{ getParamLabel(param) }}
+          </label>
           <div class="filter-input">
             <template v-if="param === 'fromIban' || param === 'toIban'">
-              <input type="text" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-                @input="getAllTransactions" />
+              <input
+                type="text"
+                v-model="filterValues[param]"
+                :placeholder="getParamPlaceholder(param)"
+                @input="getAllTransactions"
+              />
             </template>
             <template v-else-if="param === 'amount'">
               <select class="m-2" v-model="amountFilterOptions.amount" @change="getAllTransactions">
@@ -21,8 +27,12 @@
                 <option value="greaterThanAmount">Greater than</option>
                 <option value="equalToAmount">Equal to</option>
               </select>
-              <input type="number" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-                @input="getAllTransactions" />
+              <input
+                type="number"
+                v-model="filterValues[param]"
+                :placeholder="getParamPlaceholder(param)"
+                @input="getAllTransactions"
+              />
             </template>
             <template v-else-if="param === 'fromDate' || param === 'toDate'">
               <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
@@ -30,13 +40,12 @@
             <template v-else-if="param === 'dateFrom' || param === 'dateTo'">
               <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
             </template>
-
           </div>
         </div>
       </div>
       <h2 class="mt-3 mt-lg-5">Transactions</h2>
       <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createTransaction');">
-        Create Transaction
+        <i class="fas fa-plus"></i> Create Transaction
       </button>
       <div class="mt-5">
         <table class="transaction-table">
@@ -139,8 +148,6 @@ export default {
           return "From Date";
         case "toDate":
           return "To Date";
-
-
         default:
           return "";
       }
@@ -153,7 +160,22 @@ export default {
           return "Enter to IBAN";
         case "amount":
           return "Enter amount";
-
+        default:
+          return "";
+      }
+    },
+    getParamIcon(param) {
+      switch (param) {
+        case "fromIban":
+          return "fa-university";
+        case "toIban":
+          return "fa-university";
+        case "amount":
+          return "fa-money-bill";
+        case "fromDate":
+          return "fa-calendar-alt";
+        case "toDate":
+          return "fa-calendar-alt";
         default:
           return "";
       }
@@ -179,7 +201,7 @@ export default {
             break;
         }
       }
-      if(this.filterValues.fromDate) {
+      if (this.filterValues.fromDate) {
         queryParams.fromDate = this.filterValues.fromDate;
       }
       if (this.filterValues.toDate) {
@@ -206,13 +228,11 @@ export default {
           console.log(error);
         });
     },
-
   },
   created() {
     this.getAllTransactions();
     this.getAllUsers();
   },
-
 };
 </script>
 
@@ -316,5 +336,30 @@ h2 {
 h3 {
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+/* Font Awesome icons */
+.fa {
+  font-family: "Font Awesome 5 Free";
+}
+
+.icon-fromIban:before {
+  content: "\f19c";
+}
+
+.icon-toIban:before {
+  content: "\f19c";
+}
+
+.icon-amount:before {
+  content: "\f0d6";
+}
+
+.icon-fromDate:before {
+  content: "\f073";
+}
+
+.icon-toDate:before {
+  content: "\f073";
 }
 </style>
