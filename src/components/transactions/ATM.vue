@@ -28,8 +28,8 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-6">
-                <button class="btn btn-primary m-4" @click="deposit">Deposit</button>
-                <button class="btn btn-primary m-4" @click="withdraw">Withdraw</button>
+                <button class="btn btn-primary m-4" @click="sendTransaction">Deposit</button>
+                <button class="btn btn-primary m-4" @click="sendTransaction">Withdraw</button>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@ export default {
             //tra
             fromIban: "",
             toIban: "",
-            type: 0,
+            type: 1,
             amount: "",
             performingUser: useUserSessionStore().getUserId,
         };
