@@ -22,7 +22,7 @@
             <i class="fas fa-user"></i> My Account
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="!store.isEmployee">
           <router-link to="/atm" class="nav-link" active-class="active">
           <i class="fas fa-money-bill"></i>ATM
         </router-link>
