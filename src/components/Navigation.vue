@@ -1,20 +1,18 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="this.store.isAuthenticated">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item" v-if="this.store.isAuthenticated">
           <router-link to="/" class="nav-link" active-class="active">Home</router-link>
         </li>
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
-        </li>
+
         <li class="nav-item" v-if="this.store.isAuthenticated">
           <router-link to="/adminPanel" class="nav-link" active-class="active">Admin Panel</router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="this.store.isAuthenticated" >
           <router-link to="/transactions" class="nav-link" active-class="active">Transactions</router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item"  v-if="this.store.isAuthenticated">
           <router-link to="/myaccount" class="nav-link" active-class="active">My accounts</router-link>
         </li>
       </ul>
@@ -24,7 +22,8 @@
         </li>
       </ul>
     </div>
-    <button class="btn btn-dark btn-lg px-5" @click="logout()" type="button">Logout</button>
+    <button v-if="this.store.isAuthenticated" class="btn btn-dark btn-lg px-5" @click="logout()"
+      type="button">Logout</button>
   </nav>
 </template>
 

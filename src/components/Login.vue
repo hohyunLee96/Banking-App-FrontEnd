@@ -18,13 +18,13 @@
 
                 <div class="form-group">
                   <div class="input-group">
-                    <input type="password" v-model="password" class="form-control" id="inputPassword" />
+                    <input type="password" v-model="password" class="m-1 form-control" id="inputPassword" />
                     <div class="input-group-append">
-                      <button type="button" class="btn btn-secondary ml-2" @click="togglePassword()"
-                        id="passwordToggleButton">
-                        Show password
-                      </button>
                     </div>
+                    <button type="button" class="btn btn-secondary ml-3" @click="togglePassword()"
+                        id="passwordToggleButton">
+                        Show
+                      </button>
                   </div>
                   <label for="password" class="form-control-label">Password</label>
                 </div>
@@ -34,7 +34,7 @@
               </div>
               <div>
                 <p class="mb-0">Don't have an account?
-                  <a @click="register()" class="text-white-50 fw-bold">Sign Up</a>
+                  <button @click="register()" class=" btn btn-primary text-dark-50 fw-bold">Sign Up</button>
                 </p>
               </div>
             </div>
@@ -75,9 +75,9 @@ export default {
         this.errorMessage = error.data.message;
       });
     },
-    // register() {
-    //   this.$router.push('/register');
-    // },
+    register() {
+      this.$router.push('/register');
+    },
     togglePassword() {
       var x = document.getElementById("inputPassword");
       if (x.type === "password") {
