@@ -26,14 +26,26 @@
         <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
           Add User
         </button>
-        <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
-          <user-list-item
-            v-for="user in filteredUsers"
-            :key="user.id"
-            :user="user"
-            @update="update"
-          />
-        </div>
+        <table class="table mt-3" id="users-list">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="user in filteredUsers" :key="user.id">
+      <td>{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td>
+        <button @click="update(user)">Update</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
       </div>
     </div>
   </section>
