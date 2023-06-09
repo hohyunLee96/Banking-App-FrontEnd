@@ -23,7 +23,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/atm" class="nav-link" active-class="active">
+          <router-link to="/atm"  v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
             <i class="fas fa-money-bill"></i> ATM
           </router-link>
         </li>
@@ -45,6 +45,7 @@
 
 <script>
 import { useUserSessionStore } from "@/stores/usersession";
+import jwtDecode from "jwt-decode";
 
 export default {
   name: "Navigation",
@@ -61,6 +62,14 @@ export default {
   },
 
   methods: {
+    isUserRoleEmployee() {
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.auth === "ROLE_EMPLOYEE";
+      }
+      return false;
+    },
     logout() {
       this.store.logout();
       this.$router.push("/login");
