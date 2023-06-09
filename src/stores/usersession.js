@@ -8,7 +8,7 @@ export const useUserSessionStore = defineStore("userSession", {
     id: null,
     isEmployee: false,
     userRole: "",
-    loggedInUser: null,
+    loggedInUser: 1,
   }),
   getters: {
     isAuthenticated(state) {

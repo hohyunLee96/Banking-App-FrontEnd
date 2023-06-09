@@ -8,10 +8,12 @@
         <h2 class="">Users</h2>
         <div style="display: flex; flex-direction: row; background-color: lightgrey; width: 100%;" id="filter-menu">
           <div class="input-group mb-3" style="width: 100%; margin-top: 20px; margin-left: 20px; margin-right: 20px;">
-            <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" v-model="filterValues.keyword" @input="applyFilter">
+            <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2"
+              v-model="filterValues.keyword" @input="applyFilter">
           </div>
           <div class="input-group mb-3" style="width: 100%; margin-top: 20px;">
-            <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2" v-model="filterValues.birthDate" @input="applyFilter" ref="dateInput">
+            <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2"
+              v-model="filterValues.birthDate" @input="applyFilter" ref="dateInput">
           </div>
           <div class="filter-bar mt-3" style="margin-right: 20px;">
             <label for="filter">Filter: &nbsp;</label>
@@ -27,18 +29,13 @@
           Add User
         </button>
         <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
-          <user-list-item
-            v-for="user in filteredUsers"
-            :key="user.id"
-            :user="user"
-            @update="update"
-          />
+          <user-list-item v-for="user in filteredUsers" :key="user.id" :user="user" :filter-option="filterOption"
+            @update="update" />
         </div>
       </div>
     </div>
   </section>
 </template>
-
 <script>
 import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
@@ -54,11 +51,9 @@ export default {
     return {
       users: [],
       filterOption: "all",
-      filterParameters: ["keyword", "birthDate", "hasAccount"],
       filterValues: {
         keyword: "",
         birthDate: "",
-        hasAccount: "",
       },
     };
   },
@@ -90,26 +85,18 @@ export default {
           }
         }
       });
-      axios
-        .get("users", {params})
-        .then((result) => {
-          console.log(result);
-          this.users = result.data;
-        })
-        .catch((error) => console.log(error));
-    },
-    handleDateInput() {
-      this.filterValues.birthDate = this.$refs.dateInput.value;
-      this.applyFilter();
-    },
-    applyFilter() {
-      this.update();
-      const params = {
-        hasAccount: this.filterOption === "withoutAccount" ? false : undefined,
-        excludedAccountType:
-          this.filterOption === "withoutSavingsAccount" ? "SAVINGS" :
-            this.filterOption === "withoutCurrentAccount" ? "CURRENT" : undefined,
-      };
+
+      if (this.filterOption === "withoutAccount") {
+        params.hasAccount = false;
+        params.userType = "ROLE_USER";
+      } else if (this.filterOption === "withoutSavingsAccount") {
+        params.excludedAccountType = "SAVINGS";
+        params.userType = "ROLE_CUSTOMER";
+      } else if (this.filterOption === "withoutCurrentAccount") {
+        params.excludedAccountType = "CURRENT";
+        params.userType = "ROLE_CUSTOMER";
+      }
+
       axios
         .get("users", { params })
         .then((result) => {
@@ -118,7 +105,15 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+    handleDateInput() {
+      this.filterValues.birthDate = this.$refs.dateInput.value;
+      this.update();
+    },
+    applyFilter() {
+      this.update();
+    },
   },
 };
 </script>
+
 

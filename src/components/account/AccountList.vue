@@ -3,6 +3,9 @@
     <div class="admin-panel" v-if="isUserRoleEmployee">
       <AdminPanel />
     </div>
+    <div v-if="isUserRoleCustomer">
+      total Balance: {{ totalBalance }}
+    </div>
     <div class="container">
       <h2 class="mt-3 mt-lg-5"><i class="fas fa-list"></i> Accounts</h2>
       <div class="filters" v-if="isUserRoleEmployee">
@@ -26,7 +29,7 @@
         </button>
       </div>
       <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee"
-        @click="this.$router.push({ path: '/users', query: { hasAccount: false } });">
+        @click="this.$router.push({ path: '/users'});">
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">
@@ -58,6 +61,7 @@ export default {
         accountType: "",
         user: null,
       },
+      totalBalance: 0,
     };
   },
   computed: {
@@ -82,24 +86,42 @@ export default {
       }
       return false;
     },
+    isUserRoleCustomer() {
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.auth === "ROLE_CUSTOMER";
+      }
+      return false;
+    },
   },
   mounted() {
     this.update();
+    this.calculateTotalBalance();
   },
   methods: {
+    calculateTotalBalance() {
+      if (this.isUserRoleCustomer) {
+        this.totalBalance = this.accounts.reduce(
+          (sum, account) => sum + account.balance,
+          0
+        );
+      }
+    },
     update() {
       axios
         .get("accounts")
         .then((result) => {
           console.log(result);
           this.accounts = result.data;
+          this.calculateTotalBalance();
         })
         .catch((error) => console.log(error));
     },
     applyFilters() {
       // Perform API request with filters
       axios
-        .get("http://localhost:8080/accounts", {
+        .get("accounts", {
           params: {
             firstName: this.filters.firstName,
             lastName: this.filters.lastName,
@@ -124,55 +146,25 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.account-list {
-  margin-top: 30px;
-}
-
+<style>
 .admin-panel {
-  margin-top: 0;
+  margin-top: 0px;
+  /* Adjust the value to remove the row gap */
   width: 200px;
   float: left;
+  /* Add any additional styling for the admin panel here */
 }
 
 .container {
   margin-left: 200px;
+  /* Adjust the value to match the admin panel width */
+  /* Add any additional styling for the container here */
 }
 
-.filters {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.filters label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.filters input[type="text"],
-.filters input[type="number"],
-.filters select {
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
-}
-
-.btn-primary {
-  margin-right: 10px;
-}
-
-.row {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-
-.mt-3 {
-  margin-top: 15px;
-}
-
-.mt-lg-5 {
-  margin-top: 40px;
+/* Clear the float to prevent container collapsing */
+.container::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 </style>
