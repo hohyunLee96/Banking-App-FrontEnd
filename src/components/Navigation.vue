@@ -38,7 +38,7 @@
 
     </div>
     <button v-if="store.isAuthenticated" class="btn btn-dark btn-lg px-5" @click="logout()" type="button">
-      <i class="fas fa-sign-out-alt"></i> Logout {{ store.getUser}}
+      <i class="fas fa-sign-out-alt"></i> Logout 
     </button>
   </nav>
 </template>
