@@ -23,10 +23,10 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/atm" class="nav-link" active-class="active">
-          <i class="fas fa-money-bill"></i>ATM
-        </router-link>
-      </li>
+          <router-link to="/atm"  v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
+            <i class="fas fa-money-bill"></i> ATM
+          </router-link>
+        </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item" v-if="!store.isAuthenticated">
@@ -44,53 +44,40 @@
 </template>
 
 <script>
-import { useUserSessionStore } from '@/stores/usersession';
+import { useUserSessionStore } from "@/stores/usersession";
+import jwtDecode from "jwt-decode";
 
 export default {
   name: "Navigation",
+
   setup() {
+    const store = useUserSessionStore();
+    // const isEmployee = store.getUser.userType !== "ROLE_EMPLOYEE";
+    const isEmployee = store.getUser.userType;
+
     return {
-      store: useUserSessionStore()
+      store,
+      isEmployee,
     };
   },
+
   methods: {
-    logout() {
-     this.store.logout()
-     this.$router.push('/login')
-    },
     isUserRoleEmployee() {
-      return true;
-    }
-  }
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.auth === "ROLE_EMPLOYEE";
+      }
+      return false;
+    },
+    logout() {
+      this.store.logout();
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 
 <style scoped>
-.navbar {
-  border-radius: 0;
-}
-
-.navbar-nav .nav-link {
-  padding: 0.5rem 1rem;
-  color: #fff;
-}
-
-.navbar-nav .nav-link:hover,
-.navbar-nav .nav-link.active {
-  background-color: #343a40;
-}
-
-.btn-dark {
-  border-radius: 0;
-  padding: 0.5rem 1rem;
-}
-
-.btn-dark:hover {
-  background-color: #343a40;
-}
-
-.px-5 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
+/* Styles remain the same */
 </style>

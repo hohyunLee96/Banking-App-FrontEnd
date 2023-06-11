@@ -5,45 +5,73 @@
     </div>
 
     <div class="container">
-      <h3 class="filter-heading">Filter</h3>
+      <h2>Filter</h2>
       <div class="filter-bar mt-3">
         <div class="filter-group" v-for="param in filterParameters" :key="param">
-          <label :for="param" class="filter-label">{{ getParamLabel(param) }}</label>
-          <template v-if="param === 'fromIban' || param === 'toIban'">
-            <input type="text" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-              @input="applyFilter" class="filter-input" />
-          </template>
-          <template v-else-if="param === 'amount'">
-            <select class="filter-select" v-model="amountFilterOptions[param]" @change="updateAmountFilter">
-              <option value="lessThanAmount">Less Than</option>
-              <option value="greaterThanAmount">Greater Than</option>
-              <option value="equalToAmount">Equal To</option>
-            </select>
-            <input type="number" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-              @input="applyFilter" class="filter-input" />
-          </template>
-          <template v-else-if="param === 'performingUser'">
-            <select v-model="filterValues[param]" @change="applyFilter" class="filter-select">
-              <option value="" disabled>Select User</option>
-              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstName }} {{ user.lastName }}</option>
-            </select>
-          </template>
-          <template v-else-if="param === 'hasDateEqualTo' || param === 'hasDateLessThan' || param === 'hasDateGreaterThan'">
-            <input type="datetime-local" v-model="filterValues[param]" :placeholder="getParamPlaceholder(param)"
-              @input="applyFilter" class="filter-input" />
-          </template>
+          <label :for="param">
+            <i class="fas" :class="getParamIcon(param)"></i> {{ getParamLabel(param) }}
+          </label>
+          <div class="filter-input">
+            <template v-if="param === 'fromIban' || param === 'toIban'">
+              <input
+                type="text"
+                v-model="filterValues[param]"
+                :placeholder="getParamPlaceholder(param)"
+                @input="getAllTransactions"
+              />
+            </template>
+            <template v-else-if="param === 'amount'">
+              <select class="m-2" v-model="amountFilterOptions.amount" @change="getAllTransactions">
+                <option value="">All</option>
+                <option value="lessThanAmount">Less than</option>
+                <option value="greaterThanAmount">Greater than</option>
+                <option value="equalToAmount">Equal to</option>
+              </select>
+              <input
+                type="number"
+                v-model="filterValues[param]"
+                :placeholder="getParamPlaceholder(param)"
+                @input="getAllTransactions"
+              />
+            </template>
+            <template v-else-if="param === 'fromDate' || param === 'toDate'">
+              <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
+            </template>
+            <template v-else-if="param === 'dateFrom' || param === 'dateTo'">
+              <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
+            </template>
+          </div>
         </div>
       </div>
-      <h2 class="transaction-heading">Transactions</h2>
-      <button type="button" class="btn btn-primary create-transaction-btn" @click="this.$router.push('/createTransaction');">
-        Create Transaction
+      <h2 class="mt-3 mt-lg-5">Transactions</h2>
+      <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createTransaction');">
+        <i class="fas fa-plus"></i> Create Transaction
       </button>
-      <div class="transaction-group" v-for="date in orderedTransactionDates" :key="date">
-        <h3 class="transaction-date">{{ formatDate(date) }}</h3>
-        <div class="row mt-3">
-          <TransactionListItem v-for="transaction in filteredTransactions[date]" :key="transaction.transactionId"
-            :transaction="transaction" />
-        </div>
+      <div class="mt-5">
+        <table class="transaction-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transaction ID</th>
+              <th>From IBAN</th>
+              <th>To IBAN</th>
+              <th>Amount</th>
+              <th>Performing User</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="date in orderedTransactionDates" :key="date">
+              <tr v-for="transaction in orderedTransactions[date]" :key="transaction.transactionId">
+                <td>{{ formatDate(transaction.timeStamp) }}</td>
+                <td>{{ transaction.transactionId }}</td>
+                <td>{{ transaction.fromIban }}</td>
+                <td>{{ transaction.toIban }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>{{ getPerformingUser(transaction.performingUser) }}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -51,258 +79,287 @@
 
 <script>
 import axios from "../../axios-auth";
-import TransactionListItem from "./TransactionListItem.vue";
-import { useUserSessionStore } from '@/stores/usersession';
 
 export default {
   name: "TransactionList",
-  components: {
-    TransactionListItem,
-  },
   data() {
     return {
       transactions: [],
-      filterParameter: "all",
-      filterParameters: ["fromIban", "toIban", "amount", "performingUser", "hasDateEqualTo", "hasDateLessThan", "hasDateGreaterThan"],
+      filterParameters: ["fromIban", "toIban", "amount", "performingUser", "fromDate", "toDate"],
       filterValues: {
         fromIban: "",
         toIban: "",
         amount: "",
         performingUser: "",
-        hasDateEqualTo: "",
-        hasDateLessThan: "",
-        hasDateGreaterThan: "",
         transactionId: "",
+        toDate: "",
+        fromDate: "",
         type: "",
       },
       amountFilterOptions: {
-        amount: "lessThanAmount",
+        amount: "",
+        lessThanAmount: "lessThanAmount",
+        greaterThanAmount: "greaterThanAmount",
+        equalToAmount: "equalToAmount",
       },
-      users: [], // Holds the list of users
+      users: [],
     };
-  },
-  mounted() {
-    this.getAllTransactions();
-    this.getAllUsers();
   },
   computed: {
     orderedTransactions() {
-      const orderedTransactions = {};
+      const ordered = {};
       this.transactions.forEach((transaction) => {
-        const date = new Date(transaction.timeStamp).toDateString();
-        if (!orderedTransactions[date]) {
-          orderedTransactions[date] = [];
+        const date = transaction.timeStamp.split("T")[0];
+        if (!ordered[date]) {
+          ordered[date] = [];
         }
-        orderedTransactions[date].push(transaction);
+        ordered[date].push(transaction);
       });
-      return orderedTransactions;
+      return ordered;
     },
     orderedTransactionDates() {
-      return Object.keys(this.orderedTransactions).sort();
+      return Object.keys(this.orderedTransactions).sort().reverse();
     },
     filteredTransactions() {
-      if (this.filterParameter === "all") {
-        return this.orderedTransactions;
-      }
-
-      const filtered = {};
-      Object.keys(this.orderedTransactions).forEach((date) => {
-        filtered[date] = this.orderedTransactions[date].filter((transaction) => {
-          return this.filterParameters.every((param) => {
-            switch (param) {
-              case "fromIban":
-                return transaction.fromIban.includes(this.filterValues[param]);
-              case "toIban":
-                return transaction.toIban.includes(this.filterValues[param]);
-              case "amount":
-                return this.applyAmountFilter(transaction.amount, this.filterValues[param]);
-              case "performingUser":
-                return transaction.performingUserId === this.filterValues[param];
-              case "hasDateEqualTo":
-                return this.hasDateEqualTo(transaction.timeStamp, this.filterValues[param]);
-              case "hasDateLessThan":
-                return this.hasDateLessThan(transaction.timeStamp, this.filterValues[param]);
-              case "hasDateGreaterThan":
-                return this.hasDateGreaterThan(transaction.timeStamp, this.filterValues[param]);
-              default:
-                return true;
-            }
-          });
-        });
-      });
-      return filtered;
+      const fromIban = this.filterValues.fromIban.toLowerCase();
+      return this.transactions.filter((transaction) =>
+        transaction.fromIban.toLowerCase().includes(fromIban)
+      );
     },
   },
   methods: {
-    getAllTransactions() {
-      const params = {};
-      Object.keys(this.filterValues).forEach((param) => {
-        if (this.filterValues[param] !== "") {
-          params[param] = this.filterValues[param];
-        }
-      });
-
-      if (this.filterParameter !== "all") {
-        params[this.filterParameter] = params.amount;
-        delete params.amount;
-      }
-
-      axios
-        .get("transactions", { params })
-        .then((result) => {
-          console.log(result);
-          this.transactions = result.data;
-        })
-        .catch((error) => console.log(error));
-    },
-
-    getAllUsers() {
-      axios
-        .get("users")
-        .then((result) => {
-          console.log(result);
-          this.users = result.data;
-        })
-        .catch((error) => console.log(error));
-    },
     formatDate(dateString) {
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return new Date(dateString).toLocaleDateString(undefined, options);
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
     },
-    applyFilter() {
-      this.getAllTransactions();
-    },
-    applyAmountFilter(amount, filterValue) {
-      const numericFilterValue = Number(filterValue);
-      switch (this.amountFilterOptions.amount) {
-        case "lessThanAmount":
-          return amount < numericFilterValue;
-        case "greaterThanAmount":
-          return amount > numericFilterValue;
-        case "equalToAmount":
-          return amount === numericFilterValue;
-        default:
-          return true;
-      }
-    },
-    hasDateEqualTo(transactionDate, filterValue) {
-      const filterDate = new Date(filterValue);
-      const transactionDateObj = new Date(transactionDate);
-      return transactionDateObj.getTime() === filterDate.getTime();
-    },
-    hasDateLessThan(transactionDate, filterValue) {
-      const filterDate = new Date(filterValue);
-      const transactionDateObj = new Date(transactionDate);
-      return transactionDateObj.getTime() < filterDate.getTime();
-    },
-    hasDateGreaterThan(transactionDate, filterValue) {
-      const filterDate = new Date(filterValue);
-      const transactionDateObj = new Date(transactionDate);
-      return transactionDateObj.getTime() > filterDate.getTime();
-    },
-    updateAmountFilter() {
-      const selectedOption = this.amountFilterOptions.amount;
-      switch (selectedOption) {
-        case "lessThanAmount":
-          this.filterParameter = "lessThanAmount";
-          break;
-        case "greaterThanAmount":
-          this.filterParameter = "greaterThanAmount";
-          break;
-        case "equalToAmount":
-          this.filterParameter = "equalToAmount";
-          break;
-        default:
-          this.filterParameter = "all";
-          break;
-      }
-      this.applyFilter();
-    },
-    getParamPlaceholder(param) {
-      switch (param) {
-        case "fromIban":
-        case "toIban":
-          return "Enter IBAN";
-        case "amount":
-          return "Enter amount";
-        case "hasDateEqualTo":
-        case "hasDateLessThan":
-        case "hasDateGreaterThan":
-          return "Select date";
-        default:
-          return "";
-      }
+    getPerformingUser(userId) {
+      const user = this.users.find((u) => u.id === userId);
+      return user ? `${user.firstName} ${user.lastName}` : "";
     },
     getParamLabel(param) {
       switch (param) {
         case "fromIban":
-          return "From IBAN:";
+          return "From IBAN";
         case "toIban":
-          return "To IBAN:";
+          return "To IBAN";
         case "amount":
-          return "Amount:";
-        case "performingUser":
-          return "Performing User:";
-        case "hasDateEqualTo":
-          return "Date Equal To:";
-        case "hasDateLessThan":
-          return "Date Less Than:";
-        case "hasDateGreaterThan":
-          return "Date Greater Than:";
+          return "Amount";
+        case "fromDate":
+          return "From Date";
+        case "toDate":
+          return "To Date";
         default:
           return "";
       }
     },
+    getParamPlaceholder(param) {
+      switch (param) {
+        case "fromIban":
+          return "Enter from IBAN";
+        case "toIban":
+          return "Enter to IBAN";
+        case "amount":
+          return "Enter amount";
+        default:
+          return "";
+      }
+    },
+    getParamIcon(param) {
+      switch (param) {
+        case "fromIban":
+          return "fa-university";
+        case "toIban":
+          return "fa-university";
+        case "amount":
+          return "fa-money-bill";
+        case "fromDate":
+          return "fa-calendar-alt";
+        case "toDate":
+          return "fa-calendar-alt";
+        default:
+          return "";
+      }
+    },
+    getAllTransactions() {
+      const queryParams = {};
+      if (this.filterValues.fromIban) {
+        queryParams.fromIban = this.filterValues.fromIban;
+      }
+      if (this.filterValues.toIban) {
+        queryParams.toIban = this.filterValues.toIban;
+      }
+      if (this.filterValues.amount) {
+        switch (this.amountFilterOptions.amount) {
+          case "lessThanAmount":
+            queryParams.lessThanAmount = this.filterValues.amount;
+            break;
+          case "greaterThanAmount":
+            queryParams.greaterThanAmount = this.filterValues.amount;
+            break;
+          case "equalToAmount":
+            queryParams.equalToAmount = this.filterValues.amount;
+            break;
+        }
+      }
+      if (this.filterValues.fromDate) {
+        queryParams.fromDate = this.filterValues.fromDate;
+      }
+      if (this.filterValues.toDate) {
+        queryParams.toDate = this.filterValues.toDate;
+      }
+
+      axios
+        .get("/transactions", { params: queryParams })
+        .then((response) => {
+          this.transactions = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    getAllUsers() {
+      axios
+        .get("/users")
+        .then((response) => {
+          this.users = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  created() {
+    this.getAllTransactions();
+    this.getAllUsers();
   },
 };
 </script>
 
-<style>
-/* Existing styles */
+<style scoped>
+/* Transaction table styles */
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-top: 20px;
+}
 
-/* Styling for filter bar */
+.transaction-table th,
+.transaction-table td {
+  padding: 10px;
+}
+
+.transaction-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.transaction-table td {
+  border-bottom: 1px solid #ddd;
+}
+
+.transaction-table .date-row {
+  background-color: #f2f2f2;
+}
+
+/* Filter styles */
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .filter-group {
+  margin-right: 20px;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.filter-input,
-.filter-select {
+.filter-group label {
   margin-right: 10px;
 }
 
-/* Styling for date filter input */
-.filter-input[type="datetime-local"] {
-  max-width: 200px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+.filter-group select,
+.filter-group input[type="text"],
+.filter-group input[type="number"] {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
 }
 
-/* Styling for create transaction button */
-.create-transaction-btn {
+.filter-group select {
+  margin-right: 10px;
+}
+
+.filter-group input[type="number"] {
+  width: 80px;
+}
+
+.btn-primary {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.mt-3 {
   margin-top: 20px;
 }
 
-/* Styling for transaction groups */
-.transaction-group {
-  margin-top: 30px;
+.mt-5 {
+  margin-top: 50px;
 }
 
-.transaction-date {
-  font-size: 20px;
-  font-weight: bold;
+.admin-panel {
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
   margin-bottom: 10px;
 }
 
-.row {
-  margin-left: -5px;
-  margin-right: -5px;
+h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Font Awesome icons */
+.fa {
+  font-family: "Font Awesome 5 Free";
+}
+
+.icon-fromIban:before {
+  content: "\f19c";
+}
+
+.icon-toIban:before {
+  content: "\f19c";
+}
+
+.icon-amount:before {
+  content: "\f0d6";
+}
+
+.icon-fromDate:before {
+  content: "\f073";
+}
+
+.icon-toDate:before {
+  content: "\f073";
 }
 </style>

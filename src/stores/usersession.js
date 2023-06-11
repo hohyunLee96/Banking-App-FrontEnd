@@ -8,24 +8,21 @@ export const useUserSessionStore = defineStore("userSession", {
     id: null,
     isEmployee: false,
     userRole: "",
-    loggedInUser: null,
+    loggedInUser: 1,
   }),
   getters: {
     isAuthenticated(state) {
       return state.jwt !== "";
     },
-    getUserRole(state) {
-      return state.loggedInUser.userType;
-    },
+
     getUser(state) {
       return state.loggedInUser;
     },
     getUserId(state) {
       return state.id;
     },
-    IsEmployee(state){
-      return state.userRole == "ROLE_EMPLOYEE"
-    }
+
+ 
   },
   actions: {
     async localLogin() {
@@ -36,8 +33,7 @@ export const useUserSessionStore = defineStore("userSession", {
         axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
 
         try {
-          const loggedInUser = await this.getLoggedInUser();
-          this.loggedInUser = loggedInUser.data;
+          this.loggedInUser =await this.getLoggedInUser();
         } catch (error) {
           console.error(error.message);
         }
@@ -96,6 +92,11 @@ export const useUserSessionStore = defineStore("userSession", {
           console.error(error);
           throw error;
         });
+    },
+    computed: {
+      isEmployee() {
+        return this.$store.getIsEmployee;
+      },
     },
   },
 });

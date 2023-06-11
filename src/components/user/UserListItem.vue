@@ -16,8 +16,13 @@
       <div class="card-footer">
         <button class="btn btn-warning" @click="editUser(user.userId)">Edit</button>&nbsp;&nbsp;
         <button class="btn btn-danger" @click="deleteUser(user.userId)">Delete</button>
-        <button v-if="!user.hasAccount" class="btn btn-primary" @click="createAccount(user.userId)">Create
-          Account</button>
+        <!-- <button v-if="shouldDisplayCreateAccountButton(user)" class="btn btn-primary" @click="createAccount(user.userId)">
+          Create Account
+        </button> -->
+        <button v-if="shouldDisplayCreateAccountButton(user)" class="btn btn-primary"
+          @click="createAccount(user.userId, filterOption)">
+          Create Account
+        </button>
       </div>
     </div>
   </div>
@@ -30,6 +35,7 @@ export default {
   name: "UserListItem",
   props: {
     user: Object,
+    filterOption: String,
   },
   mounted() {
     
@@ -66,10 +72,10 @@ export default {
     editUser(id) {
       this.$router.push('/edituser/' + id);
     },
-    createAccount(userId) {
+    createAccount(userId, filterOption) {
       // Perform the necessary action to create an account for the user
       console.log("Create account for user:", userId);
-      this.$router.push({ name: 'CreateAccount', params: { userId } });
+      this.$router.push({ name: 'CreateAccount', params: { userId }, query: { filterOption } });
     },
   },
 };
