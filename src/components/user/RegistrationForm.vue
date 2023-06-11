@@ -97,7 +97,7 @@
     methods: {
       addUser() {
         this.user.hasAccount = false;
-        this.user.userType = "ROLE_CUSTOMER";
+        this.user.userType = "ROLE_USER";
         axios
           .post("users", this.user)
           .then((res) => {
