@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4" style="margin-bottom: 0 !important;">
     <div class="container-fluid" v-if="store.isAuthenticated">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item" v-if="store.isAuthenticated">
@@ -7,7 +7,7 @@
             <i class="fas fa-home"></i> Home
           </router-link>
         </li>
-        <li class="nav-item" v-if="store.isAuthenticated">
+        <li class="nav-item" v-if="isUserRoleEmployee()">
           <router-link to="/adminPanel" class="nav-link" active-class="active">
             <i class="fas fa-cogs"></i> Admin Panel
           </router-link>
@@ -58,6 +58,9 @@ export default {
      this.store.logout()
      this.$router.push('/login')
     },
+    isUserRoleEmployee() {
+      return true;
+    }
   }
 };
 </script>
