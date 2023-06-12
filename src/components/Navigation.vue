@@ -8,8 +8,8 @@
           </router-link>
         </li>
         <li class="nav-item" v-if="isUserRoleEmployee()">
-          <router-link to="/adminPanel" class="nav-link" active-class="active">
-            <i class="fas fa-cogs"></i> Admin Panel
+          <router-link to="/users" class="nav-link" active-class="active">
+            <i class="fas fa-cogs"></i> Users
           </router-link>
         </li>
         <li class="nav-item" v-if="store.isAuthenticated">
@@ -52,12 +52,9 @@ export default {
 
   setup() {
     const store = useUserSessionStore();
-    // const isEmployee = store.getUser.userType !== "ROLE_EMPLOYEE";
-    const isEmployee = store.getUser.userType;
 
     return {
       store,
-      isEmployee,
     };
   },
 
