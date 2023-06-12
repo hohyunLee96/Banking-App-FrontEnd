@@ -67,7 +67,11 @@ export default {
           console.log(result);
           this.$emit("update");
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error.response.data.message);
+          this.$emit('error-message', error.response.data.message);
+          console.log(error);
+        });
     },
     editUser(id) {
       this.$router.push('/edituser/' + id);

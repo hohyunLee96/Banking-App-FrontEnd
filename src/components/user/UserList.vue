@@ -11,10 +11,10 @@
             <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2"
               v-model="filterValues.keyword" @input="applyFilter">
           </div>
-          <div class="input-group mb-3" style="width: 100%; margin-top: 20px;">
+          <!--<div class="input-group mb-3" style="width: 100%; margin-top: 20px;">
             <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2"
               v-model="filterValues.birthDate" @input="applyFilter" ref="dateInput">
-          </div>
+          </div>-->
           <div class="filter-bar mt-3" style="margin-right: 20px;">
             <label for="filter">Filter: &nbsp;</label>
             <select id="filter" v-model="filterOption" @change="applyFilter">
@@ -25,12 +25,13 @@
             </select>
           </div>
         </div>
-        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
+        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/register');">
           Add User
         </button>
+        <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
         <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
           <user-list-item v-for="user in filteredUsers" :key="user.id" :user="user" :filter-option="filterOption"
-            @update="update" />
+            @update="update"  @error-message="setErrorMessage"/>
         </div>
       </div>
     </div>
@@ -49,6 +50,7 @@ export default {
   },
   data() {
     return {
+      errorMessage: "",
       users: [],
       filterOption: "all",
       filterValues: {
@@ -59,8 +61,6 @@ export default {
   },
   mounted() {
     this.update();
-    const dateInput = this.$refs.dateInput;
-    dateInput.addEventListener('input', this.handleDateInput);
   },
   computed: {
     filteredUsers() {
@@ -68,6 +68,13 @@ export default {
     },
   },
   methods: {
+    setErrorMessage(message) {
+      this.errorMessage = message;
+    
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 8000);
+    },
     formatDate(dateString) {
       const format = { year: "numeric", month: "long", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -78,7 +85,7 @@ export default {
         if (this.filterValues[param] !== "") {
           if (param === "birthDate") {
             const date = new Date(this.filterValues[param]);
-            const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            const formattedDate = `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}`;
             params[param] = formattedDate;
           } else {
             params[param] = this.filterValues[param];

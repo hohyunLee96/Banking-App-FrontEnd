@@ -2,9 +2,11 @@
     <section>
       <div style="display: flex; width: 100%; justify-content: center; margin-bottom: 30px;">
         <form ref="form" style="width: 80% !important">
-          <h2 class="mt-3 mt-lg-5">Register</h2>
+          <h2 class="mt-3 mt-lg-5" v-if="store.isAuthenticated">Create User</h2>
+          <h2 class="mt-3 mt-lg-5" v-if="!store.isAuthenticated">Register</h2>
           <h5 class="mb-4"></h5>
-  
+          <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
+
           <div class="input-group mb-3">
             <span class="input-group-text">First Name</span>
             <input type="text" class="form-control" v-model="user.firstName" />
@@ -73,11 +75,19 @@
   
   <script>
   import axios from "../../axios-auth";
-  
+  import { useUserSessionStore } from "@/stores/usersession";
+
   export default {
     name: "CreateUser",
+    setup() {
+      const store = useUserSessionStore();
+      return {
+        store
+      };
+    },
     data() {
       return {
+        errorMessage: "",
         user: {
           firstName: "",
           lastName: "",
@@ -98,6 +108,7 @@
       addUser() {
         this.user.hasAccount = false;
         this.user.userType = "ROLE_USER";
+        
         axios
           .post("users", this.user)
           .then((res) => {
@@ -105,7 +116,15 @@
             this.$refs.form.reset();
             this.$router.push("/login");
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error.response.data);
+            this.errorMessage = error.response.data;
+            
+            setTimeout(() => {
+                this.errorMessage = "";
+            }, 8000);
+            console.log(error);
+          });
       },
     }
   };
