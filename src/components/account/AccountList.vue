@@ -20,10 +20,7 @@
           <option value="CURRENT">Current</option>
         </select>
         <label><i class="fas fa-id-card"></i> User ID:</label>
-        <input type="number" v-model="filters.user" />
-        <button type="button" class="btn btn-primary" @click="applyFilters">
-          <i class="fas fa-filter"></i> Apply Filters
-        </button>
+        <input type="text" v-model="filters.user" />
         <button type="button" class="btn btn-secondary" @click="resetFilters">
           <i class="fas fa-undo"></i> Reset Filters
         </button>
@@ -71,8 +68,8 @@ export default {
       return this.accounts.filter((account) => {
         // Apply filters based on the selected criteria
         return (
-          (firstName === "" || account.user.firstName.toLowerCase().includes(firstName.toLowerCase())) &&
-          (lastName === "" || account.user.lastName.toLowerCase().includes(lastName.toLowerCase())) &&
+          (firstName === "" || account.firstName.toLowerCase().includes(firstName.toLowerCase())) &&
+          (lastName === "" || account.lastName.toLowerCase().includes(lastName.toLowerCase())) &&
           (accountType === "" || account.accountType === accountType) &&
           (user === null || account.user === user)
         );
@@ -115,23 +112,6 @@ export default {
           console.log(result);
           this.accounts = result.data;
           this.calculateTotalBalance();
-        })
-        .catch((error) => console.log(error));
-    },
-    applyFilters() {
-      // Perform API request with filters
-      axios
-        .get("accounts", {
-          params: {
-            firstName: this.filters.firstName,
-            lastName: this.filters.lastName,
-            accountType: this.filters.accountType,
-            user: this.filters.user,
-          },
-        })
-        .then((result) => {
-          console.log(result);
-          this.accounts = result.data;
         })
         .catch((error) => console.log(error));
     },
