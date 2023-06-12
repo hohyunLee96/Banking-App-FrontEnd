@@ -91,10 +91,8 @@ export default {
         params.userType = "ROLE_USER";
       } else if (this.filterOption === "withoutSavingsAccount") {
         params.excludedAccountType = "SAVINGS";
-        params.userType = "ROLE_CUSTOMER";
       } else if (this.filterOption === "withoutCurrentAccount") {
         params.excludedAccountType = "CURRENT";
-        params.userType = "ROLE_CUSTOMER";
       }
 
       axios
