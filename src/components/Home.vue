@@ -5,7 +5,7 @@
       <div id="title-section" style="margin-left: 3vw;">
         <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
         <h5 style="color: white; ">Don't have an account yet?</h5>
-        <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;">Open Account</button>
+        <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;" @click="this.$router.push({ path: '/register'})">Open Account</button>
       </div>
     </div>
   </section>
@@ -56,6 +56,9 @@ export default {
 
   },
 };
+function redirectToRegister() {
+        window.location.href = "/register";
+    }
 </script>
 
 <style>
