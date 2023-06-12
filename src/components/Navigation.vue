@@ -52,12 +52,9 @@ export default {
 
   setup() {
     const store = useUserSessionStore();
-    // const isEmployee = store.getUser.userType !== "ROLE_EMPLOYEE";
-    const isEmployee = store.getUser.userType;
 
     return {
       store,
-      isEmployee,
     };
   },
 
