@@ -27,6 +27,11 @@
             <i class="fas fa-money-bill"></i> ATM
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/test" v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
+            <i class="fas fa-money-bill"></i> Search Iban
+          </router-link>
+        </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item" v-if="!store.isAuthenticated">

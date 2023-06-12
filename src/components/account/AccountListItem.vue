@@ -47,6 +47,8 @@
         <div class="account-details">
           <h4 class="account-title">{{ "Account Details" }}</h4>
           <p class="user-id">{{ "User ID: " + account.user }}</p>
+          <p class="user-id">{{ "First Name: " + account.firstName }}</p>
+          <p class="user-id">{{ "Last Name: " + account.lastName }}</p>
           <p class="iban">{{ account.IBAN }}</p>
           <p class="account-type">{{ account.accountType }}</p>
           <p class="account-status" :class="{ 'text-success': account.isActive, 'text-danger': !account.isActive }">
