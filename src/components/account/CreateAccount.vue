@@ -102,12 +102,12 @@ export default {
 
         <div class="input-group mb-3">
           <span class="input-group-text">userID</span>
-          <input type="number" class="form-control" v-model="users.id" />
+          <input type="number" class="form-control" v-model="users.id" readonly />
         </div>
 
         <div class="input-group mb-3">
           <span class="input-group-text">user name</span>
-          <textarea class="form-control" v-model="users.firstName"></textarea>
+          <textarea class="form-control" v-model="users.firstName" readonly></textarea>
         </div>
 
         <div class="input-group mb-3">

@@ -3,8 +3,10 @@
     <div class="admin-panel" v-if="isUserRoleEmployee">
       <AdminPanel />
     </div>
-    <div v-if="isUserRoleCustomer">
-      total Balance: {{ totalBalance }}
+    <div>
+      <h1>
+        My total Balance: {{ totalBalance }}
+      </h1>
     </div>
     <div class="container">
       <h2 class="mt-3 mt-lg-5"><i class="fas fa-list"></i> Accounts</h2>
@@ -20,13 +22,12 @@
           <option value="CURRENT">Current</option>
         </select>
         <label><i class="fas fa-id-card"></i> User ID:</label>
-        <input type="text" v-model="filters.user" />
+        <input type="number" v-model="filters.user" />
         <button type="button" class="btn btn-secondary" @click="resetFilters">
           <i class="fas fa-undo"></i> Reset Filters
         </button>
       </div>
       <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee"
-        @click="this.$router.push({ path: '/users'});">
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">
@@ -42,6 +43,7 @@ import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
 import AccountListItem from "./AccountListItem.vue";
 import jwtDecode from "jwt-decode";
+import { useUserSessionStore } from '@/stores/usersession';
 
 export default {
   name: "AccountList",
@@ -59,9 +61,13 @@ export default {
         user: null,
       },
       totalBalance: 0,
+      loggedInUserId : useUserSessionStore().getUserId,
     };
   },
   computed: {
+    loggedInUserId() {
+      return useUserSessionStore().getUserId;
+    },
     filteredAccounts() {
       const { firstName, lastName, accountType, user } = this.filters;
 
@@ -98,12 +104,9 @@ export default {
   },
   methods: {
     calculateTotalBalance() {
-      if (this.isUserRoleCustomer) {
-        this.totalBalance = this.accounts.reduce(
-          (sum, account) => sum + account.balance,
-          0
-        );
-      }
+      this.totalBalance = this.accounts
+        .filter((account) => account.user === this.loggedInUserId)
+        .reduce((sum, account) => sum + account.balance, 0);
     },
     update() {
       axios
