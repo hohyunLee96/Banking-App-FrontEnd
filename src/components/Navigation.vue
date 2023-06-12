@@ -7,9 +7,9 @@
             <i class="fas fa-home"></i> Home
           </router-link>
         </li>
-        <li class="nav-item" v-if="store.isAuthenticated">
-          <router-link to="/adminPanel" class="nav-link" active-class="active">
-            <i class="fas fa-cogs"></i> Admin Panel
+        <li class="nav-item" v-if="isUserRoleEmployee()">
+          <router-link to="/users" class="nav-link" active-class="active">
+            <i class="fas fa-cogs"></i> Users
           </router-link>
         </li>
         <li class="nav-item" v-if="store.isAuthenticated">
