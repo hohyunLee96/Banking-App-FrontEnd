@@ -1,11 +1,14 @@
 <template>
   <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 p-2">
     <div class="card user-card h-100">
+      <div class="card-header">
+        <p>Role: {{ getUserType(user.userType) }}</p>
+      </div>
       <div class="card-body">
         <div class="float-start">
-          <p>{{ user.firstName }} {{ user.lastName }}</p>
+          <p>Name: {{ user.firstName }} {{ user.lastName }}</p>
           <p>
-            <small>{{ user.email }}</small>
+            <small>Email: {{ user.email }}</small>
           </p>
         </div>
         <span class="float-end">{{ user.phoneNumber }}</span>
@@ -34,7 +37,18 @@ export default {
     user: Object,
     filterOption: String,
   },
+  mounted() {
+    
+  },
   methods: {
+    getUserType(userType) {
+      if (userType === "ROLE_EMPLOYEE") {
+        return "Employee";
+      } else if (userType === "ROLE_CUSTOMER") {
+        return "Customer";
+      }
+      return "Unknown";
+    },
     shouldDisplayCreateAccountButton(user) {
       if (this.filterOption === "withoutSavingsAccount" && !user.hasSavingsAccount && user.userType !== "ROLE_EMPLOYEE") {
         return true;

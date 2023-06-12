@@ -60,7 +60,10 @@
 
         <div class="input-group mb-3">
           <span class="input-group-text">User Type</span>
-          <input type="text" class="form-control" v-model="user.userType" />
+          <select v-model=user.userType class="form-select" aria-label="Default select example">
+            <option value="ROLE_EMPLOYEE">Employee</option>
+            <option value="ROLE_CUSTOMER">Customer</option>
+          </select>
         </div>
 
         <div class="input-group mb-3">
@@ -110,6 +113,7 @@ export default {
         userType: "",
         hasAccount: false,
       },
+      userTypes: ["Employee", "Customer"],
     };
   },
   methods: {

@@ -9,7 +9,7 @@ import CreateAccount from '../components/account/CreateAccount.vue';
 import UserList from '../components/user/UserList.vue';
 import EditUser from '../components/user/EditUser.vue';
 import CreateUser from '../components/user/CreateUser.vue';
-
+import RegistrationForm from '../components/user/RegistrationForm.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
 import EditProduct from '../components/products/EditProduct.vue';
 import Login from '../components/Login.vue';
@@ -32,7 +32,7 @@ const router = createRouter({
     }, 
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
-    { path: '/register', component: CreateUser },
+    { path: '/register', component: RegistrationForm },
     { path: '/users', component: UserList },
     //{ path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
