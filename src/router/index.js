@@ -34,6 +34,7 @@ const router = createRouter({
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: RegistrationForm },
     { path: '/users', component: UserList },
+    { path: '/createuser', component: CreateUser },
     //{ path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
 
