@@ -1,6 +1,6 @@
 <template>
   <section>
-   <div class="registration-page">
+    <div class="registration-page">
       <div class="registration-form">
         <div class="bank-icon">
           <img class="icon" src="logo-no-background.svg" alt="Bank Icon" />
@@ -9,63 +9,104 @@
         <form ref="form">
           <h2 class="form-title">Register</h2>
 
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" id="firstName" v-model="user.firstName" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" id="lastName" v-model="user.lastName" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" v-model="user.email" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" v-model="user.password" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="passwordConfirm">Confirm Password</label>
+              <input type="password" class="form-control" id="passwordConfirm" v-model="user.passwordConfirm" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="birthDate">Birth Date</label>
+              <input type="date" class="form-control" id="birthDate" v-model="user.birthDate" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="postalCode">Postal Code</label>
+              <input type="text" class="form-control" id="postalCode" v-model="user.postalCode" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" id="address" v-model="user.address" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" v-model="user.city" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="text" class="form-control" id="phoneNumber" v-model="user.phoneNumber" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button type="button" class="btn btn-primary btn-register" @click="addUser()">Register</button>
+            <button type="button" class="btn btn-danger" @click="$router.push('/login')">Cancel</button>
+          </div>
+
         </form>
       </div>
-    </section>
-  </template>
-  
-  <script>
-  import axios from "../../axios-auth";
-  import { useUserSessionStore } from "@/stores/usersession";
+    </div>
+  </section>
+</template>
 
-  export default {
-    name: "CreateUser",
-    setup() {
-      const store = useUserSessionStore();
-      return {
-        store
-      };
-    },
-    data() {
-      return {
-        errorMessage: "",
-        user: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          passwordConfirm: "",
-          birthDate: "",
-          postalCode: "",
-          address: "",
-          city: "",
-          phoneNumber: "",
-          userType: "",
-          hasAccount: "",
-        },
-      };
-    },
-    methods: {
-      addUser() {
-        this.user.hasAccount = false;
-        this.user.userType = "ROLE_USER";
-        
-        axios
-          .post("users", this.user)
-          .then((res) => {
-            console.log(res.data);
-            this.$refs.form.reset();
-            this.$router.push("/login");
-          })
-          .catch((error) => {
-            console.log(error.response.data);
-            this.errorMessage = error.response.data;
-            
-            setTimeout(() => {
-                this.errorMessage = "";
-            }, 8000);
-            console.log(error);
-          });
+
+<script>
+import axios from "../../axios-auth";
+import { useUserSessionStore } from "@/stores/usersession";
+
+export default {
+  name: "CreateUser",
+  setup() {
+    const store = useUserSessionStore();
+    return {
+      store
+    };
+  },
+  data() {
+    return {
+      errorMessage: "",
+      user: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        birthDate: "",
+        postalCode: "",
+        address: "",
+        city: "",
+        phoneNumber: "",
+        userType: "",
+        hasAccount: "",
       },
     };
   },
@@ -73,6 +114,7 @@
     addUser() {
       this.user.hasAccount = false;
       this.user.userType = "ROLE_USER";
+
       axios
         .post("users", this.user)
         .then((res) => {
@@ -80,7 +122,15 @@
           this.$refs.form.reset();
           this.$router.push("/login");
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error.response.data);
+          this.errorMessage = error.response.data;
+
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 8000);
+          console.log(error);
+        });
     },
   },
 };
@@ -96,8 +146,10 @@
 .registration-form {
   flex: 1;
   padding: 20px;
-  margin-left: 400px; /* Add left margin */
-  margin-right: 400px; /* Add right margin */
+  margin-left: 400px;
+  /* Add left margin */
+  margin-right: 400px;
+  /* Add right margin */
 }
 
 .bank-icon {
@@ -111,6 +163,7 @@
   width: auto;
   height: auto;
 }
+
 .form-title {
   margin-top: 20px;
   margin-bottom: 40px;
