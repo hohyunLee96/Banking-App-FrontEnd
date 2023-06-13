@@ -133,7 +133,7 @@ export default {
           this.$refs.form.reset();
           this.errorMessage = "";
           this.successMessage = "User updated successfully!";
-          //this.$router.push("/users");
+          this.$router.push("/users");
         })
         .catch((error) => {
             console.log(error.response.data);
@@ -149,7 +149,7 @@ export default {
   mounted() {
     axios
       .get("users/" + this.id)
-      .then((result) => {
+      .then((result) =>{
         console.log(result);
         this.user = result.data;
       })
@@ -157,6 +157,5 @@ export default {
   },
 };
 </script>
-
 <style>
 </style>

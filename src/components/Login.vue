@@ -1,7 +1,7 @@
 <template>
   <section class="vh-100 gradient-custom">
     <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
-    <div class="container h-100">
+    <div class="container h-100 ">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card-body p-5 text-center">
