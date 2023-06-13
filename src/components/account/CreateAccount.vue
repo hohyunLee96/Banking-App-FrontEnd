@@ -99,7 +99,7 @@ export default {
       <form ref="form">
         <h2 class="mt-3 mt-lg-5">Create an account</h2>
         <h5 class="mb-4"></h5>
-
+        <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="input-group mb-3">
           <span class="input-group-text">userID</span>
           <input type="number" class="form-control" v-model="users.id" readonly />
@@ -154,6 +154,7 @@ export default {
       users: {
       },
       filterOption: "",
+      errorMessage: "",
     };
   },
   methods: {
@@ -170,7 +171,15 @@ export default {
           console.log(response)
           this.$router.push('/')
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          if (error) {
+            this.errorMessage = error.response.data.message;
+          }
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 8000);
+          console.log(error);
+        });
     },
   },
   mounted() {
@@ -181,7 +190,15 @@ export default {
         this.users = result.data;
         this.account.userId = result.data.id; // Update the userId property
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+          if (error) {
+            this.errorMessage = error.response.data.message;
+          }
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 8000);
+          console.log(error);
+        });
 
     this.filterOption = this.$route.query.filterOption; // Get the filterOption from the query parameter
   },
