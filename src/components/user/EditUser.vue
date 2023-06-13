@@ -1,8 +1,5 @@
 <template>
   <section>
-    <div class="admin-panel">
-      <AdminPanel />
-    </div>
     <div class="container">
       <form ref="form">
         <h2 class="mt-3 mt-lg-5">Edit User</h2>
@@ -57,22 +54,31 @@
           </select>
         </div>
 
-        <div class="input-group mb-3">
-          <span class="input-group-text">Has Account</span>
-          <input type="checkbox" class="form-check-input" v-model="user.hasAccount" />
-        </div>
-
         <h2 class="mt-3 mt-lg-5">Change Password</h2>
         <h5 class="mb-4"></h5>
-
+        
+        <small id="password-help" class="form-text text-muted">A password must be at least 8 characters long, contain one special character and one number.</small>
         <div class="input-group mb-3">
           <span class="input-group-text">New Password</span>
-          <input type="password" class="form-control" v-model="user.password" />
+          <input id="new-password" type="password" aria-describedby="password-help" class="form-control" v-model="user.password" />
         </div>
 
         <div class="input-group mb-3">
           <span class="input-group-text">Confirm Password</span>
           <input type="password" class="form-control" v-model="user.passwordConfirm" />
+        </div>
+
+        <h2 class="mt-3 mt-lg-5">Transaction Limits</h2>
+        <h5 class="mb-4"></h5>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Daily Limit</span>
+          <input type="number" class="form-control" v-model="user.dailyLimit" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Transaction Limit</span>
+          <input type="number" class="form-control" v-model="user.transactionLimit" />
         </div>
 
         <div class="input-group mt-4">
@@ -119,7 +125,8 @@ export default {
         city: "",
         phoneNumber: "",
         userType: "",
-        hasAccount: "",
+        dailyLimit: "",
+        transactionLimit: "",
       },
       userTypes: ["Employee", "Customer"],
     };
