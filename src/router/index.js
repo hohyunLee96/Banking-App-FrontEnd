@@ -8,7 +8,6 @@ import CreateAccount from '../components/account/CreateAccount.vue';
 //USER IMPORTS/////////////////////////////////////////////////////////
 import UserList from '../components/user/UserList.vue';
 import EditUser from '../components/user/EditUser.vue';
-import CreateUser from '../components/user/CreateUser.vue';
 import RegistrationForm from '../components/user/RegistrationForm.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
 import EditProduct from '../components/products/EditProduct.vue';
@@ -36,7 +35,7 @@ const router = createRouter({
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: RegistrationForm },
     { path: '/users', component: UserList },
-    { path: '/createuser', component: CreateUser },
+    { path: '/me', component: EditUser },
     //{ path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
 

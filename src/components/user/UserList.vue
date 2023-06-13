@@ -40,6 +40,7 @@
 
 <script>
 import axios from "../../axios-auth";
+import { useUserSessionStore } from "@/stores/usersession";
 import AdminPanel from "./../AdminPanel.vue";
 import UserListItem from "./UserListItem.vue";
 
@@ -60,8 +61,18 @@ export default {
       },
     };
   },
+  setup() {
+    const store = useUserSessionStore();
+
+    return {
+      store,
+    };
+  },
   mounted() {
     this.update();
+    if(this.store.isUserRoleEmployee){
+      this.$router.push("/home");
+    }
   },
   computed: {
     filteredUsers() {

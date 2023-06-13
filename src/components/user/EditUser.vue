@@ -2,7 +2,8 @@
   <section>
     <div class="container">
       <form ref="form">
-        <h2 class="mt-3 mt-lg-5">Edit User</h2>
+        <h2 class="mt-3 mt-lg-5" v-if="!store.isUserRoleEmployee">Edit User</h2>
+        <h2 class="mt-3 mt-lg-5" v-if="store.isUserRoleEmployee">My Details</h2>
         <h5 class="mb-4"></h5>
         <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
         <div class="success alert-success" v-if="successMessage" id="success-message">{{ successMessage }}</div>
@@ -82,15 +83,9 @@
         </div>
 
         <div class="input-group mt-4">
-          <button type="button" class="btn btn-primary" @click="updateUser">
-            Save changes
-          </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="this.$router.push('/users')">
-              Cancel
-          </button>
+          <button type="button" class="btn btn-primary" @click="updateUser">Save changes</button>
+          <button type="button" v-if="!this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/users')">Cancel</button>
+          <button type="button" v-if="this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/home')">Cancel</button>
         </div>
       </form>
     </div>
@@ -100,6 +95,8 @@
 <script>
 import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
+import { useUserSessionStore } from "@/stores/usersession";
+
 
 export default {
   name: "EditUser",
@@ -108,6 +105,12 @@ export default {
   },
   props: {
     id: Number,
+  },
+  setup() {
+    const store = useUserSessionStore();
+    return {
+      store
+    };
   },
   data() {
     return {
@@ -134,28 +137,29 @@ export default {
   methods: {
     updateUser() {
       axios
-        .put("users/" + this.id, this.user)
+        .put("users/" + this.store.getUserId, this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
           this.errorMessage = "";
           this.successMessage = "User updated successfully!";
-          this.$router.push("/users");
+          if(!this.store.isUserRoleEmployee)
+            this.$router.push("/users");
+          else
+            this.$router.push("/home");
         })
         .catch((error) => {
             console.log(error.response.data);
             this.errorMessage = error.response.data;
             this.successMessage = "";
-            setTimeout(() => {
-                this.errorMessage = "";
-            }, 8000);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             console.log(error);
           });
     },
   },
   mounted() {
     axios
-      .get("users/" + this.id)
+      .get("users/" + this.store.getUserId)
       .then((result) =>{
         console.log(result);
         this.user = result.data;
