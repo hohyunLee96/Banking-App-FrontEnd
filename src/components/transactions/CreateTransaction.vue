@@ -62,91 +62,120 @@ import axios from "../../axios-auth";
 import { useUserSessionStore } from '@/stores/usersession';
 
 export default {
-    name: "NewTransaction",
-    data() {
-        return {
-            fromIban: "",
-            toIban: "",
-            type: 0,
-            amount: "",
-            performingUser: useUserSessionStore().getUserId,
-            errorMessage: "",
-            loggedInUserId: useUserSessionStore().getUserId,
-            accounts: [], // Initialize as empty array
-            hasSavingsAccount: false,
-            hasCurrentAccount: false,
-            savingsAccountBalance: 0,
-            currentAccountBalance: 0,
-            transactionLimit: 0,
-            dailyLimit: 0,
-        };
+  name: "NewTransaction",
+  data() {
+    return {
+      fromIban: "",
+      toIban: "",
+      type: 0,
+      amount: "",
+      user: null,
+      errorMessage: "",
+      loggedInUserId: useUserSessionStore().getUserId,
+      accounts: [],
+      hasSavingsAccount: false,
+      hasCurrentAccount: false,
+      savingsAccountBalance: 0,
+      currentAccountBalance: 0,
+      transactionLimit: 0,
+      dailyLimit: 0,
+    };
+  },
+  setup() {
+    const store = useUserSessionStore();
+    return { store };
+  },
+  methods: {
+    sendTransaction() {
+      axios
+        .post("transactions", {
+          transactionId: this.transactionId,
+          fromIban: this.fromIban,
+          toIban: this.toIban,
+          type: this.type,
+          amount: this.amount,
+        })
+        .then((response) => {
+          alert("Transaction sent!");
+          console.log(response);
+        })
+        .catch((error) => {
+          if (error) {
+            this.errorMessage = error.response.data.message;
+          }
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 8000);
+          console.log(error);
+        });
     },
     methods: {
-        sendTransaction() {
-            axios
-                .post("http://localhost:8080/transactions", {
-                    transactionId: this.transactionId,
-                    fromIban: this.fromIban,
-                    toIban: this.toIban,
-                    type: this.type,
-                    amount: this.amount,
-                })
-                .then((response) => {
-                    alert("Transaction sent!");
-                    console.log(response);
-                    this.$router.push("/transactions");
-                })
-                .catch((error) => {
-                    if (error) {
-                        this.errorMessage = error.response.data.message;
-                    }
-                    setTimeout(() => {
-                        this.errorMessage = "";
-                    }, 8000);
-                    console.log(error);
-                });
-        },
-        goBack() {
+      sendTransaction() {
+        axios
+          .post("http://localhost:8080/transactions", {
+            transactionId: this.transactionId,
+            fromIban: this.fromIban,
+            toIban: this.toIban,
+            type: this.type,
+            amount: this.amount,
+          })
+          .then((response) => {
+            alert("Transaction sent!");
+            console.log(response);
             this.$router.push("/transactions");
-        },
-        getAccountDetails() {
-            axios
-                .get("http://localhost:8080/accounts?user=" + this.loggedInUserId)
-                .then((response) => {
-                    this.accounts = response.data;
-                    this.calculateSummary();
-                    console.log(response.data.dailyLimit);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        calculateSummary() {
-  let hasSavingsAccount = false;
-  let hasCurrentAccount = false;
+          })
+          .catch((error) => {
+            if (error) {
+              this.errorMessage = error.response.data.message;
+            }
+            setTimeout(() => {
+              this.errorMessage = "";
+            }, 8000);
+            console.log(error);
+          });
+      },
+      goBack() {
+        this.$router.push("/transactions");
+      },
+      getAccountDetails() {
+        axios
+          .get("http://localhost:8080/accounts?user=" + this.loggedInUserId)
+          .then((response) => {
+            this.accounts = response.data;
+            this.calculateSummary();
+            console.log(response.data.dailyLimit);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      calculateSummary() {
+        let hasSavingsAccount = false;
+        let hasCurrentAccount = false;
 
-  for (const account of this.accounts) {
-    if (account.accountType === "SAVINGS") {
-      hasSavingsAccount = true;
-    } else if (account.accountType === "CURRENT") {
-      hasCurrentAccount = true;
-    }
-  }
+        for (const account of this.accounts) {
+          if (account.accountType === "SAVINGS") {
+            hasSavingsAccount = true;
+          } else if (account.accountType === "CURRENT") {
+            hasCurrentAccount = true;
+          }
+        }
 
-  this.hasSavingsAccount = hasSavingsAccount;
-  this.hasCurrentAccount = hasCurrentAccount;
+        this.hasSavingsAccount = hasSavingsAccount;
+        this.hasCurrentAccount = hasCurrentAccount;
 
-  this.totalBalance = this.accounts.reduce(
-    (total, account) => total + account.balance,
-    0
-  );
-  this.transactionLimit = this.accounts[0].user.transactionLimit;
-  this.dailyLimit = this.accounts[0].user.dailyLimit;
-},
+        this.totalBalance = this.accounts.reduce(
+          (total, account) => total + account.balance,
+          0
+        );
+        this.transactionLimit = this.accounts[0].user.transactionLimit;
+        this.dailyLimit = this.accounts[0].user.dailyLimit;
+      },
     },
     mounted() {
-        this.getAccountDetails();
+      this.getAccountDetails();
     },
+  },
 };
 </script>
   
