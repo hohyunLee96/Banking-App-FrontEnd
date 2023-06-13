@@ -7,7 +7,8 @@
       <form ref="form">
         <h2 class="mt-3 mt-lg-5">Edit User</h2>
         <h5 class="mb-4"></h5>
-
+        <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
+        <div class="success alert-success" v-if="successMessage" id="success-message">{{ successMessage }}</div>
         <div class="input-group mb-3">
           <span class="input-group-text">First Name</span>
           <input type="text" class="form-control" v-model="user.firstName" />
@@ -23,18 +24,8 @@
           <input type="email" class="form-control" v-model="user.email" />
         </div>
 
-        <!---<div class="input-group mb-3">
-          <span class="input-group-text">Password</span>
-          <input type="password" class="form-control" v-model="user.password" />
-        </div>
-
         <div class="input-group mb-3">
-          <span class="input-group-text">Confirm Password</span>
-          <input type="password" class="form-control" v-model="user.passwordConfirm" />
-        </div>-->
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">Birth Date</span>
+          <span class="input-group-text">Date of Birth</span>
           <input type="date" class="form-control" v-model="user.birthDate" />
         </div>
 
@@ -71,6 +62,19 @@
           <input type="checkbox" class="form-check-input" v-model="user.hasAccount" />
         </div>
 
+        <h2 class="mt-3 mt-lg-5">Change Password</h2>
+        <h5 class="mb-4"></h5>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">New Password</span>
+          <input type="password" class="form-control" v-model="user.password" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">Confirm Password</span>
+          <input type="password" class="form-control" v-model="user.passwordConfirm" />
+        </div>
+
         <div class="input-group mt-4">
           <button type="button" class="btn btn-primary" @click="updateUser">
             Save changes
@@ -101,8 +105,12 @@ export default {
   },
   data() {
     return {
+      errorMessage: "",
+      successMessage: "",
       user: {
         email: "",
+        password: "",
+        passwordConfirm: "",
         firstName: "",
         lastName: "",
         birthDate: "",
@@ -111,7 +119,7 @@ export default {
         city: "",
         phoneNumber: "",
         userType: "",
-        hasAccount: false,
+        hasAccount: "",
       },
       userTypes: ["Employee", "Customer"],
     };
@@ -123,9 +131,19 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
-          this.$router.push("/users");
+          this.errorMessage = "";
+          this.successMessage = "User updated successfully!";
+          //this.$router.push("/users");
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+            console.log(error.response.data);
+            this.errorMessage = error.response.data;
+            this.successMessage = "";
+            setTimeout(() => {
+                this.errorMessage = "";
+            }, 8000);
+            console.log(error);
+          });
     },
   },
   mounted() {

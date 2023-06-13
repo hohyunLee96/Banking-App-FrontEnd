@@ -1,7 +1,7 @@
 <template>
   <section class="account-list">
     <div class="admin-panel" v-if="isUserRoleEmployee">
-      <AdminPanel />
+
     </div>
     <div>
       <h1>

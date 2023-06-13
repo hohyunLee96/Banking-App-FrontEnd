@@ -1,14 +1,17 @@
 <template>
   <section class="vh-100 gradient-custom">
     <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
-    <div class="container py-5 h-100">
+    <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card-body p-5 text-center">
 
             <div class="mb-md-5 mt-md-4 pb-5">
-              <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-              <br>
+
+              <div class="bank-icon">
+                <embed class="icon" id="svgicon" src="logo-no-background.svg" type="image/svg+xml">
+              </div>
+              <h2 class="fw-bold mb-4 text-uppercase">Login</h2>
               <div class="form-outline form-white mb-4">
                 <input id="inputemail" v-model="email" type="text" class="form-control" />
                 <label class="form-label" for="inputemail">Email</label>
@@ -66,7 +69,7 @@ export default {
       console.log("logging in!")
       this.store.login(this.email, this.password).then(() => {
         if (this.store.isAuthenticated) {
-          this.$router.push('/');
+          this.$router.push('/home');
         } else {
           this.errorMessage = "Login failed";
         }
@@ -91,13 +94,25 @@ export default {
 
 <style scoped>
 .gradient-custom {
-  background-color: #fdd835;
-  background-image: linear-gradient(315deg, #fdd835 0%, #f9a825 74%);
+  background-color: #003366;
+  background-image: linear-gradient(315deg, #003366 0%, #006699 74%);
 }
 
 .card-body {
   background-color: #fff;
   border-radius: 1rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bank-icon {
+
+  height: 100%;
+  width: 100%;
+}
+
+.bank-icon img {
+  width: 100px;
+  height: 100px;
 }
 
 .form-control {
@@ -172,5 +187,12 @@ export default {
 .px-5 {
   padding-left: 3rem;
   padding-right: 3rem;
+}
+ 
+ #svgicon {
+  width: 300px;
+  height: 200px;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 </style>

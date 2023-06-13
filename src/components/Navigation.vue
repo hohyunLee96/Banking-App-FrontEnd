@@ -19,7 +19,7 @@
         </li>
         <li class="nav-item" v-if="store.isAuthenticated">
           <router-link to="/myaccount" class="nav-link" active-class="active">
-            <i class="fas fa-user"></i> My Account
+            <i class="fas fa-user"></i> Accounts
           </router-link>
         </li>
         <li class="nav-item">
@@ -29,7 +29,7 @@
         </li>
         <li class="nav-item">
           <router-link to="/test" v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
-            <i class="fas fa-money-bill"></i> Search Iban
+            <i class="fas fa-search"></i> Search Iban
           </router-link>
         </li>
       </ul>
