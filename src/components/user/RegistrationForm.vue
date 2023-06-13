@@ -125,6 +125,8 @@ export default {
         phoneNumber: "",
         userType: "",
         hasAccount: "",
+        dailyLimit: "",
+        transactionLimit: "",
       },
     };
   },
@@ -146,10 +148,7 @@ export default {
         .catch((error) => {
           console.log(error.response.data);
           this.errorMessage = error.response.data;
-
-          setTimeout(() => {
-            this.errorMessage = "";
-          }, 8000);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           console.log(error);
         });
     },
