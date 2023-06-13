@@ -82,7 +82,7 @@ export default {
     return { store };
   },
   methods: {
-    sendTransaction() {
+    sendTransaction() { 
       event.preventDefault();
       axios
         .post("transactions", {
@@ -94,6 +94,7 @@ export default {
         .then((response) => {
           alert("Transaction sent!");
           console.log(response);
+           this.$router.push("/transactions");  
         })
         .catch((error) => {
           if (error) {
