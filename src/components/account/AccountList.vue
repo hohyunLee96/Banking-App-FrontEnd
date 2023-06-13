@@ -1,7 +1,7 @@
 <template>
   <section class="account-list">
     <div class="admin-panel" v-if="isUserRoleEmployee">
-      <AdminPanel />
+
     </div>
     <div>
       <h1>
@@ -27,7 +27,7 @@
           <i class="fas fa-undo"></i> Reset Filters
         </button>
       </div>
-      <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee">w
+      <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee">
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">

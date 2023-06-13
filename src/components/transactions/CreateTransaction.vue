@@ -12,11 +12,13 @@
                       <h3 class="mb-5 text-uppercase">New Transaction</h3>
                       <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
                       <div class="row">
-                        <div class="form-outline mb-4">
-                          <div class="form-outline">
-                            <input type="text" id="firstnameInput" v-model="fromIban" class="form-control form-control-lg" name="toIban" required placeholder="Enter sender IBAN" />
-                            <label class="form-label" for="firstnameInput"> Sender </label>
-                          </div>
+                        <div class="col-md-6">
+                          <label for="accountSelect">Select Account:</label>
+                          <select id="accountSelect" class="form-select" v-model="fromIban">
+                            <option v-for="account in accounts" :value="account.IBAN" :key="account.IBAN">
+                              ({{ account.accountType }}) {{ account.IBAN }}
+                            </option>
+                          </select>
                         </div>
                         <div class="row">
                           <div class="form-outline mb-4">
@@ -108,16 +110,16 @@ export default {
         });
     },
     getUserAccounts() {
-        axios
-          .get("accounts")
-          .then((response) => {
-            this.accounts = response.data;
-            console.log(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
+      axios
+        .get("accounts")
+        .then((response) => {
+          this.accounts = response.data;
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     goBack() {
       this.$router.push("/transactions");
     },

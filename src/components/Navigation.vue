@@ -19,7 +19,7 @@
         </li>
         <li class="nav-item" v-if="store.isAuthenticated">
           <router-link to="/myaccount" class="nav-link" active-class="active">
-            <i class="fas fa-user"></i> My Account
+            <i class="fas fa-user"></i> Accounts
           </router-link>
         </li>
         <li class="nav-item">
