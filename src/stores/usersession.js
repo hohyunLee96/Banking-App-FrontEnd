@@ -55,7 +55,6 @@ export const useUserSessionStore = defineStore("userSession", {
             this.jwt = response.data.jwt;
             this.email = response.data.email;
             this.id = response.data.id;
-            this.loggedInUser=getLoggedInUser();
 
             localStorage.setItem("jwt", this.jwt);
             localStorage.setItem("email", this.email);
