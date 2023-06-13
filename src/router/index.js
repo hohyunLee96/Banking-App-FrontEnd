@@ -23,7 +23,6 @@ const router = createRouter({
   routes: [
 
     { path: '/', component: Home },
-    { path: '/users', component: UserList },
     { path: '/edituser/:id', component: EditUser, props: true  },
     {
       path: '/createaccount/:userId',
@@ -31,7 +30,6 @@ const router = createRouter({
       component: CreateAccount
     }, 
     { path: '/test', component: AccountIbanList },
-    { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: RegistrationForm },
     { path: '/users', component: UserList },
