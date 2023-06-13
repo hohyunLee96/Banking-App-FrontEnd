@@ -19,15 +19,18 @@
                 </div>
                 <div class="mb-4">
                   <label for="toIban" class="form-label">Recipient:</label>
-                  <input type="text" id="toIban" v-model="toIban" class="form-control form-control-lg" name="toIban" required placeholder="Enter recipient IBAN" />
+                  <input type="text" id="toIban" v-model="toIban" class="form-control form-control-lg" name="toIban"
+                    required placeholder="Enter recipient IBAN" />
                 </div>
                 <div class="mb-4">
                   <label for="amount" class="form-label">Amount:</label>
-                  <input type="number" id="amount" v-model="amount" class="form-control form-control-lg" name="amount" required placeholder="Enter amount" />
+                  <input type="number" id="amount" v-model="amount" class="form-control form-control-lg" name="amount"
+                    required placeholder="Enter amount" />
                 </div>
                 <div class="d-flex justify-content-end">
                   <button type="button" class="btn btn-light btn-lg me-2" @click="goBack()">Cancel</button>
-                  <button name="registerBtn" type="submit" class="btn btn-warning btn-lg" @click="sendTransaction()">Send</button>
+                  <button name="registerBtn" type="submit" class="btn btn-warning btn-lg"
+                    @click="sendTransaction()">Send</button>
                 </div>
               </div>
             </div>
@@ -36,14 +39,11 @@
             <div v-if="hasSavingsAccount || hasCurrentAccount" class="card card-summary mb-3 shadow">
               <div class="card-body p-md-4">
                 <h4 class="mb-4">Account Summary</h4>
-                <div v-if="hasSavingsAccount">
-                  <p><strong>Savings account balance:</strong> {{ savingsAccountBalance }}</p>
+                <div v-for="account in accounts" :key="account.IBAN">
+                  <p><strong>{{ account.accountType }} Account Balance: € {{ account.balance }}</strong> </p>
                 </div>
-                <div v-if="hasCurrentAccount">
-                  <p><strong>Current account balance:</strong> {{ currentAccountBalance }}</p>
-                </div>
-                <p><strong>Transaction Limit:</strong> {{ transactionLimit }}</p>
-                <p><strong>Daily Limit:</strong> {{ dailyLimit }}</p>
+                <p><strong>Transaction Limit:</strong>€  {{ this.store.getUser.transactionLimit }}</p>
+                <p><strong>Daily Limit:</strong> € {{ this.store.getUser.dailyLimit }}</p>
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@ export default {
       toIban: "",
       type: 0,
       amount: "",
-      performingUser: useUserSessionStore().getUserId,
+      user: null,
       errorMessage: "",
       loggedInUserId: useUserSessionStore().getUserId,
       accounts: [],
@@ -76,6 +76,10 @@ export default {
       transactionLimit: 0,
       dailyLimit: 0,
     };
+  },
+  setup() {
+    const store = useUserSessionStore();
+    return { store };
   },
   methods: {
     sendTransaction() {
@@ -104,7 +108,7 @@ export default {
     },
     getUserAccounts() {
       axios
-        .get("accounts")
+        .get("accounts?accounttype=SAVINGS")
         .then((response) => {
           this.accounts = response.data;
           console.log(response.data);
@@ -122,7 +126,8 @@ export default {
         .then((response) => {
           this.accounts = response.data;
           this.calculateSummary();
-          console.log(response.data.dailyLimit);
+          console.log(response.data);
+         
         })
         .catch((error) => {
           console.log(error);
@@ -151,7 +156,7 @@ export default {
       this.dailyLimit = this.accounts[0].user.dailyLimit;
     },
   },
-  mounted() {
+    mounted() {
     this.getAccountDetails();
   },
 };
@@ -207,5 +212,4 @@ h4 {
   .card-registration {
     margin-top: 20px;
   }
-}
-</style>
+}</style>
