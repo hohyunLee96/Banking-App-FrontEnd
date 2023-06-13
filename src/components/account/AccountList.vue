@@ -5,7 +5,7 @@
     </div>
     <div>
       <h1>
-        My total Balance: {{ totalBalance }}
+        My total Balance: {{ balance }}
       </h1>
     </div>
     <div class="container">
@@ -27,7 +27,8 @@
           <i class="fas fa-undo"></i> Reset Filters
         </button>
       </div>
-      <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee">
+      <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee"
+        @click="this.$router.push({ path: '/users' });">
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">
@@ -60,14 +61,15 @@ export default {
         accountType: "",
         user: null,
       },
-      totalBalance: 0,
-      loggedInUserId : useUserSessionStore().getUserId,
+      balance: 0,
+      loggedInUserId: useUserSessionStore().getUserId,
     };
   },
+  setup() {
+    const store = useUserSessionStore();
+    return { store };
+  },
   computed: {
-    loggedInUserId() {
-      return useUserSessionStore().getUserId;
-    },
     filteredAccounts() {
       const { firstName, lastName, accountType, user } = this.filters;
 
@@ -100,13 +102,20 @@ export default {
   },
   mounted() {
     this.update();
-    this.calculateTotalBalance();
+    this.totalBalance();
   },
   methods: {
-    calculateTotalBalance() {
-      this.totalBalance = this.accounts
-        .filter((account) => account.user === this.loggedInUserId)
-        .reduce((sum, account) => sum + account.balance, 0);
+    totalBalance() {
+      axios
+        .get("http://localhost:8080/accounts?totalBalance=" + this.loggedInUserId)
+        .then((response) => {
+          this.balance = response.data; // Set the total balance in data property
+          console.log(response.data);
+         
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     update() {
       axios
@@ -114,7 +123,7 @@ export default {
         .then((result) => {
           console.log(result);
           this.accounts = result.data;
-          this.calculateTotalBalance();
+          this.totalBalance();
         })
         .catch((error) => console.log(error));
     },
