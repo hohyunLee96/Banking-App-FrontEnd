@@ -1,11 +1,20 @@
 <template>
+  <section style="width: 100%; height: 100%">
+  <div class="d-flex flex-column justify-content-between align-items-start mb-4" style="width: 100%; height: 40vh; background-image: url('../../../home-page-background-image.jpg'); background-size: cover; background-position: 0px; background-repeat: no-repeat;">
+    <div id="title-section" style="margin-left: 3vw;">
+      <p style="color: white; font-weight: 1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
+      <h5 style="color: white;">Don't have an account yet?</h5>
+      <button class="btn btn-outline-light mt-4" style="font-size: medium;" @click="this.$router.push({ path: '/login'})">Open Account</button>
+    </div>
+  </div>
+</section>
   <section class="account-list">
     <div class="admin-panel" v-if="isUserRoleEmployee">
 
     </div>
     <div>
       <h1>
-        My total Balance: {{ balance }}
+        My total Balance: €{{ balance.toFixed(2) }}
       </h1>
     </div>
     <div class="container">
@@ -61,7 +70,19 @@ export default {
         accountType: "",
         user: null,
       },
-      balance: 0,
+      user: {
+        email: "",
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        postalCode: "",
+        address: "",
+        city: "",
+        phoneNumber: "",
+        userType: "",
+        hasAccount: "",
+      },
+      balance: 0.0,
       loggedInUserId: useUserSessionStore().getUserId,
     };
   },
@@ -103,6 +124,7 @@ export default {
   mounted() {
     this.update();
     this.totalBalance();
+    this.getLogUser();
   },
   methods: {
     totalBalance() {
@@ -111,7 +133,7 @@ export default {
         .then((response) => {
           this.balance = response.data; // Set the total balance in data property
           console.log(response.data);
-         
+
         })
         .catch((error) => {
           console.log(error);
@@ -124,6 +146,15 @@ export default {
           console.log(result);
           this.accounts = result.data;
           this.totalBalance();
+        })
+        .catch((error) => console.log(error));
+    },
+    getLogUser() {
+      axios
+        .get("users/" + this.store.getUserId)
+        .then((result) => {
+          console.log(result);
+          this.user = result.data;
         })
         .catch((error) => console.log(error));
     },
