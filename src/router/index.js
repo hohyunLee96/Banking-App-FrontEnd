@@ -22,7 +22,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
 
-    { path: '/', component: Home },
+    { path: '/', component: Login },
     { path: '/users', component: UserList },
     { path: '/edituser/:id', component: EditUser, props: true  },
     {
