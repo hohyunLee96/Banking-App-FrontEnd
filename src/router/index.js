@@ -22,8 +22,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
 
-    { path: '/', component: AccountList },
-    { path: '/users', component: UserList },
+    { path: '/', component: Home },
     { path: '/edituser/:id', component: EditUser, props: true  },
     {
       path: '/createaccount/:userId',
@@ -31,7 +30,7 @@ const router = createRouter({
       component: CreateAccount
     }, 
     { path: '/search', component: AccountIbanList },
-    { path: '/users', component: CreateAccount },
+    { path: '/test', component: AccountIbanList },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: RegistrationForm },
     { path: '/users', component: UserList },

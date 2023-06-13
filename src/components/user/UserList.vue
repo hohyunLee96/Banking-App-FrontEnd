@@ -70,7 +70,7 @@ export default {
   },
   mounted() {
     this.update();
-    if(this.store.isUserRoleEmployee){
+    if(!this.store.isUserRoleEmployee){
       this.$router.push("/home");
     }
   },
