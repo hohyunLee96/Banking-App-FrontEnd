@@ -4,7 +4,7 @@
       <div id="title-section" style="margin-left: 3vw;">
         <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Frank Bank</p>
         <h5 style="color: white; ">Online banking anywhere, anytime.</h5>
-        <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;">Open Account</button>
+        <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;" @click="goToLogin">Login</button>
       </div>
     </div>
   </section>
@@ -17,6 +17,15 @@ export default {
     return {
       msg: ""
     };
+  },
+  methods:
+  {
+    // goToLogin() {
+    //   this.$router.push('/createaccount/1');
+    // }
+    goToLogin() {
+      this.$router.push('/login');
+    }
   },
   mounted() {
     //fetch the message from the spring boot server

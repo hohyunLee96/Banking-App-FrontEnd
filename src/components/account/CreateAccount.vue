@@ -2,7 +2,7 @@
   <section>
     <div class="container">
       <form ref="form">
-        <h2 class="mt-3 mt-lg-5">Create an account</h2>
+        <h2 class="mt-3 mt-lg-5 text-center " id="createaccountheader">Create an account</h2>
         <h5 class="mb-4"></h5>
 
         <div class="input-group mb-3">
@@ -10,9 +10,9 @@
           <input type="number" class="form-control" v-model="users.id" />
         </div>
 
-        <div class="input-group mb-3">
+        <div class="input-group mb-3 text-center">
           <span class="input-group-text">user name</span>
-          <textarea class="form-control" v-model="users.firstName"></textarea>
+          <input type="text" class="form-control" v-model="users.firstName" />
         </div>
 
         <div class="input-group mb-3">
@@ -28,12 +28,11 @@
           </select>
         </div>
 
-
         <div class="input-group mt-4">
-          <button type="button" class="btn btn-primary" @click="addAccount">
+          <button type="button" id="createAccountButton" @click="addAccount">
             Create Account
           </button>
-          <button type="button" class="btn btn-danger" @click="this.$router.push('/accounts')">
+          <button type="button" id="cancelButton" @click="this.$router.push('/accounts')">
             Cancel
           </button>
         </div>
@@ -92,4 +91,30 @@ export default {
 };
 </script>
   
-<style></style>
+<style>
+  #createaccountheader  {
+    margin-bottom: 100px;
+  }
+  #createAccountButton {
+    margin-right: 30px;
+    margin-left: 40%;
+    margin-top: 40px;
+    background-color: darkblue;
+    padding-left: 25px;
+    padding-right: 25px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+  }
+  #cancelButton {
+    background-color: red;
+    margin-top: 40px;
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+
+</style>
