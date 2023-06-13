@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "../axios-auth.js";
+import jwtDecode from "jwt-decode";
 
 export const useUserSessionStore = defineStore("userSession", {
   state: () => ({
@@ -21,8 +22,9 @@ export const useUserSessionStore = defineStore("userSession", {
     getUserId(state) {
       return state.id;
     },
-
- 
+    getIsUserRoleEmployee(state) {
+      return state.isEmployee === true;
+    },
   },
   actions: {
     async localLogin() {
@@ -31,9 +33,10 @@ export const useUserSessionStore = defineStore("userSession", {
         this.email = localStorage.getItem("email");
         this.id = localStorage.getItem("id");
         axios.defaults.headers.common["Authorization"] = "Bearer " + this.jwt;
+        this.isEmployee = this.isUserRoleEmployee();
 
         try {
-          this.loggedInUser =await this.getLoggedInUser();
+          this.loggedInUser = await this.getLoggedInUser();
         } catch (error) {
           console.error(error.message);
         }
@@ -51,7 +54,7 @@ export const useUserSessionStore = defineStore("userSession", {
             console.log(response);
             this.jwt = response.data.jwt;
             this.email = response.data.email;
-            this.id = response.data.id;
+            this.id = response.data.id; 
 
             localStorage.setItem("jwt", this.jwt);
             localStorage.setItem("email", this.email);
@@ -79,7 +82,14 @@ export const useUserSessionStore = defineStore("userSession", {
       delete axios.defaults.headers.common["Authorization"];
       this.loggedInUser = null; // Clear the logged-in user
     },
-
+    isUserRoleEmployee() {
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.auth === "ROLE_EMPLOYEE";
+      }
+      return false;
+    },
     getLoggedInUser() {
       const id = this.id;
       return axios
@@ -98,5 +108,6 @@ export const useUserSessionStore = defineStore("userSession", {
         return this.$store.getIsEmployee;
       },
     },
+
   },
 });

@@ -1,7 +1,21 @@
 <template>
+  <section style="width: 100%; height: 100%">
+  <div class="d-flex flex-column justify-content-between align-items-start mb-4" style="width: 100%; height: 40vh; background-image: url('../../../home-page-background-image.jpg'); background-size: cover; background-position: 0px; background-repeat: no-repeat;">
+    <div id="title-section" style="margin-left: 3vw;">
+      <p style="color: white; font-weight: 1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
+      <h5 style="color: white;">Don't have an account yet?</h5>
+      <button class="btn btn-outline-light mt-4" style="font-size: medium;" @click="this.$router.push({ path: '/login'})">Open Account</button>
+    </div>
+  </div>
+</section>
   <section class="account-list">
     <div class="admin-panel" v-if="isUserRoleEmployee">
-      <AdminPanel />
+
+    </div>
+    <div>
+      <h1>
+        My total Balance: €{{ balance.toFixed(2) }}
+      </h1>
     </div>
     <div class="container">
       <h2 class="mt-3 mt-lg-5"><i class="fas fa-list"></i> Accounts</h2>
@@ -18,15 +32,12 @@
         </select>
         <label><i class="fas fa-id-card"></i> User ID:</label>
         <input type="number" v-model="filters.user" />
-        <button type="button" class="btn btn-primary" @click="applyFilters">
-          <i class="fas fa-filter"></i> Apply Filters
-        </button>
         <button type="button" class="btn btn-secondary" @click="resetFilters">
           <i class="fas fa-undo"></i> Reset Filters
         </button>
       </div>
       <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee"
-        @click="this.$router.push({ path: '/users', query: { hasAccount: false } });">
+        @click="this.$router.push({ path: '/users' });">
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">
@@ -42,6 +53,7 @@ import axios from "../../axios-auth";
 import AdminPanel from "./../AdminPanel.vue";
 import AccountListItem from "./AccountListItem.vue";
 import jwtDecode from "jwt-decode";
+import { useUserSessionStore } from '@/stores/usersession';
 
 export default {
   name: "AccountList",
@@ -58,7 +70,25 @@ export default {
         accountType: "",
         user: null,
       },
+      user: {
+        email: "",
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        postalCode: "",
+        address: "",
+        city: "",
+        phoneNumber: "",
+        userType: "",
+        hasAccount: "",
+      },
+      balance: 0.0,
+      loggedInUserId: useUserSessionStore().getUserId,
     };
+  },
+  setup() {
+    const store = useUserSessionStore();
+    return { store };
   },
   computed: {
     filteredAccounts() {
@@ -67,8 +97,8 @@ export default {
       return this.accounts.filter((account) => {
         // Apply filters based on the selected criteria
         return (
-          (firstName === "" || account.user.firstName.toLowerCase().includes(firstName.toLowerCase())) &&
-          (lastName === "" || account.user.lastName.toLowerCase().includes(lastName.toLowerCase())) &&
+          (firstName === "" || account.firstName.toLowerCase().includes(firstName.toLowerCase())) &&
+          (lastName === "" || account.lastName.toLowerCase().includes(lastName.toLowerCase())) &&
           (accountType === "" || account.accountType === accountType) &&
           (user === null || account.user === user)
         );
@@ -82,34 +112,49 @@ export default {
       }
       return false;
     },
+    isUserRoleCustomer() {
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.auth === "ROLE_CUSTOMER";
+      }
+      return false;
+    },
   },
   mounted() {
     this.update();
+    this.totalBalance();
+    this.getLogUser();
   },
   methods: {
+    totalBalance() {
+      axios
+        .get("http://localhost:8080/accounts?totalBalance=" + this.loggedInUserId)
+        .then((response) => {
+          this.balance = response.data; // Set the total balance in data property
+          console.log(response.data);
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     update() {
       axios
         .get("accounts")
         .then((result) => {
           console.log(result);
           this.accounts = result.data;
+          this.totalBalance();
         })
         .catch((error) => console.log(error));
     },
-    applyFilters() {
-      // Perform API request with filters
+    getLogUser() {
       axios
-        .get("http://localhost:8080/accounts", {
-          params: {
-            firstName: this.filters.firstName,
-            lastName: this.filters.lastName,
-            accountType: this.filters.accountType,
-            user: this.filters.user,
-          },
-        })
+        .get("users/" + this.store.getUserId)
         .then((result) => {
           console.log(result);
-          this.accounts = result.data;
+          this.user = result.data;
         })
         .catch((error) => console.log(error));
     },
@@ -124,55 +169,25 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.account-list {
-  margin-top: 30px;
-}
-
+<style>
 .admin-panel {
-  margin-top: 0;
+  margin-top: 0px;
+  /* Adjust the value to remove the row gap */
   width: 200px;
   float: left;
+  /* Add any additional styling for the admin panel here */
 }
 
 .container {
   margin-left: 200px;
+  /* Adjust the value to match the admin panel width */
+  /* Add any additional styling for the container here */
 }
 
-.filters {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.filters label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.filters input[type="text"],
-.filters input[type="number"],
-.filters select {
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
-}
-
-.btn-primary {
-  margin-right: 10px;
-}
-
-.row {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-
-.mt-3 {
-  margin-top: 15px;
-}
-
-.mt-lg-5 {
-  margin-top: 40px;
+/* Clear the float to prevent container collapsing */
+.container::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 </style>

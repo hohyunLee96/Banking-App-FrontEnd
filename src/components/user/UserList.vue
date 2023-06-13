@@ -1,20 +1,21 @@
 <template>
   <section>
-    <div style="width: 100%; display: flex;" id="admin-panel">
-      <div class="admin-panel" style="flex-grow: 0; margin-top: 26px;">
-        <AdminPanel />
-      </div>
-      <div style="flex-grow: 1;" id="users-view">
-        <h2 class="">Users</h2>
-        <div style="display: flex; flex-direction: row; background-color: lightgrey; width: 100%;" id="filter-menu">
-          <div class="input-group mb-3" style="width: 100%; margin-top: 20px; margin-left: 20px; margin-right: 20px;">
-            <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" v-model="filterValues.keyword" @input="applyFilter">
+    <div class="admin-panel">
+      <div class="users-view">
+        <h2 class="section-title">Users</h2>
+        <button type="button" class="btn btn-add-user m-3" @click="this.$router.push('/register');">
+          <i class="fas fa-plus"></i>
+          Add User
+        </button>
+        <div class="filter-menu">
+          <div class="row filter-bar">
+            <div class="col">
+              <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2"
+                v-model="filterValues.keyword" @input="applyFilter">
+            </div>
           </div>
-          <div class="input-group mb-3" style="width: 100%; margin-top: 20px;">
-            <input id="date-search" type="date" class="form-control" placeholder="" aria-describedby="basic-addon2" v-model="filterValues.birthDate" @input="applyFilter" ref="dateInput">
-          </div>
-          <div class="filter-bar mt-3" style="margin-right: 20px;">
-            <label for="filter">Filter: &nbsp;</label>
+          <div class="col">
+            <label class="m-3" for="filter">Filter:</label>
             <select id="filter" v-model="filterOption" @change="applyFilter">
               <option value="all">All Users</option>
               <option value="withoutAccount">Without Account</option>
@@ -22,25 +23,24 @@
               <option value="withoutCurrentAccount">Without Current Account</option>
             </select>
           </div>
+
+
         </div>
-        <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createuser');">
-          Add User
-        </button>
-        <div class="row mt-3" id="users-list" style="margin-left: 10px; margin-right: 10px;">
-          <user-list-item
-            v-for="user in filteredUsers"
-            :key="user.id"
-            :user="user"
-            @update="update"
-          />
+
+        <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
+        <div class="users-list">
+          <user-list-item v-for="user in filteredUsers" :key="user.id" :user="user" :filter-option="filterOption"
+            @update="update" @error-message="setErrorMessage" />
         </div>
       </div>
     </div>
   </section>
 </template>
 
+
 <script>
 import axios from "../../axios-auth";
+import { useUserSessionStore } from "@/stores/usersession";
 import AdminPanel from "./../AdminPanel.vue";
 import UserListItem from "./UserListItem.vue";
 
@@ -52,20 +52,30 @@ export default {
   },
   data() {
     return {
+      errorMessage: "",
       users: [],
       filterOption: "all",
-      filterParameters: ["keyword", "birthDate", "hasAccount"],
       filterValues: {
         keyword: "",
         birthDate: "",
-        hasAccount: "",
       },
     };
   },
+  setup() {
+    const store = useUserSessionStore();
+
+    return {
+      store,
+    };
+  },
   mounted() {
+    if(!this.store.isUserRoleEmployee){
+      this.$router.push("/home");
+    }
+    if(!this.store.isAuthenticated){
+      this.$router.push("/login");
+    }
     this.update();
-    const dateInput = this.$refs.dateInput;
-    dateInput.addEventListener('input', this.handleDateInput);
   },
   computed: {
     filteredUsers() {
@@ -73,6 +83,13 @@ export default {
     },
   },
   methods: {
+    setErrorMessage(message) {
+      this.errorMessage = message;
+
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 8000);
+    },
     formatDate(dateString) {
       const format = { year: "numeric", month: "long", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -83,33 +100,23 @@ export default {
         if (this.filterValues[param] !== "") {
           if (param === "birthDate") {
             const date = new Date(this.filterValues[param]);
-            const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            const formattedDate = `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}`;
             params[param] = formattedDate;
           } else {
             params[param] = this.filterValues[param];
           }
         }
       });
-      axios
-        .get("users", {params})
-        .then((result) => {
-          console.log(result);
-          this.users = result.data;
-        })
-        .catch((error) => console.log(error));
-    },
-    handleDateInput() {
-      this.filterValues.birthDate = this.$refs.dateInput.value;
-      this.applyFilter();
-    },
-    applyFilter() {
-      this.update();
-      const params = {
-        hasAccount: this.filterOption === "withoutAccount" ? false : undefined,
-        excludedAccountType:
-          this.filterOption === "withoutSavingsAccount" ? "SAVINGS" :
-            this.filterOption === "withoutCurrentAccount" ? "CURRENT" : undefined,
-      };
+
+      if (this.filterOption === "withoutAccount") {
+        params.hasAccount = false;
+        params.userType = "ROLE_USER";
+      } else if (this.filterOption === "withoutSavingsAccount") {
+        params.excludedAccountType = "SAVINGS";
+      } else if (this.filterOption === "withoutCurrentAccount") {
+        params.excludedAccountType = "CURRENT";
+      }
+
       axios
         .get("users", { params })
         .then((result) => {
@@ -118,7 +125,104 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+    handleDateInput() {
+      this.filterValues.birthDate = this.$refs.dateInput.value;
+      this.update();
+    },
+    applyFilter() {
+      this.update();
+    },
   },
 };
 </script>
+<style scoped>
+.admin-panel {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.users-view {
+  max-width: 100vw;
+  width: 80vw;
+}
+
+.section-title {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.filter-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.input-group {
+  flex-grow: 1;
+}
+
+#search {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+}
+
+label {
+  margin-right: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+#filter {
+  width: 150px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.btn {
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-user {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.alert {
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.users-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px;
+  /* Add negative margin to offset the default padding of user-list-item */
+}
+</style>
 

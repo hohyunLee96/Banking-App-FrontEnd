@@ -3,7 +3,7 @@
     <div class="admin-panel">
       <!-- Admin panel content -->
     </div>
-
+ 
     <div class="container">
       <h2>Filter</h2>
       <div class="filter-bar mt-2">
@@ -37,9 +37,6 @@
             <template v-else-if="param === 'fromDate' || param === 'toDate'">
               <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
             </template>
-            <template v-else-if="param === 'dateFrom' || param === 'dateTo'">
-              <input type="datetime-local" v-model="filterValues[param]" @change="getAllTransactions" />
-            </template>
           </div>
         </div>
       </div>
@@ -57,7 +54,7 @@
               <th>From IBAN</th>
               <th>To IBAN</th>
               <th>Amount</th>
-              <th>Performing User</th>
+              <th v-if="isUserRoleEmployee">Performing User</th>
             </tr>
           </thead>
           <tbody>
@@ -79,11 +76,13 @@
 
 <script>
 import axios from "../../axios-auth";
+import { useUserSessionStore } from "@/stores/usersession";
 
 export default {
   name: "TransactionList",
   data() {
-    return {
+    return { 
+      isUserRoleEmployee: useUserSessionStore.getIsUserRoleEmployee,
       transactions: [],
       filterParameters: ["fromIban", "toIban", "amount", "performingUser", "fromDate", "toDate"],
       filterValues: {
@@ -228,6 +227,10 @@ export default {
           console.log(error);
         });
     },
+  },
+  mounted() {
+    const store = useUserSessionStore();
+    this.isUserRoleEmployee= store.isUserRoleEmployee();
   },
   created() {
     this.getAllTransactions();
