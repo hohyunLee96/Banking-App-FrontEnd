@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     sendTransaction() {
+      event.preventDefault();
       axios
         .post("transactions", {
           fromIban: this.fromIban,
