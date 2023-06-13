@@ -50,12 +50,12 @@ export default {
       return "Unknown";
     },
     shouldDisplayCreateAccountButton(user) {
-      if (this.filterOption === "withoutSavingsAccount" && !user.hasSavingsAccount && user.userType !== "ROLE_EMPLOYEE") {
+      if (this.filterOption === "withoutSavingsAccount" && !user.hasSavingsAccount) {
         return true;
-      } else if (this.filterOption === "withoutCurrentAccount" && !user.hasCurrentAccount && user.userType !== "ROLE_EMPLOYEE") {
+      } else if (this.filterOption === "withoutCurrentAccount" && !user.hasCurrentAccount) {
         return true;
       }
-      else if (!user.hasAccount && user.userType !== "ROLE_EMPLOYEE") {
+      else if (!user.hasAccount) {
         return true;
       }
       return false;
@@ -67,7 +67,11 @@ export default {
           console.log(result);
           this.$emit("update");
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error.response.data.message);
+          this.$emit('error-message', error.response.data.message);
+          console.log(error);
+        });
     },
     editUser(id) {
       this.$router.push('/edituser/' + id);

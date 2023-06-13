@@ -17,6 +17,7 @@ import AdminPanel from '../components/AdminPanel.vue';
 import CreateTransaction from '../components/transactions/CreateTransaction.vue';
 import TransactionList from '../components/transactions/TransactionList.vue';
 import ATM from '../components/transactions/ATM.vue'
+import AccountIbanList from '../components/account/AccountIbanList.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,10 +31,12 @@ const router = createRouter({
       name: 'CreateAccount',
       component: CreateAccount
     }, 
+    { path: '/test', component: AccountIbanList },
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: RegistrationForm },
     { path: '/users', component: UserList },
+    { path: '/createuser', component: CreateUser },
     //{ path: '/users', component: CreateAccount },
     { path: '/edituser/:id', component: EditUser, props: true  },
 

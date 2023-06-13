@@ -2,7 +2,8 @@
   <section>
     <div style="display: flex; width: 100%; justify-content: center; margin-bottom: 30px;">
       <form ref="form" style="width: 80% !important">
-        <h2 class="mt-3 mt-lg-5">Register</h2>
+        <h2 class="mt-3 mt-lg-5" v-if="store.isAuthenticated">Create User</h2>
+        <h2 class="mt-3 mt-lg-5" v-if="!store.isAuthenticated">Register</h2>
         <h5 class="mb-4"></h5>
 
         <div class="input-group mb-3">
@@ -67,7 +68,7 @@
           <button
             type="button"
             class="btn btn-danger"
-            @click="this.$router.push('/')">
+            @click="this.$router.push('/users')">
               Cancel
           </button>
         </div>

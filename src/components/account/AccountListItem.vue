@@ -43,10 +43,13 @@
 <template>
   <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 p-2">
     <div class="card bank-account-card h-100">
+      <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
       <div class="card-body">
         <div class="account-details">
           <h4 class="account-title">{{ "Account Details" }}</h4>
           <p class="user-id">{{ "User ID: " + account.user }}</p>
+          <p class="user-id">{{ "First Name: " + account.firstName }}</p>
+          <p class="user-id">{{ "Last Name: " + account.lastName }}</p>
           <p class="iban">{{ account.IBAN }}</p>
           <p class="account-type">{{ account.accountType }}</p>
           <p class="account-status" :class="{ 'text-success': account.isActive, 'text-danger': !account.isActive }">
@@ -97,6 +100,7 @@ export default {
     return {
       isModifyLimitDialogOpen: false,
       newLimit: null,
+      errorMessage: ""
     };
   },
   computed: {
@@ -120,7 +124,15 @@ export default {
           this.account.isActive = false;
           this.$emit('update');
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          if (error) {
+            this.errorMessage = error.response.data.message;
+          }
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 8000);
+          console.log(error);
+        });
     },
     activateAccount(id) {
       const requestData = { isActive: true, absoluteLimit: this.account.absoluteLimit };
@@ -132,7 +144,15 @@ export default {
           this.account.isActive = true;
           this.$emit('update');
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          if (error) {
+            this.errorMessage = error.response.data.message;
+          }
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 8000);
+          console.log(error);
+        });
     },
     openModifyLimitDialog() {
       // Reset the new limit value
@@ -152,7 +172,11 @@ export default {
           // Close the dialog
           this.isModifyLimitDialogOpen = false;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          if (error.response && error.response.data && error.response.data.message) {
+            this.errorMessage = error.response.data.message;
+          }
+        });
     },
     cancelModifyLimit() {
       // Close the dialog without modifying the limit
