@@ -31,7 +31,7 @@ const router = createRouter({
       name: 'CreateAccount',
       component: CreateAccount
     }, 
-    { path: '/test', component: AccountIbanList },
+    { path: '/search', component: AccountIbanList },
     { path: '/users', component: CreateAccount },
     //USER ROUTES/////////////////////////////////////////////////////////
     { path: '/register', component: RegistrationForm },
