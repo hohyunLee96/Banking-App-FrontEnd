@@ -1,6 +1,6 @@
 <template>
-  <section>
-    <div class="container">
+  <section style="width: 100%; display: flex; justify-items: center; justify-content: center;">
+    <div style="width: 80%;">
       <form ref="form">
         <h2 class="mt-3 mt-lg-5" v-if="!store.isUserRoleEmployee">Edit User</h2>
         <h2 class="mt-3 mt-lg-5" v-if="store.isUserRoleEmployee">My Details</h2>
@@ -47,7 +47,7 @@
           <input type="text" class="form-control" v-model="user.phoneNumber" />
         </div>
 
-        <div class="input-group mb-3">
+        <div v-if="!store.isUserRoleEmployee" class="input-group mb-3">
           <span class="input-group-text">User Type</span>
           <select v-model=user.userType class="form-select" aria-label="Default select example">
             <option value="ROLE_EMPLOYEE">Employee</option>
