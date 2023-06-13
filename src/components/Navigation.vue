@@ -17,11 +17,11 @@
             <i class="fas fa-exchange-alt"></i> Transactions
           </router-link>
         </li>
-        <li class="nav-item" v-if="store.isAuthenticated">
+        <!-- <li class="nav-item" v-if="store.isAuthenticated">
           <router-link to="/myaccount" class="nav-link" active-class="active">
             <i class="fas fa-user"></i> Accounts
           </router-link>
-        </li>
+        </li> -->
         <li class="nav-item">
           <router-link to="/atm"  v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
             <i class="fas fa-money-bill"></i> ATM

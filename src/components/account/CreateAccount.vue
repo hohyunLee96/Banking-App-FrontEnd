@@ -127,7 +127,7 @@ export default {
           <button type="button" class="btn btn-primary" @click="addAccount">
             Create Account
           </button>
-          <button type="button" class="btn btn-danger" @click="this.$router.push('/accounts')">
+          <button type="button" class="btn btn-danger" @click="this.$router.push('/')">
             Cancel
           </button>
         </div>
@@ -163,12 +163,12 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
-          this.$router.push("/accounts");
+          this.$router.push("/");
         })
         .then(response => {
           alert("Account sent!")
           console.log(response)
-          this.$router.push('/accounts')
+          this.$router.push('/')
         })
         .catch((error) => console.log(error));
     },

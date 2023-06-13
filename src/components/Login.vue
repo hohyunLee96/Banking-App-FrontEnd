@@ -69,7 +69,7 @@ export default {
       console.log("logging in!")
       this.store.login(this.email, this.password).then(() => {
         if (this.store.isAuthenticated) {
-          this.$router.push('/home');
+          this.$router.push('/');
         } else {
           this.errorMessage = "Login failed";
         }
