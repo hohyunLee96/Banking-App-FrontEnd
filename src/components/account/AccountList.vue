@@ -28,6 +28,7 @@
         </button>
       </div>
       <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee"
+        @click="this.$router.push({ path: '/users' });">
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">
