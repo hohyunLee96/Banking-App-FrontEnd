@@ -69,10 +69,13 @@ export default {
     };
   },
   mounted() {
-    this.update();
     if(!this.store.isUserRoleEmployee){
       this.$router.push("/home");
     }
+    if(!this.store.isAuthenticated){
+      this.$router.push("/login");
+    }
+    this.update();
   },
   computed: {
     filteredUsers() {

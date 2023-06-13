@@ -61,6 +61,9 @@ export default {
     };
   },
   mounted() {
+    if(!this.store.isAuthenticated){
+      this.$router.push({ path: "/login" });
+    }
     axios
       .get("users/" + this.store.getUserId)
       .then((result) => {
