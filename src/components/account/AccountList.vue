@@ -27,7 +27,7 @@
           <i class="fas fa-undo"></i> Reset Filters
         </button>
       </div>
-      <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee">
+      <button type="button" class="btn btn-primary mt-3" v-if="isUserRoleEmployee">w
         <i class="fas fa-plus"></i> Add Accounts
       </button>
       <div class="row mt-3">

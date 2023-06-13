@@ -8,6 +8,7 @@
 
         <form ref="form">
           <h2 class="form-title">Register</h2>
+          <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
 
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -124,7 +125,7 @@ export default {
         })
         .catch((error) => {
           console.log(error.response.data);
-          this.errorMessage = error.response.data;
+          this.errorMessage = error.response.data.message;
 
           setTimeout(() => {
             this.errorMessage = "";
