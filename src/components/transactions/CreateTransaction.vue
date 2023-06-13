@@ -113,7 +113,6 @@ export default {
       sendTransaction() {
         axios
           .post("http://localhost:8080/transactions", {
-            transactionId: this.transactionId,
             fromIban: this.fromIban,
             toIban: this.toIban,
             type: this.type,
