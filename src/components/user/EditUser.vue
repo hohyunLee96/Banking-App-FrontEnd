@@ -150,7 +150,7 @@ export default {
         })
         .catch((error) => {
             console.log(error.response.data);
-            this.errorMessage = error.response.data;
+            this.errorMessage = error.response.data.message;
             this.successMessage = "";
             window.scrollTo({ top: 0, behavior: 'smooth' });
             console.log(error);
