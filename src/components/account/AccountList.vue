@@ -10,7 +10,6 @@
 </section>
   <section class="account-list">
     <div class="admin-panel" v-if="isUserRoleEmployee">
-
     </div>
     <div>
       <h1>
@@ -50,7 +49,6 @@
 
 <script>
 import axios from "../../axios-auth";
-import AdminPanel from "./../AdminPanel.vue";
 import AccountListItem from "./AccountListItem.vue";
 import jwtDecode from "jwt-decode";
 import { useUserSessionStore } from '@/stores/usersession';
@@ -58,7 +56,6 @@ import { useUserSessionStore } from '@/stores/usersession';
 export default {
   name: "AccountList",
   components: {
-    AdminPanel,
     AccountListItem,
   },
   data() {
@@ -129,7 +126,7 @@ export default {
   methods: {
     totalBalance() {
       axios
-        .get("http://localhost:8080/accounts?totalBalance=" + this.loggedInUserId)
+        .get("accounts?totalBalance=" + this.loggedInUserId)
         .then((response) => {
           this.balance = response.data; // Set the total balance in data property
           console.log(response.data);
