@@ -22,12 +22,20 @@
               </div>
             </div>
             <div class="col" style="flex-grow: 1;">
-              <label class="m-3" for="filter">Filter:</label>
+              <label class="m-3" for="filter">Account Filter:</label>
               <select id="filter" v-model="filterOption" @change="applyFilter">
-                <option value="all">All Users</option>
+                <option value="all">All</option>
                 <option value="withoutAccount">Without Account</option>
                 <option value="withoutSavingsAccount">Without Savings Account</option>
                 <option value="withoutCurrentAccount">Without Current Account</option>
+              </select>
+            </div>
+            <div class="col" style="flex-grow: 1;">
+              <label class="m-3" for="filter">User Type:</label>
+              <select id="filter" v-model="userType" @change="applyFilter">
+                <option value="">All</option>
+                <option value="ROLE_CUSTOMER">Customers</option>
+                <option value="ROLE_EMPLOYEE">Employees</option>
               </select>
             </div>
           </div>
@@ -60,6 +68,7 @@ export default {
     return {
       errorMessage: "",
       users: [],
+      userType: "",
       filterOption: "all",
       filterValues: {
         keyword: "",
@@ -121,6 +130,12 @@ export default {
         params.excludedAccountType = "SAVINGS";
       } else if (this.filterOption === "withoutCurrentAccount") {
         params.excludedAccountType = "CURRENT";
+      }
+
+      if (this.userType === "ROLE_CUSTOMER") {
+        params.userType = "ROLE_CUSTOMER";
+      } else if (this.userType === "ROLE_EMPLOYEE") {
+        params.userType = "ROLE_EMPLOYEE";
       }
 
       axios
