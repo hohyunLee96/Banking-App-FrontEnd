@@ -147,7 +147,7 @@ export default {
 .btn-edit {
   background-color: #ffc107;
   border-color: #ffc107;
-  color: #fff;
+  color: #ffffff;
   margin-right: 6px;
 }
 

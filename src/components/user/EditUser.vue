@@ -1,9 +1,9 @@
 <template>
-  <section>
-    <div class="container">
+  <section style="width: 100%; display: flex; justify-items: center; justify-content: center;">
+    <div style="width: 80%;">
       <form ref="form">
-        <h2 class="mt-3 mt-lg-5" v-if="!store.isUserRoleEmployee">Edit User</h2>
-        <h2 class="mt-3 mt-lg-5" v-if="store.isUserRoleEmployee">My Details</h2>
+        <h2 class="mt-3 mt-lg-5" v-if="user.userType === 'ROLE_EMPLOYEE'">Edit User</h2>
+        <h2 class="mt-3 mt-lg-5" v-if="user.userType === 'ROLE_CUSTOMER'">My Details</h2>
         <h5 class="mb-4"></h5>
         <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
         <div class="success alert-success" v-if="successMessage" id="success-message">{{ successMessage }}</div>
@@ -47,7 +47,7 @@
           <input type="text" class="form-control" v-model="user.phoneNumber" />
         </div>
 
-        <div class="input-group mb-3">
+        <div v-if="user.userType === 'ROLE_EMPLOYEE'" class="input-group mb-3">
           <span class="input-group-text">User Type</span>
           <select v-model=user.userType class="form-select" aria-label="Default select example">
             <option value="ROLE_EMPLOYEE">Employee</option>
@@ -55,33 +55,35 @@
           </select>
         </div>
 
-        <h2 class="mt-3 mt-lg-5">Change Password</h2>
-        <h5 class="mb-4"></h5>
-        
-        <small id="password-help" class="form-text text-muted">A password must be at least 8 characters long, contain one special character and one number.</small>
-        <div class="input-group mb-3">
-          <span class="input-group-text">New Password</span>
-          <input id="new-password" type="password" aria-describedby="password-help" class="form-control" v-model="user.password" />
+        <div v-if="user.userType === 'ROLE_CUSTOMER'">
+          <h2 class="mt-3 mt-lg-5">Change Password</h2>
+          <h5 class="mb-4"></h5>
+          
+          <small id="password-help" class="form-text text-muted">A password must be at least 8 characters long, contain one special character and one number.</small>
+          <div class="input-group mb-3">
+            <span class="input-group-text">New Password</span>
+            <input id="new-password" type="password" aria-describedby="password-help" class="form-control" v-model="user.password" />
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Confirm Password</span>
+            <input type="password" class="form-control" v-model="user.passwordConfirm" />
+          </div>
         </div>
+        <div v-if="user.userType === 'ROLE_EMPLOYEE'">
+          <h2 class="mt-3 mt-lg-5">Transaction Limits</h2>
+          <h5 class="mb-4"></h5>
 
-        <div class="input-group mb-3">
-          <span class="input-group-text">Confirm Password</span>
-          <input type="password" class="form-control" v-model="user.passwordConfirm" />
+          <div class="input-group mb-3">
+            <span class="input-group-text">Daily Limit</span>
+            <input type="number" class="form-control" v-model="user.dailyLimit" />
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Transaction Limit</span>
+            <input type="number" class="form-control" v-model="user.transactionLimit" />
+          </div>
         </div>
-
-        <h2 class="mt-3 mt-lg-5">Transaction Limits</h2>
-        <h5 class="mb-4"></h5>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">Daily Limit</span>
-          <input type="number" class="form-control" v-model="user.dailyLimit" />
-        </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">Transaction Limit</span>
-          <input type="number" class="form-control" v-model="user.transactionLimit" />
-        </div>
-
         <div class="input-group mt-4">
           <button type="button" class="btn btn-primary" @click="updateUser">Save changes</button>
           <button type="button" v-if="!this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/users')">Cancel</button>
@@ -137,7 +139,7 @@ export default {
   methods: {
     updateUser() {
       axios
-        .put("users/" + this.store.getUserId, this.user)
+        .put("users/" + this.id, this.user)
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
@@ -159,7 +161,7 @@ export default {
   },
   mounted() {
     axios
-      .get("users/" + this.store.getUserId)
+      .get("users/" + this.id)
       .then((result) =>{
         console.log(result);
         this.user = result.data;

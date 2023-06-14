@@ -1,12 +1,12 @@
 <template>
-  <section class="vh-100 gradient-custom">
+  <section class=" gradient-custom" style="height: 100%;">
     <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
-    <div class="container h-100 ">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card-body p-5 text-center">
+    <div class=" h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100" style="width: 100%; padding-bottom: 27px !important;">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5" style="height: 100% !important;">
+          <div class="card-body p-5 text-center" style="margin: 10px !important; padding: 5px !important;">
 
-            <div class="mb-md-5 mt-md-4 pb-5">
+            <div class="mb-md-5 mt-md-4 pb-5" style="margin-bottom: 0px !important;">
 
               <div class="bank-icon">
                 <embed class="icon" id="svgicon" src="logo-no-background.svg" type="image/svg+xml">
