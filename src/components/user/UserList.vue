@@ -3,30 +3,36 @@
     <div class="admin-panel">
       <div class="users-view">
         <h2 class="section-title">Users</h2>
-        <button type="button" class="btn btn-add-user m-3" @click="this.$router.push('/register');">
+        <button type="button" class="btn btn-add-user m-3" @click="this.$router.push('/register');" style="margin-left: 0px !important;">
           <i class="fas fa-plus"></i>
           Add User
         </button>
-        <div class="filter-menu">
-          <div class="row filter-bar">
-            <div class="col">
-              <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2"
-                v-model="filterValues.keyword" @input="applyFilter">
+        
+        <div class="card" style="margin-bottom: 30px;">
+          <div>
+            <div class="card-header" style="background-color: #e5e5e5;">
+              <p style="margin-bottom: 0px !important; font-weight: bold; font-size: 14px;">Filters</p>
             </div>
           </div>
-          <div class="col">
-            <label class="m-3" for="filter">Filter:</label>
-            <select id="filter" v-model="filterOption" @change="applyFilter">
-              <option value="all">All Users</option>
-              <option value="withoutAccount">Without Account</option>
-              <option value="withoutSavingsAccount">Without Savings Account</option>
-              <option value="withoutCurrentAccount">Without Current Account</option>
-            </select>
+          <div class="card-body" style="display: flex; flex-direction: row; background-color: #f7f7f7 !important;">
+            <div class="row filter-bar" style="flex-grow: .7;">
+              <div class="col">
+                <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2"
+                  v-model="filterValues.keyword" @input="applyFilter">
+              </div>
+            </div>
+            <div class="col" style="flex-grow: 1;">
+              <label class="m-3" for="filter">Filter:</label>
+              <select id="filter" v-model="filterOption" @change="applyFilter">
+                <option value="all">All Users</option>
+                <option value="withoutAccount">Without Account</option>
+                <option value="withoutSavingsAccount">Without Savings Account</option>
+                <option value="withoutCurrentAccount">Without Current Account</option>
+              </select>
+            </div>
           </div>
-
-
         </div>
-
+        
         <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="users-list">
           <user-list-item v-for="user in filteredUsers" :key="user.id" :user="user" :filter-option="filterOption"
@@ -224,5 +230,6 @@ label {
   margin: -10px;
   /* Add negative margin to offset the default padding of user-list-item */
 }
+
 </style>
 
