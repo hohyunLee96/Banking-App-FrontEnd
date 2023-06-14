@@ -19,7 +19,7 @@
         </li>
         <!-- <li class="nav-item" v-if="store.isAuthenticated">
           <router-link to="/myaccount" class="nav-link" active-class="active">
-            <i class="fas fa-user"></i> Accounts
+            <i class="fas fa-credit-card"></i> Accounts
           </router-link>
         </li> -->
         <li class="nav-item">
@@ -30,6 +30,11 @@
         <li class="nav-item">
           <router-link to="/search" v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
             <i class="fas fa-search"></i> Search Iban
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/me"  v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
+            <i class="fas fa-user"></i> My Details
           </router-link>
         </li>
       </ul>
@@ -62,7 +67,9 @@ export default {
       store,
     };
   },
-
+  mounted() {
+    
+  },
   methods: {
     isUserRoleEmployee() {
       const token = localStorage.getItem("jwt");

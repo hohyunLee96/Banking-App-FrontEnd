@@ -7,7 +7,9 @@
         </div>
 
         <form ref="form">
-          <h2 class="form-title">Register</h2>
+          <h2 class="form-title" v-if="store.isAuthenticated">Create User</h2>
+          <h2 class="form-title" v-if="!store.isAuthenticated">Register</h2>
+
           <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
 
           <div class="form-row">
@@ -68,9 +70,24 @@
             </div>
           </div>
 
+          <h2 class="form-title">Transaction Limits</h2>
+          <h5 class="mb-4"></h5>
+
+          <div class="input-group mb-3">
+            <label for="daily-limit">Daily Limit</label>
+            <input id="daily-limit" type="number" class="form-control" v-model="user.dailyLimit" />
+          </div>
+
+          <div class="input-group mb-3">
+            <label for="transaction-limit">Transaction Limit</label>
+            <input id="transaction-limit" type="number" class="form-control" v-model="user.transactionLimit" />
+          </div>
+
           <div class="form-group">
-            <button type="button" class="btn btn-primary btn-register" @click="addUser()">Register</button>
-            <button type="button" class="btn btn-danger" @click="$router.push('/login')">Cancel</button>
+            <button type="button" v-if="!store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Register</button>
+            <button type="button" v-if="store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Add user</button>
+            <button type="button" v-if="!store.isAuthenticated" class="btn btn-danger" @click="$router.push('/login')">Cancel</button>
+            <button type="button" v-if="store.isAuthenticated" class="btn btn-danger" @click="$router.push('/users')">Cancel</button>
           </div>
 
         </form>
@@ -108,6 +125,8 @@ export default {
         phoneNumber: "",
         userType: "",
         hasAccount: "",
+        dailyLimit: "",
+        transactionLimit: "",
       },
     };
   },
@@ -121,15 +140,15 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.$refs.form.reset();
-          this.$router.push("/login");
+          if(this.store.isAuthenticated)
+            this.$router.push("/users");
+          else
+            this.$router.push("/login");
         })
         .catch((error) => {
           console.log(error.response.data);
-          this.errorMessage = error.response.data.message;
-
-          setTimeout(() => {
-            this.errorMessage = "";
-          }, 8000);
+          this.errorMessage = error.response.data;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           console.log(error);
         });
     },

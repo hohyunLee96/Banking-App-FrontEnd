@@ -82,10 +82,10 @@ export default {
     return { store };
   },
   methods: {
-    sendTransaction() {
+    sendTransaction() { 
+      event.preventDefault();
       axios
         .post("transactions", {
-          transactionId: this.transactionId,
           fromIban: this.fromIban,
           toIban: this.toIban,
           type: this.type,
@@ -94,7 +94,7 @@ export default {
         .then((response) => {
           alert("Transaction sent!");
           console.log(response);
-          this.$router.push("/transactions");
+           this.$router.push("/transactions");  
         })
         .catch((error) => {
           if (error) {
@@ -158,6 +158,7 @@ export default {
   },
     mounted() {
     this.getAccountDetails();
+    
   },
 };
 </script>
