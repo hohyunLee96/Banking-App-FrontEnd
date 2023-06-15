@@ -8,9 +8,9 @@
         <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;" @click="this.$router.push({ path: '/createaccount/' + this.store.getUserId})">Open Account</button>
       </div>
     </div>
-    <!--<div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
+    <div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
       
-      <a href='me/' style="text-decoration: none;">
+      <a :href="`/editUser/${this.store.id}`" style="text-decoration: none;">
         <div class="floating-box ">
           My Details
         </div>
@@ -25,7 +25,7 @@
           Transfer Money
         </div>
       </a>
-    </div>-->
+    </div>
   </section>
 </template>
 
