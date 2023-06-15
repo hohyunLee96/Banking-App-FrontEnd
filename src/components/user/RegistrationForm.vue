@@ -112,8 +112,7 @@ export default {
         phoneNumber: "",
         userType: "",
         hasAccount: "",
-        dailyLimit: "",
-        transactionLimit: "",
+
       },
     };
   },
