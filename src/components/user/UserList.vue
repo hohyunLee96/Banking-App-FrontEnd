@@ -125,7 +125,7 @@ export default {
 
       if (this.filterOption === "withoutAccount") {
         params.hasAccount = false;
-        params.userType = "ROLE_USER";
+        params.userType = this.userType;
       } else if (this.filterOption === "withoutSavingsAccount") {
         params.excludedAccountType = "SAVINGS";
       } else if (this.filterOption === "withoutCurrentAccount") {

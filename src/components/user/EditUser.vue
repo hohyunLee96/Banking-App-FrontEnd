@@ -160,6 +160,9 @@ export default {
     },
   },
   mounted() {
+    if(window.location.href.charAt(window.location.href.length - 1) != this.store.getUserId){
+      this.$router.push("/home");
+    }
     axios
       .get("users/" + this.id)
       .then((result) =>{
