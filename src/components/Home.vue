@@ -4,13 +4,11 @@
     <div style="width: 100%; height: 30vw; background-image: url('../../../home-page-background-image.jpg'); background-size: cover; background-position: 0px; background-repeat: no-repeat;">
       <div id="title-section" style="margin-left: 3vw;">
         <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
-        <h5 style="color: white; ">Don't have an account yet?</h5>
-        <button class="btn btn-outline-light" style="margin-top: 20px; font-size: large;" @click="this.$router.push({ path: '/createaccount/' + this.store.getUserId})">Open Account</button>
       </div>
     </div>
-    <div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
+    <!--<div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
       
-      <a href="/me" style="text-decoration: none;">
+      <a href='me/' style="text-decoration: none;">
         <div class="floating-box ">
           My Details
         </div>
@@ -25,7 +23,7 @@
           Transfer Money
         </div>
       </a>
-    </div>
+    </div>-->
   </section>
 </template>
 

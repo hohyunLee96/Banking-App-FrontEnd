@@ -70,19 +70,6 @@
             </div>
           </div>
 
-          <h2 class="form-title">Transaction Limits</h2>
-          <h5 class="mb-4"></h5>
-
-          <div class="input-group mb-3">
-            <label for="daily-limit">Daily Limit</label>
-            <input id="daily-limit" type="number" class="form-control" v-model="user.dailyLimit" />
-          </div>
-
-          <div class="input-group mb-3">
-            <label for="transaction-limit">Transaction Limit</label>
-            <input id="transaction-limit" type="number" class="form-control" v-model="user.transactionLimit" />
-          </div>
-
           <div class="form-group">
             <button type="button" v-if="!store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Register</button>
             <button type="button" v-if="store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Add user</button>
@@ -147,7 +134,7 @@ export default {
         })
         .catch((error) => {
           console.log(error.response.data);
-          this.errorMessage = error.response.data;
+          this.errorMessage = error.response.data.message;
           window.scrollTo({ top: 0, behavior: 'smooth' });
           console.log(error);
         });

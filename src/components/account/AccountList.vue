@@ -3,8 +3,6 @@
   <div class="d-flex flex-column justify-content-between align-items-start mb-4" style="width: 100%; height: 40vh; background-image: url('../../../home-page-background-image.jpg'); background-size: cover; background-position: 0px; background-repeat: no-repeat;">
     <div id="title-section" style="margin-left: 3vw;">
       <p style="color: white; font-weight: 1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
-      <h5 style="color: white;">Don't have an account yet?</h5>
-      <button class="btn btn-outline-light mt-4" style="font-size: medium;" @click="this.$router.push({ path: '/login'})">Open Account</button>
     </div>
   </div>
 </section>

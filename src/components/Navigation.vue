@@ -33,7 +33,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/me"  v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
+          <router-link :to="`/editUser/${this.store.id}`" v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
             <i class="fas fa-user"></i> My Details
           </router-link>
         </li>
