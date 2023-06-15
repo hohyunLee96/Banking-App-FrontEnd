@@ -6,9 +6,9 @@
         <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
       </div>
     </div>
-    <!--<div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
+    <div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
       
-      <a href='me/' style="text-decoration: none;">
+      <a :href="`/editUser/${this.store.id}`" style="text-decoration: none;">
         <div class="floating-box ">
           My Details
         </div>
@@ -23,7 +23,7 @@
           Transfer Money
         </div>
       </a>
-    </div>-->
+    </div>
   </section>
 </template>
 

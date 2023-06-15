@@ -47,7 +47,7 @@
           <input type="text" class="form-control" v-model="user.phoneNumber" />
         </div>
 
-        <div v-if="user.userType === 'ROLE_EMPLOYEE'" class="input-group mb-3">
+        <div v-if="this.store.isUserRoleEmployee === false" class="input-group mb-3">
           <span class="input-group-text">User Type</span>
           <select v-model=user.userType class="form-select" aria-label="Default select example">
             <option value="ROLE_EMPLOYEE">Employee</option>
@@ -145,6 +145,7 @@ export default {
           this.$refs.form.reset();
           this.errorMessage = "";
           this.successMessage = "User updated successfully!";
+
           if(!this.store.isUserRoleEmployee)
             this.$router.push("/users");
           else
@@ -160,6 +161,11 @@ export default {
     },
   },
   mounted() {
+    if(this.store.isUserRoleEmployee){
+      if(window.location.href.charAt(window.location.href.length - 1) != this.store.getUserId){
+        this.$router.push("/edituser/" + this.store.getUserId);
+      }
+    }
     axios
       .get("users/" + this.id)
       .then((result) =>{
