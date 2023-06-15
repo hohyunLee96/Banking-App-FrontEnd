@@ -116,6 +116,7 @@ export default {
   },
   data() {
     return {
+      isUserRoleEmployee: useUserSessionStore.getIsUserRoleEmployee,
       errorMessage: "",
       successMessage: "",
       user: {
@@ -161,13 +162,18 @@ export default {
     },
   },
   mounted() {
-    if(this.store.isUserRoleEmployee){
-      if(window.location.href.charAt(window.location.href.length - 1) != this.store.getUserId){
-        this.$router.push("/edituser/" + this.store.getUserId);
-      }
+    this.isUserRoleEmployee= this.store.isUserRoleEmployee();
+
+    //If the user is not an employee, redirect to his own isolated edit page
+    if(!this.isUserRoleEmployee){
+      this.$router.push("/me");
+      var id = this.store.getUserId;
+    }else{
+    //if the user is an employee, get the id from the url
+      var id = this.id;
     }
     axios
-      .get("users/" + this.id)
+      .get("users/" + id)
       .then((result) =>{
         console.log(result);
         this.user = result.data;

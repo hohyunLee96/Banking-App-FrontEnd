@@ -100,10 +100,7 @@ export default {
   methods: {
     setErrorMessage(message) {
       this.errorMessage = message;
-
-      setTimeout(() => {
-        this.errorMessage = "";
-      }, 8000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     formatDate(dateString) {
       const format = { year: "numeric", month: "long", day: "numeric" };
