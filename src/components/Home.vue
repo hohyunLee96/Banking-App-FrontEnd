@@ -38,7 +38,6 @@ export default {
 
   setup() {
     const store = useUserSessionStore();
-
     return {
       store,
     };
@@ -64,13 +63,22 @@ export default {
     if(!this.store.isAuthenticated){
       this.$router.push({ path: "/login" });
     }
+    if(!this.store.isAuthenticated){
+      this.$router.push({ path: "/login" });
+    }
     axios
       .get("users/" + this.store.getUserId)
       .then((result) => {
         console.log(result);
         this.user = result.data;
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        if (error.response.data == "Invalid JWT token") {
+          this.store.logout();
+          this.$router.push({ path: "/login" });
+        }
+      });
   },
   methods: {
 
