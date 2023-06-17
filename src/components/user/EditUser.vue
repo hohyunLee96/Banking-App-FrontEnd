@@ -55,7 +55,7 @@
           </select>
         </div>
 
-        <div v-if="user.userType === 'ROLE_CUSTOMER'">
+        <div v-if="!isUserRoleEmployee">
           <h2 class="mt-3 mt-lg-5">Change Password</h2>
           <h5 class="mb-4"></h5>
           
@@ -70,7 +70,7 @@
             <input type="password" class="form-control" v-model="user.passwordConfirm" />
           </div>
         </div>
-        <div v-if="user.userType === 'ROLE_EMPLOYEE'">
+        <div v-if="isUserRoleEmployee">
           <h2 class="mt-3 mt-lg-5">Transaction Limits</h2>
           <h5 class="mb-4"></h5>
 
@@ -86,8 +86,8 @@
         </div>
         <div class="input-group mt-4">
           <button type="button" class="btn btn-primary" @click="updateUser">Save changes</button>
-          <button type="button" v-if="!this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/users')">Cancel</button>
-          <button type="button" v-if="this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/home')">Cancel</button>
+          <button type="button" v-if="!this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/home')">Cancel</button>
+          <button type="button" v-if="this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/users')">Cancel</button>
         </div>
       </form>
     </div>
@@ -162,7 +162,8 @@ export default {
     },
   },
   mounted() {
-    this.isUserRoleEmployee= this.store.isUserRoleEmployee();
+    const store = useUserSessionStore();
+    this.isUserRoleEmployee= store.isUserRoleEmployee();
 
     //If the user is not an employee, redirect to his own isolated edit page
     if(!this.isUserRoleEmployee){
