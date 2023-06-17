@@ -142,7 +142,7 @@ export default {
         .then((result) => {
           console.log(result);
           this.accounts = result.data;
-          this.totalBalance();
+          // this.totalBalance();
         })
         .catch((error) => console.log(error));
     },
