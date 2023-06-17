@@ -47,7 +47,7 @@
           <input type="text" class="form-control" v-model="user.phoneNumber" />
         </div>
 
-        <div v-if="user.userType === 'ROLE_EMPLOYEE'" class="input-group mb-3">
+        <div v-if="this.store.isUserRoleEmployee === false" class="input-group mb-3">
           <span class="input-group-text">User Type</span>
           <select v-model=user.userType class="form-select" aria-label="Default select example">
             <option value="ROLE_EMPLOYEE">Employee</option>
@@ -116,6 +116,7 @@ export default {
   },
   data() {
     return {
+      isUserRoleEmployee: useUserSessionStore.getIsUserRoleEmployee,
       errorMessage: "",
       successMessage: "",
       user: {
@@ -145,6 +146,7 @@ export default {
           this.$refs.form.reset();
           this.errorMessage = "";
           this.successMessage = "User updated successfully!";
+
           if(!this.store.isUserRoleEmployee)
             this.$router.push("/users");
           else
@@ -160,8 +162,18 @@ export default {
     },
   },
   mounted() {
+    this.isUserRoleEmployee= this.store.isUserRoleEmployee();
+
+    //If the user is not an employee, redirect to his own isolated edit page
+    if(!this.isUserRoleEmployee){
+      this.$router.push("/me");
+      var id = this.store.getUserId;
+    }else{
+    //if the user is an employee, get the id from the url
+      var id = this.id;
+    }
     axios
-      .get("users/" + this.id)
+      .get("users/" + id)
       .then((result) =>{
         console.log(result);
         this.user = result.data;
