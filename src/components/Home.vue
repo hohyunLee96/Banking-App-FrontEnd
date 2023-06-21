@@ -13,7 +13,7 @@
           My Details
         </div>
       </a>
-      <a href="/myaccount" style="text-decoration: none;">
+      <a href="/account" style="text-decoration: none;">
         <div class="floating-box">
           My Accounts
         </div>
