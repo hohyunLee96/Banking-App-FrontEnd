@@ -26,22 +26,7 @@
       </div>
       <div class="card-footer" v-if="isUserRoleEmployee">
         <button class="btn btn-edit" @click="editAccount(account.accountId)">Edit</button>
-
-        <!-- <button class="btn btn-danger deactivate-btn" @click="deactivateAccount(account.accountId)"
-          v-if="account.isActive">Deactivate</button>
-        <button class="btn btn-success activate-btn" v-else-if="isUserRoleEmployee"
-          @click="activateAccount(account.accountId)">Activate</button>
-        <button class="btn btn-primary modify-limit-btn" v-if="isUserRoleEmployee" @click="openModifyLimitDialog">Modify
-          Limit</button> -->
       </div>
-      <!-- <div class="modify-limit-dialog" v-if="isModifyLimitDialogOpen">
-        <label for="new-limit-input">New Limit:</label>
-        <input type="number" id="new-limit-input" v-model="newLimit">
-        <div>
-          <button class="btn btn-primary" @click="modifyLimit">Save</button>
-          <button class="btn btn-secondary" @click="cancelModifyLimit">Cancel</button>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -74,75 +59,6 @@ export default {
     },
   },
   methods: {
-    deactivateAccount(id) {
-      const requestData = { isActive: false, absoluteLimit: this.account.absoluteLimit };
-
-      axios
-        .put("accounts/" + id, requestData)
-        .then((result) => {
-          console.log(result);
-          this.account.isActive = false;
-          this.$emit('update');
-        })
-        .catch((error) => {
-          if (error) {
-            this.errorMessage = error.response.data.message;
-          }
-          setTimeout(() => {
-            this.errorMessage = "";
-          }, 8000);
-          console.log(error);
-        });
-    },
-    activateAccount(id) {
-      const requestData = { isActive: true, absoluteLimit: this.account.absoluteLimit };
-
-      axios
-        .put("accounts/" + id, requestData)
-        .then((result) => {
-          console.log(result);
-          this.account.isActive = true;
-          this.$emit('update');
-        })
-        .catch((error) => {
-          if (error) {
-            this.errorMessage = error.response.data.message;
-          }
-          setTimeout(() => {
-            this.errorMessage = "";
-          }, 8000);
-          console.log(error);
-        });
-    },
-    openModifyLimitDialog() {
-      // Reset the new limit value
-      this.newLimit = null;
-      // Open the dialog
-      this.isModifyLimitDialogOpen = true;
-    },
-    modifyLimit() {
-      const { accountId } = this.account;
-      const requestData = { absoluteLimit: this.newLimit };
-      axios
-        .put(`accounts/${accountId}`, requestData)
-        .then((result) => {
-          console.log(result);
-          // Update the account's absoluteLimit
-          this.account.absoluteLimit = this.newLimit;
-          // Close the dialog
-          this.isModifyLimitDialogOpen = false;
-        })
-        .catch((error) => {
-          if (error.response && error.response.data && error.response.data.message) {
-            this.errorMessage = error.response.data.message;
-            // console.log(error.response.data.message)
-          }
-        });
-    },
-    cancelModifyLimit() {
-      // Close the dialog without modifying the limit
-      this.isModifyLimitDialogOpen = false;
-    },
     editAccount(id) {
       this.$router.push('/editAccount/' + id);
     },

@@ -27,6 +27,12 @@
           <option value="SAVINGS">Saving</option>
           <option value="CURRENT">Current</option>
         </select>
+        <label><i class="fas fa-university"></i> Account Status:</label>
+        <select v-model="filters.isActive">
+          <option value="">All</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
         <label><i class="fas fa-id-card"></i> User ID:</label>
         <input type="number" v-model="filters.user" />
         <button type="button" class="btn btn-secondary" @click="resetFilters">
@@ -63,6 +69,7 @@ export default {
         firstName: "",
         lastName: "",
         accountType: "",
+        isActive: "",
         user: null,
       },
       user: {
@@ -87,7 +94,7 @@ export default {
   },
   computed: {
     filteredAccounts() {
-      const { firstName, lastName, accountType, user } = this.filters;
+      const { firstName, lastName, accountType,isActive, user } = this.filters;
 
       return this.accounts.filter((account) => {
         // Apply filters based on the selected criteria
@@ -95,6 +102,7 @@ export default {
           (firstName === "" || account.firstName.toLowerCase().includes(firstName.toLowerCase())) &&
           (lastName === "" || account.lastName.toLowerCase().includes(lastName.toLowerCase())) &&
           (accountType === "" || account.accountType === accountType) &&
+          (isActive === "" || account.isActive.toString() === isActive) &&
           (user === null || account.user === user)
         );
       });
@@ -158,6 +166,7 @@ export default {
       this.filters.firstName = "";
       this.filters.lastName = "";
       this.filters.accountType = "";
+      this.filters.isActive = "";
       this.filters.user = null;
       this.update();
     },
