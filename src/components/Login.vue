@@ -4,9 +4,9 @@
     <div class=" h-100">
       <div class="row d-flex justify-content-center align-items-center h-100" style="width: 100%; padding-bottom: 27px !important;">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5" style="height: 100% !important;">
-          <div class="card-body p-5 text-center" style="margin: 10px !important; padding: 5px !important;">
+          <div class="card-body p-5 text-center" style="margin: 10px !important; padding: 15px !important;">
 
-            <div class="mb-md-5 mt-md-4 pb-5" style="margin-bottom: 0px !important;">
+            <div class="mb-md-5 mt-md-4 pb-5" style="margin-bottom: 0px !important; padding: 15px;">
 
               <div class="bank-icon">
                 <embed class="icon" id="svgicon" src="logo-no-background.svg" type="image/svg+xml">
@@ -22,7 +22,7 @@
                   <input type="password" v-model="password" class="m-1 form-control" id="inputPassword" />
                   <div class="input-group-append">
                   </div>
-                  <button type="button" class="btn btn-secondary ml-3" @click="togglePassword()"
+                  <button type="button" class="btn btn-secondary" @click="togglePassword()" style="border-radius: 10px;"
                     id="passwordToggleButton">
                     Show
                   </button>

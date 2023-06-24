@@ -55,7 +55,7 @@
           </select>
         </div>
 
-        <div v-if="user.userType === 'ROLE_CUSTOMER'">
+        <div v-if="!isUserRoleEmployee">
           <h2 class="mt-3 mt-lg-5">Change Password</h2>
           <h5 class="mb-4"></h5>
           
@@ -70,7 +70,7 @@
             <input type="password" class="form-control" v-model="user.passwordConfirm" />
           </div>
         </div>
-        <div v-if="user.userType === 'ROLE_EMPLOYEE'">
+        <div v-if="isUserRoleEmployee">
           <h2 class="mt-3 mt-lg-5">Transaction Limits</h2>
           <h5 class="mb-4"></h5>
 
@@ -86,8 +86,8 @@
         </div>
         <div class="input-group mt-4">
           <button type="button" class="btn btn-primary" @click="updateUser">Save changes</button>
-          <button type="button" v-if="!this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/users')">Cancel</button>
-          <button type="button" v-if="this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/home')">Cancel</button>
+          <button type="button" v-if="!this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/home')">Cancel</button>
+          <button type="button" v-if="this.store.isUserRoleEmployee" class="btn btn-danger" @click="this.$router.push('/users')">Cancel</button>
         </div>
       </form>
     </div>
@@ -116,6 +116,7 @@ export default {
   },
   data() {
     return {
+      isUserRoleEmployee: useUserSessionStore.getIsUserRoleEmployee,
       errorMessage: "",
       successMessage: "",
       user: {
@@ -161,13 +162,19 @@ export default {
     },
   },
   mounted() {
-    if(this.store.isUserRoleEmployee){
-      if(window.location.href.charAt(window.location.href.length - 1) != this.store.getUserId){
-        this.$router.push("/edituser/" + this.store.getUserId);
-      }
+    const store = useUserSessionStore();
+    this.isUserRoleEmployee= store.isUserRoleEmployee();
+
+    //If the user is not an employee, redirect to his own isolated edit page
+    if(!this.isUserRoleEmployee){
+      this.$router.push("/me");
+      var id = this.store.getUserId;
+    }else{
+    //if the user is an employee, get the id from the url
+      var id = this.id;
     }
     axios
-      .get("users/" + this.id)
+      .get("users/" + id)
       .then((result) =>{
         console.log(result);
         this.user = result.data;
