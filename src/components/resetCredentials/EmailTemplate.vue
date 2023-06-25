@@ -6,14 +6,14 @@
       <h3>Please enter your email so that we can send you your reset password link.</h3>
       <h3>{{ connectionMessage }}</h3>
       <label for="email">Email:</label><br>
-      <input type="text" placeholder="Enter your registered email" v-model="email" required>
+      <input type="text" placeholder="Enter your registered email" v-model="emailTo" required>
       <button id="send" @click="emailLinkSend" :disabled="isEmailEmpty" :class="{ 'disabled-button': isEmailEmpty }">Send</button>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../../axios-auth";
 
 export default {
   name: "EmailTemplate",
@@ -22,13 +22,13 @@ export default {
   },
   data() {
     return {
-      email: "",
+      emailTo: "",
       connectionMessage: "",
     };
   },
   computed: {
     isEmailEmpty() {
-      return this.email.trim() === "";
+      return this.emailTo.trim() === "";
     },
   },
   methods: {
@@ -46,18 +46,21 @@ export default {
       console.log("Sending link to reset password...");
 
       // Check if the email field is populated correctly
-      console.log("Email:", this.email);
+      console.log("Email:", this.emailTo);
 
+      // Send the email to the backend
       axios
-          .post("http://localhost:8080/forgot/sendEmail", {
-            email: this.email,
+          .post("forgot/sendEmail", {
+            emailTo: this.emailTo,
           })
           .then((response) => {
             console.log(response);
-            this.$router.push('/login');
+            alert("Email sent!");
+            this.$router.push("/login");
           })
           .catch((error) => {
             console.log(error);
+
           });
     },
 
