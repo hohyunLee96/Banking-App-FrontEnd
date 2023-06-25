@@ -1,10 +1,11 @@
 <template>
   <div class="text-center">
+    <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
     <div>
       <h1>Password Reset</h1>
       <p>Please enter your new password below:</p>
       <label for="password">New Password:</label><br>
-      <input type="password" v-model="newPassword" required>
+      <input type="password" v-model="password" required>
       <div class="button-group">
         <button @click="resetPassword" id="resetButton">Reset Password</button>
         <button @click="cancelReset" id="cancelButton">Cancel</button>
@@ -17,29 +18,44 @@
 import axios from "@/axios-auth";
 
 export default {
+  mounted() {
+      if (this.$route.query.email) {
+        console.log("Email: " + this.$route.query.email);
+        this.emailTo = this.$route.query.email;
+      } else {
+        this.$router.push("/login");
+      }
+  },
   data() {
     return {
-      newPassword: '',
-      resetStatus: '',
+      emailTo: "",
+      password: "",
+      errorMessage: "",
     };
   },
   methods: {
     resetPassword() {
-      const token = this.$route.query.token; // Extract the token from the URL query parameter
-      axios.post('/forgot/resetPassword', {
-        token: token,
-        newPassword: this.newPassword,
-      })
-          .then(response => {
-            this.resetStatus = response.data;
+      console.log("Password reset in progress...");
+
+      axios
+          .post("/forgot/resetPassword", {
+            emailTo: this.emailTo,
+            password: this.password,
           })
-          .catch(error => {
-            this.resetStatus = error.response.data;
+          .then((response) => {
+            this.errorMessage = response.data;
+            console.log(this.errorMessage);
+            alert("Password reset successful!");
+            this.$router.push("/login");
+          })
+          .catch((error) => {
+            console.log(error);
+            this.errorMessage = error.response.data.message;
           });
     },
     cancelReset() {
       // Redirect the user back to the login page
-      this.$router.push('/login');
+      this.$router.push("/login");
     },
   },
 };
