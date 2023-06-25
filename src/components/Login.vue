@@ -35,6 +35,7 @@
             </div>
 
             <div>
+              <a class="forgot-password-link" @click="forgotPassword" id="forgotPassword">Forgot Password?</a>
               <p class="mb-0">Don't have an account?
                 <button @click="register()" class="btn btn-primary text-dark-50 fw-bold">Sign Up</button>
               </p>
@@ -66,7 +67,7 @@ export default {
   },
   methods: {
     login() {
-      console.log("logging in!")
+      console.log("logging in...")
       this.store.login(this.email, this.password).then(() => {
         if (this.store.isAuthenticated) {
           this.$router.push('/');
@@ -79,6 +80,9 @@ export default {
     },
     register() {
       this.$router.push('/register');
+    },
+    forgotPassword() {
+      this.$router.push('/email-link');
     },
     togglePassword() {
       var x = document.getElementById("inputPassword");
@@ -108,6 +112,14 @@ export default {
 
   height: 100%;
   width: 100%;
+}
+
+#loginButton {
+  margin-top: 1%;
+}
+#forgotPassword {
+  margin-top: -10%;
+  cursor: pointer;
 }
 
 .bank-icon img {

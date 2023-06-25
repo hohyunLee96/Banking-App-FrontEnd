@@ -12,6 +12,8 @@ import RegistrationForm from '../components/user/RegistrationForm.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
 import EditProduct from '../components/products/EditProduct.vue';
 import Login from '../components/Login.vue';
+import EmailTemplate from "@/components/resetCredentials/EmailTemplate.vue";
+import PasswordResetTemplate from "@/components/resetCredentials/PasswordResetTemplate.vue";
 import AdminPanel from '../components/AdminPanel.vue';
 import CreateTransaction from '../components/transactions/CreateTransaction.vue';
 import TransactionList from '../components/transactions/TransactionList.vue';
@@ -44,6 +46,8 @@ const router = createRouter({
     { path: '/:notFound(.*)', component: Home},
     { path: '/products', component: ProductList },
     { path: '/login', component: Login },
+    { path: '/email-link', component: EmailTemplate },
+    { path: '/resetPassword', component: PasswordResetTemplate },
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},
