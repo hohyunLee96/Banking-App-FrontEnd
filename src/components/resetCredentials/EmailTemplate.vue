@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import axios from "@/axios-auth";
+import axios from "axios";
 
 export default {
   name: "EmailTemplate",
@@ -40,7 +40,6 @@ export default {
           })
           .catch((error) => {
             console.log(error);
-            // Handle the error as needed
           });
     },
     emailLinkSend() {
@@ -50,7 +49,7 @@ export default {
       console.log("Email:", this.email);
 
       axios
-          .post("/forgot/sendEmail", {
+          .post("http://localhost:8080/forgot/sendEmail", {
             email: this.email,
           })
           .then((response) => {
@@ -59,7 +58,6 @@ export default {
           })
           .catch((error) => {
             console.log(error);
-            // Handle the error as needed
           });
     },
 
