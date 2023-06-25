@@ -1,6 +1,7 @@
 <template>
   <button id="backButton" @click="backToLogin">Back to Login</button>
   <div class="text-center">
+    <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
     <div>
       <h1>Hi!</h1>
       <h3>Please enter your email so that we can send you your reset password link.</h3>
@@ -24,6 +25,7 @@ export default {
     return {
       emailTo: "",
       connectionMessage: "",
+      errorMessage: "",
     };
   },
   computed: {
@@ -60,6 +62,7 @@ export default {
           })
           .catch((error) => {
             console.log(error);
+            this.errorMessage = error.response.data.message;
 
           });
     },
