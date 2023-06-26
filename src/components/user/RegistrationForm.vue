@@ -112,8 +112,7 @@ export default {
         phoneNumber: "",
         userType: "",
         hasAccount: "",
-        dailyLimit: "",
-        transactionLimit: "",
+
       },
     };
   },
@@ -122,24 +121,41 @@ export default {
       this.user.hasAccount = false;
       this.user.userType = "ROLE_USER";
 
-      axios
-        .post("users", this.user)
-        .then((res) => {
-          console.log(res.data);
-          this.$refs.form.reset();
-          if(this.store.isAuthenticated)
-            this.$router.push("/users");
-          else
-            this.$router.push("/login");
-        })
-        .catch((error) => {
-          console.log(error.response.data);
-          this.errorMessage = error.response.data.message;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          console.log(error);
-        });
+      // Call verificationLinkSentMsg method to send the verification link
+      this.verificationLinkSentMsg()
+          .then(() => {
+            // Verification link sent successfully, now register the user
+            axios
+                .post("users", this.user)
+                .then((res) => {
+                  console.log(res.data);
+                  this.$refs.form.reset();
+                })
+                .catch((error) => {
+                  console.log(error.response.data);
+                  this.errorMessage = error.response.data.message;
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  console.log(error);
+                });
+          })
+          .catch((error) => {
+            console.log(error);
+            this.errorMessage = error.response.data.message;
+          });
     },
-  },
+    verificationLinkSentMsg() {
+      return axios
+          .post("users/register", this.user)
+          .then((response) => {
+            console.log(response);
+            alert(`Verification email sent to ${this.user.email}!`);
+          })
+          .catch((error) => {
+            console.log(error);
+            this.errorMessage = error.response.data.message;
+          });
+    },
+  }
 };
 </script>
 
