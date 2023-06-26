@@ -61,7 +61,7 @@ export default {
     if(!this.store.isAuthenticated){
       this.$router.push({ path: "/login" });
     }
-    if(!this.store.isAuthenticated){
+    if(this.store == null){
       this.$router.push({ path: "/login" });
     }
     axios
