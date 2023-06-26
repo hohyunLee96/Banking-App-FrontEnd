@@ -132,7 +132,7 @@ export default {
   methods: {
     totalBalance() {
       axios
-        .get("accounts?totalBalance=" + this.loggedInUserId)
+        .get("accounts/user/" + this.loggedInUserId)
         .then((response) => {
           this.balance = response.data; // Set the total balance in data property
           console.log(response.data);
