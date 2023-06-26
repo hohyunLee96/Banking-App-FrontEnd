@@ -45,6 +45,9 @@ export default {
       } else if (userType === "ROLE_CUSTOMER") {
         return "Customer";
       }
+      else if (userType === "ROLE_USER") {
+        return "User";
+      }
       return "Unknown";
     },
     shouldDisplayCreateAccountButton(user) {
