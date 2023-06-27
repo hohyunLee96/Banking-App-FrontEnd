@@ -19,8 +19,8 @@ export default {
       this.$router.push("/register");
     } else {
       this.token = this.$route.query.token;
+      this.emailVerified();
     }
-    this.emailVerified();
   },
   data() {
     return {
@@ -31,12 +31,13 @@ export default {
   methods: {
     emailVerified() {
       console.log("Verifying email...");
+      console.log(this.token);
+
 
       // Send the email to the backend
       axios
-          .get("/users/confirmAccount", {
-            token: this.token,
-          })
+          .get("/users/confirmAccount?token=" + this.token)
+
           .then((response) => {
             this.errorMessage = response.data;
             console.log(this.errorMessage);

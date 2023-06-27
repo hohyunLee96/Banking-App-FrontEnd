@@ -69,7 +69,7 @@
               <input type="text" class="form-control" id="phoneNumber" v-model="user.phoneNumber" />
             </div>
           </div>
-
+          <div class="alert alert-success" v-if="success" id="error-message">Email will be sent for verification.</div>
           <div class="form-group">
             <button type="button" v-if="!store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Register</button>
             <button type="button" v-if="store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Add user</button>
@@ -99,6 +99,7 @@ export default {
   data() {
     return {
       errorMessage: "",
+      success: false,
       user: {
         firstName: "",
         lastName: "",
@@ -112,50 +113,40 @@ export default {
         phoneNumber: "",
         userType: "",
         hasAccount: "",
-
+        dailyLimit: "",
+        transactionLimit: "",
       },
     };
   },
   methods: {
+
     addUser() {
       this.user.hasAccount = false;
       this.user.userType = "ROLE_USER";
 
-      // Call verificationLinkSentMsg method to send the verification link
-      this.verificationLinkSentMsg()
-          .then(() => {
-            // Verification link sent successfully, now register the user
-            axios
-                .post("users", this.user)
-                .then((res) => {
-                  console.log(res.data);
-                  this.$refs.form.reset();
-                })
-                .catch((error) => {
-                  console.log(error.response.data);
-                  this.errorMessage = error.response.data.message;
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  console.log(error);
-                });
+      axios
+          .post("users", this.user)
+          .then((res) => {
+            this.success = true;
+
+            setTimeout(() => {
+              this.success = false;
+              this.$refs.form.reset();
+              if (this.store.isAuthenticated)
+                this.$router.push("/users");
+              else
+                this.$router.push("/login");
+            }, 5000);
           })
           .catch((error) => {
-            console.log(error);
+            console.log(error.response.data);
             this.errorMessage = error.response.data.message;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            console.log(error);
           });
     },
-    verificationLinkSentMsg() {
-      return axios
-          .post("users/register", this.user)
-          .then((response) => {
-            console.log(response);
-            alert(`Verification email sent to ${this.user.email}!`);
-          })
-          .catch((error) => {
-            console.log(error);
-            this.errorMessage = error.response.data.message;
-          });
-    },
-  }
+
+  },
 };
 </script>
 
