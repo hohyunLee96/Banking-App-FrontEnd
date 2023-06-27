@@ -12,9 +12,11 @@ import RegistrationForm from '../components/user/RegistrationForm.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
 import EditProduct from '../components/products/EditProduct.vue';
 import Login from '../components/Login.vue';
+
 import EmailTemplate from "@/components/emailManagement/EmailTemplate.vue";
-import PasswordResetTemplate from "@/components/emailManagement/PasswordResetTemplate.vue";
-import EmailVerificationTemplate from "@/components/emailManagement/EmailVerificationTemplate.vue";
+import EmailVerified from "@/components/emailManagement/EmailVerified.vue";
+import PasswordReset from "@/components/emailManagement/PasswordReset.vue";
+
 import AdminPanel from '../components/AdminPanel.vue';
 import CreateTransaction from '../components/transactions/CreateTransaction.vue';
 import TransactionList from '../components/transactions/TransactionList.vue';
@@ -47,10 +49,12 @@ const router = createRouter({
     { path: '/:notFound(.*)', component: Home},
     { path: '/products', component: ProductList },
     { path: '/login', component: Login },
+
     // Email Management
     { path: '/email-link', component: EmailTemplate },
-    { path: '/resetPassword', component: PasswordResetTemplate },
-    { path: '/verifyEmail', component: EmailVerificationTemplate },
+    { path: '/resetPassword', component: PasswordReset },
+    { path: '/confirmAccount', component: EmailVerified },
+
     { path: '/createproduct', component: CreateProduct },
     { path: '/editproduct/:id', component: EditProduct, props: true  },
     { path: '/adminpanel', component: AdminPanel},

@@ -15,18 +15,16 @@ import axios from "../../axios-auth";
 export default {
   name: "EmailConfirmTemplate",
   mounted() {
-    if (!this.$route.query.token || !this.$route.query.email) {
-      this.$router.push("/login");
+    if (!this.$route.query.token) {
+      this.$router.push("/register");
     } else {
       this.token = this.$route.query.token;
-      this.email = this.$route.query.email;
     }
     this.emailVerified();
   },
   data() {
     return {
       token: "",
-      email: "",
       errorMessage: "",
     };
   },
@@ -36,14 +34,15 @@ export default {
 
       // Send the email to the backend
       axios
-          .get("users/confirmAccount", {
-            token: this.$route.query.token,
-            email: this.$route.query.email,
+          .get("/users/confirmAccount", {
+            token: this.token,
           })
           .then((response) => {
+            this.errorMessage = response.data;
+            console.log(this.errorMessage);
             console.log(response);
             alert("Email verified!");
-            this.$router.push("/signup");
+            this.$router.push("/register");
           })
           .catch((error) => {
             console.log(error);
