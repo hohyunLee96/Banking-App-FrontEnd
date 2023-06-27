@@ -69,7 +69,7 @@
               <input type="text" class="form-control" id="phoneNumber" v-model="user.phoneNumber" />
             </div>
           </div>
-          <div class="alert alert-success" v-if="success" id="error-message">Email will be sent for verification.</div>
+          <div class="alert alert-success" v-if="success" id="error-message">Email sent, Click on link to verify account.</div>
           <div class="form-group">
             <button type="button" v-if="!store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Register</button>
             <button type="button" v-if="store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Add user</button>
@@ -161,9 +161,7 @@ export default {
   flex: 1;
   padding: 20px;
   margin-left: 400px;
-  /* Add left margin */
   margin-right: 400px;
-  /* Add right margin */
 }
 
 .bank-icon {

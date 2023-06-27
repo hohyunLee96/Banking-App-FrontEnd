@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button id="backButton" @click="backToLogin">Back to Login</button>
     <div class="text-center">
       <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
       <h1>Congratulations!</h1>
@@ -16,7 +15,7 @@ export default {
   name: "EmailVerified",
   mounted() {
     if (!this.$route.query.token) {
-      this.$router.push("/register");
+      this.$router.push("/login");
     } else {
       this.token = this.$route.query.token;
       this.emailVerified();
@@ -30,36 +29,29 @@ export default {
   },
   methods: {
     emailVerified() {
-      console.log("Verifying email...");
-      console.log(this.token);
-
-
       // Send the email to the backend
       axios
           .get("/users/confirmAccount?token=" + this.token)
-
           .then((response) => {
             this.errorMessage = response.data;
             console.log(this.errorMessage);
             console.log(response);
             alert("Email verified!");
-            this.$router.push("/register");
+            this.$router.push("/login");
           })
           .catch((error) => {
             console.log(error);
             this.errorMessage = error.response.data.message;
           });
     },
-    backToLogin() {
-      this.$router.push('/login');
-    },
+
   },
 };
 </script>
 
 <style scoped>
 h1 {
-  margin-top: 5%;
+  margin-top: 15%;
   color: darkslateblue;
 }
 h3 {

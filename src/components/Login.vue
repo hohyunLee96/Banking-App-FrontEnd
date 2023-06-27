@@ -1,6 +1,5 @@
 <template>
   <section class=" gradient-custom" style="height: 100%;">
-    <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
     <div class=" h-100">
       <div class="row d-flex justify-content-center align-items-center h-100" style="width: 100%; padding-bottom: 27px !important;">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5" style="height: 100% !important;">
@@ -29,6 +28,8 @@
                 </div>
                 <label for="inputPassword" class="form-control-label">Password</label>
               </div>
+
+              <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
 
               <button class="btn btn-dark btn-lg px-5" name="loginButton" id="loginButton" @click="login"
                 type="submit">Login</button>

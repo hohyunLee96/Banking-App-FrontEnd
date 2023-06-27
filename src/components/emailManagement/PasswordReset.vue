@@ -1,11 +1,11 @@
 <template>
   <div class="text-center">
-    <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
     <div>
       <h1>Password Reset</h1>
       <p>Please enter your new password below:</p>
       <label for="password">New Password:</label><br>
       <input type="password" v-model="password" required>
+    <div class="alert alert-danger" v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
       <div class="button-group">
         <button @click="resetPassword" id="resetButton">Reset Password</button>
         <button @click="cancelReset" id="cancelButton">Cancel</button>
