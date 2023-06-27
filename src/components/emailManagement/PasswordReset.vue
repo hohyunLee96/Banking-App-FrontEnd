@@ -18,6 +18,7 @@
 import axios from "@/axios-auth";
 
 export default {
+  name: "PasswordReset",
   mounted() {
       if (this.$route.query.email) {
         console.log("Email: " + this.$route.query.email);

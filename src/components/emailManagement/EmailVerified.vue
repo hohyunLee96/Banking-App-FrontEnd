@@ -13,7 +13,7 @@
 import axios from "../../axios-auth";
 
 export default {
-  name: "EmailConfirmTemplate",
+  name: "EmailVerified",
   mounted() {
     if (!this.$route.query.token) {
       this.$router.push("/register");
