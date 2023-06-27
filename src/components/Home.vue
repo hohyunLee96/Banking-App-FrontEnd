@@ -6,14 +6,14 @@
         <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
       </div>
     </div>
-    <!--<div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
+    <div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
       
-      <a href='me/' style="text-decoration: none;">
+      <a :href="`/editUser/${this.store.id}`" style="text-decoration: none;">
         <div class="floating-box ">
           My Details
         </div>
       </a>
-      <a href="/myaccount" style="text-decoration: none;">
+      <a href="/account" style="text-decoration: none;">
         <div class="floating-box">
           My Accounts
         </div>
@@ -23,7 +23,7 @@
           Transfer Money
         </div>
       </a>
-    </div>-->
+    </div>
   </section>
 </template>
 
@@ -36,7 +36,6 @@ export default {
 
   setup() {
     const store = useUserSessionStore();
-
     return {
       store,
     };
@@ -62,13 +61,22 @@ export default {
     if(!this.store.isAuthenticated){
       this.$router.push({ path: "/login" });
     }
+    if(!this.store.isAuthenticated){
+      this.$router.push({ path: "/login" });
+    }
     axios
       .get("users/" + this.store.getUserId)
       .then((result) => {
         console.log(result);
         this.user = result.data;
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        if (error.response.data == "Invalid JWT token") {
+          this.store.logout();
+          this.$router.push({ path: "/login" });
+        }
+      });
   },
   methods: {
 

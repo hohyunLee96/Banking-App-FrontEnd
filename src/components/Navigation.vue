@@ -7,6 +7,11 @@
             <i class="fas fa-home"></i> Home
           </router-link>
         </li>
+        <li class="nav-item" v-if="store.isAuthenticated">
+          <router-link to="/account" class="nav-link" active-class="active">
+            <i class="fas fa-exchange-alt"></i> Accounts
+          </router-link>
+        </li>
         <li class="nav-item" v-if="isUserRoleEmployee()">
           <router-link to="/users" class="nav-link" active-class="active">
             <i class="fas fa-cogs"></i> Users
@@ -17,6 +22,7 @@
             <i class="fas fa-exchange-alt"></i> Transactions
           </router-link>
         </li>
+        
         <!-- <li class="nav-item" v-if="store.isAuthenticated">
           <router-link to="/myaccount" class="nav-link" active-class="active">
             <i class="fas fa-credit-card"></i> Accounts
@@ -33,7 +39,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="`/editUser/${this.store.id}`" v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
+          <router-link to="/me" v-if="!isUserRoleEmployee()" class="nav-link" active-class="active">
             <i class="fas fa-user"></i> My Details
           </router-link>
         </li>

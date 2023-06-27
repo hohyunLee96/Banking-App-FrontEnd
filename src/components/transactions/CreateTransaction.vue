@@ -44,6 +44,7 @@
                 </div>
                 <p><strong>Transaction Limit:</strong>€  {{ this.store.getUser.transactionLimit }}</p>
                 <p><strong>Daily Limit:</strong> € {{ this.store.getUser.dailyLimit }}</p>
+                <p><strong>Daily Transactions Left:</strong> € {{ this.dailyTransactionLeft }}</p>
               </div>
             </div>
           </div>
@@ -74,6 +75,7 @@ export default {
       savingsAccountBalance: 0,
       currentAccountBalance: 0,
       transactionLimit: 0,
+      dailyTransactionLeft:0,
       dailyLimit: 0,
     };
   },
@@ -133,6 +135,19 @@ export default {
           console.log(error);
         });
     },
+    getDailyTransactionsAmountLeft(){
+      axios
+      .get("http://localhost:8080/transactions/dailyTransactionsLeft")
+      .then((response) => {
+        this.dailyTransactionLeft = response.data.dailyTransactionLeft;
+        console.log(response.data);
+      })
+      .catch((error) => {
+        this.errorMessage = error.response.data.message;
+        console.log(error);
+
+      });  
+    },
     calculateSummary() {
       let hasSavingsAccount = false;
       let hasCurrentAccount = false;
@@ -158,7 +173,9 @@ export default {
   },
     mounted() {
     this.getAccountDetails();
-    
+    this.getDailyTransactionsAmountLeft();
+    this.$router.push("/createTransaction");
+
   },
 };
 </script>
