@@ -9,6 +9,11 @@ import UserList from '../components/user/UserList.vue';
 import EditUser from '../components/user/EditUser.vue';
 import RegistrationForm from '../components/user/RegistrationForm.vue';
 import Login from '../components/Login.vue';
+
+import EmailTemplate from "@/components/emailManagement/EmailTemplate.vue";
+import EmailVerified from "@/components/emailManagement/EmailVerified.vue";
+import PasswordReset from "@/components/emailManagement/PasswordReset.vue";
+
 import AdminPanel from '../components/AdminPanel.vue';
 import CreateTransaction from '../components/transactions/CreateTransaction.vue';
 import TransactionList from '../components/transactions/TransactionList.vue';
@@ -40,6 +45,11 @@ const router = createRouter({
 
     { path: '/:notFound(.*)', component: Home},
     { path: '/login', component: Login },
+
+    // Email Management
+    { path: '/email-link', component: EmailTemplate },
+    { path: '/resetPassword', component: PasswordReset },
+    { path: '/confirmAccount', component: EmailVerified },
 
     { path: '/adminpanel', component: AdminPanel},
     {path: '/transactions', component: TransactionList},
