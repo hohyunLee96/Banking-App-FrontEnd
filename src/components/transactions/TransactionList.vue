@@ -6,7 +6,7 @@
  
     <div class="container">
       <h2>Filter</h2>
-      <div class="filter-bar mt-3">
+      <div class="filter-bar mt-2">
         <div class="filter-group" v-for="param in filterParameters" :key="param">
           <label :for="param">
             <i class="fas" :class="getParamIcon(param)"></i> {{ getParamLabel(param) }}
@@ -40,6 +40,7 @@
           </div>
         </div>
       </div>
+      </div>
       <h2 class="mt-3 mt-lg-5">Transactions</h2>
       <button type="button" class="btn btn-primary mt-3" @click="this.$router.push('/createTransaction');">
         <i class="fas fa-plus"></i> Create Transaction
@@ -69,7 +70,6 @@
             </template>
           </tbody>
         </table>
-      </div>
     </div>
   </section>
 </template>

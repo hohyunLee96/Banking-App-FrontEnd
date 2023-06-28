@@ -69,7 +69,7 @@
               <input type="text" class="form-control" id="phoneNumber" v-model="user.phoneNumber" />
             </div>
           </div>
-
+          <div class="alert alert-success" v-if="success" id="error-message">Email sent, Click on link to verify account.</div>
           <div class="form-group">
             <button type="button" v-if="!store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Register</button>
             <button type="button" v-if="store.isAuthenticated" class="btn btn-primary btn-register" @click="addUser()">Add user</button>
@@ -99,6 +99,7 @@ export default {
   data() {
     return {
       errorMessage: "",
+      success: false,
       user: {
         firstName: "",
         lastName: "",
@@ -112,33 +113,38 @@ export default {
         phoneNumber: "",
         userType: "",
         hasAccount: "",
-        dailyLimit: "",
-        transactionLimit: "",
+
       },
     };
   },
   methods: {
+
     addUser() {
       this.user.hasAccount = false;
       this.user.userType = "ROLE_USER";
 
       axios
-        .post("users", this.user)
-        .then((res) => {
-          console.log(res.data);
-          this.$refs.form.reset();
-          if(this.store.isAuthenticated)
-            this.$router.push("/users");
-          else
-            this.$router.push("/login");
-        })
-        .catch((error) => {
-          console.log(error.response.data);
-          this.errorMessage = error.response.data.message;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          console.log(error);
-        });
+          .post("users", this.user)
+          .then((res) => {
+            this.success = true;
+
+            setTimeout(() => {
+              this.success = false;
+              this.$refs.form.reset();
+              if (this.store.isAuthenticated)
+                this.$router.push("/users");
+              else
+                this.$router.push("/login");
+            }, 5000);
+          })
+          .catch((error) => {
+            console.log(error.response.data);
+            this.errorMessage = error.response.data.message;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            console.log(error);
+          });
     },
+
   },
 };
 </script>
@@ -154,9 +160,7 @@ export default {
   flex: 1;
   padding: 20px;
   margin-left: 400px;
-  /* Add left margin */
   margin-right: 400px;
-  /* Add right margin */
 }
 
 .bank-icon {

@@ -1,6 +1,5 @@
 <template>
   <section class=" gradient-custom" style="height: 100%;">
-    <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
     <div class=" h-100">
       <div class="row d-flex justify-content-center align-items-center h-100" style="width: 100%; padding-bottom: 27px !important;">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5" style="height: 100% !important;">
@@ -30,11 +29,14 @@
                 <label for="inputPassword" class="form-control-label">Password</label>
               </div>
 
+              <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
+
               <button class="btn btn-dark btn-lg px-5" name="loginButton" id="loginButton" @click="login"
                 type="submit">Login</button>
             </div>
 
             <div>
+              <a class="forgot-password-link" @click="forgotPassword" id="forgotPassword">Forgot Password?</a>
               <p class="mb-0">Don't have an account?
                 <button @click="register()" class="btn btn-primary text-dark-50 fw-bold">Sign Up</button>
               </p>
@@ -66,7 +68,7 @@ export default {
   },
   methods: {
     login() {
-      console.log("logging in!")
+      console.log("logging in...")
       this.store.login(this.email, this.password).then(() => {
         if (this.store.isAuthenticated) {
           this.$router.push('/');
@@ -79,6 +81,9 @@ export default {
     },
     register() {
       this.$router.push('/register');
+    },
+    forgotPassword() {
+      this.$router.push('/email-link');
     },
     togglePassword() {
       var x = document.getElementById("inputPassword");
@@ -108,6 +113,14 @@ export default {
 
   height: 100%;
   width: 100%;
+}
+
+#loginButton {
+  margin-top: 1%;
+}
+#forgotPassword {
+  margin-top: -10%;
+  cursor: pointer;
 }
 
 .bank-icon img {
