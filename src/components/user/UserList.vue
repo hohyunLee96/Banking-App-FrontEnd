@@ -34,6 +34,7 @@
               <label class="m-3" for="filter">User Type:</label>
               <select id="filter" v-model="userType" @change="applyFilter">
                 <option value="">All</option>
+                <option value="ROLE_USER">Users</option>
                 <option value="ROLE_CUSTOMER">Customers</option>
                 <option value="ROLE_EMPLOYEE">Employees</option>
               </select>
@@ -133,6 +134,8 @@ export default {
         params.userType = "ROLE_CUSTOMER";
       } else if (this.userType === "ROLE_EMPLOYEE") {
         params.userType = "ROLE_EMPLOYEE";
+      } else if (this.userType === "ROLE_USER") {
+        params.userType = "ROLE_USER";
       }
 
       axios

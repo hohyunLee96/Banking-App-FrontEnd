@@ -55,7 +55,7 @@
           </select>
         </div>
 
-        <div v-if="!isUserRoleEmployee">
+        <div v-if="!isUserRoleEmployee || this.store.getUserId == this.id">
           <h2 class="mt-3 mt-lg-5">Change Password</h2>
           <h5 class="mb-4"></h5>
           
@@ -115,27 +115,28 @@ export default {
     };
   },
   data() {
-    return {
-      isUserRoleEmployee: useUserSessionStore.getIsUserRoleEmployee,
-      errorMessage: "",
-      successMessage: "",
-      user: {
-        email: "",
-        password: "",
-        passwordConfirm: "",
-        firstName: "",
-        lastName: "",
-        birthDate: "",
-        postalCode: "",
-        address: "",
-        city: "",
-        phoneNumber: "",
-        userType: "",
-        dailyLimit: "",
-        transactionLimit: "",
-      },
-      userTypes: ["Employee", "Customer"],
-    };
+        return {
+            id: "",
+            isUserRoleEmployee: useUserSessionStore.getIsUserRoleEmployee,
+            errorMessage: "",
+            successMessage: "",
+            user: {
+                email: "",
+                password: null,
+                passwordConfirm: null,
+                firstName: "",
+                lastName: "",
+                birthDate: "",
+                postalCode: "",
+                address: "",
+                city: "",
+                phoneNumber: "",
+                userType: "",
+                dailyLimit: null,
+                transactionLimit: null,
+            },
+        userTypes: ["Employee", "Customer"],
+        };
   },
   methods: {
     updateUser() {
@@ -145,9 +146,8 @@ export default {
           console.log(res.data);
           this.$refs.form.reset();
           this.errorMessage = "";
-          this.successMessage = "User updated successfully!";
 
-          if(!this.store.isUserRoleEmployee)
+          if(this.isUserRoleEmployee)
             this.$router.push("/users");
           else
             this.$router.push("/home");
@@ -167,14 +167,14 @@ export default {
 
     //If the user is not an employee, redirect to his own isolated edit page
     if(!this.isUserRoleEmployee){
-      this.$router.push("/me");
-      var id = this.store.getUserId;
+        this.$router.push("/me");
+        this.id = this.store.id;
     }else{
     //if the user is an employee, get the id from the url
-      var id = this.id;
+        this.id = this.$route.params.id;
     }
     axios
-      .get("users/" + id)
+      .get("users/" + this.id)
       .then((result) =>{
         console.log(result);
         this.user = result.data;

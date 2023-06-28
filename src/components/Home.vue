@@ -4,7 +4,7 @@
     <div style="width: 100%; height: 30vw; background-image: url('../../../home-page-background-image.jpg'); background-size: cover; background-position: 0px; background-repeat: no-repeat;">
       <div id="title-section" style="margin-left: 3vw;">
         <p style="color: white; font-weight:1500; font-size: 60px; letter-spacing: 4px;">Hi {{ user.firstName }}</p>
-      </div>
+    </div>
     </div>
     <div style="margin-top: 3vw; height: 20vw; display: flex; flex-direction: row; justify-items: auto; justify-content: space-evenly;">
       

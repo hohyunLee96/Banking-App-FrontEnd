@@ -15,7 +15,7 @@
       </div>
       <div class="card-footer">
         <button class="btn btn-edit" @click="editUser(user.userId)">Edit</button>
-        <button class="btn btn-delete" @click="deleteUser(user.userId)">Delete</button>
+        <button v-if="this.store.getUserId != user.userId" class="btn btn-delete" @click="deleteUser(user.userId)">Delete</button>
         <button v-if="shouldDisplayCreateAccountButton(user)" class="btn btn-create-account m-2"
           @click="createAccount(user.userId, filterOption)">
           Create Account
@@ -28,6 +28,7 @@
   
 <script>
 import axios from "../../axios-auth";
+import { useUserSessionStore } from "@/stores/usersession";
 
 export default {
   name: "UserListItem",
@@ -36,7 +37,14 @@ export default {
     filterOption: String,
   },
   mounted() {
-    
+    console.log(this.store.userId);
+  },
+  setup() {
+    const store = useUserSessionStore();
+
+    return {
+      store,
+    };
   },
   methods: {
     getUserType(userType) {

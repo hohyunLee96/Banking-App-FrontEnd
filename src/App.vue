@@ -28,6 +28,6 @@ export default {
 
 <style>
 html, body, #app{
-    height: 100%;
+    height: 100vh;
 }
 </style>
