@@ -38,21 +38,34 @@ export default {
     resetPassword() {
       console.log("Password reset in progress...");
 
-      axios
-          .post("/forgot/resetPassword", {
-            emailTo: this.emailTo,
-            password: this.password,
-          })
-          .then((response) => {
-            this.errorMessage = response.data;
-            console.log(this.errorMessage);
-            alert("Password reset successful!");
-            this.$router.push("/login");
-          })
-          .catch((error) => {
-            console.log(error);
-            this.errorMessage = error.response.data.message;
-          });
+      if (this.password.trim().length < 8) {
+        this.errorMessage = "Password must be at least 8 characters long.";
+
+      } else if (!/\d/.test(this.password)) {
+        this.errorMessage = "Password must contain at least one number.";
+
+      } else if (!/[!@#$%^&*]/.test(this.password)) {
+        this.errorMessage = "Password must contain at least one special character.";
+
+      } else {
+        this.errorMessage = "";
+        // Password meets all requirements, continue with further logic
+        axios
+            .post("/forgot/resetPassword", {
+              emailTo: this.emailTo,
+              password: this.password,
+            })
+            .then((response) => {
+              this.errorMessage = response.data;
+              console.log(this.errorMessage);
+              alert("Password reset successful!");
+              this.$router.push("/login");
+            })
+            .catch((error) => {
+              console.log(error);
+              this.errorMessage = error.response.data.message;
+            });
+      }
     },
     cancelReset() {
       // Redirect the user back to the login page
