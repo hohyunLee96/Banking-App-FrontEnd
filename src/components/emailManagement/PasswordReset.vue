@@ -22,6 +22,8 @@ export default {
   mounted() {
       if (this.$route.query.email) {
         console.log("Email: " + this.$route.query.email);
+
+        // Get the email from the URL
         this.emailTo = this.$route.query.email;
       } else {
         this.$router.push("/login");
@@ -36,7 +38,6 @@ export default {
   },
   methods: {
     resetPassword() {
-      console.log("Password reset in progress...");
 
       if (this.password.trim().length < 8) {
         return this.errorMessage = "Password must be at least 8 characters long.";
@@ -46,17 +47,18 @@ export default {
 
       } else if (!/[!@#$%^&*]/.test(this.password)) {
         return this.errorMessage = "Password must contain at least one special character.";
+
       } else {
         this.errorMessage = "";
-        // Password meets all requirements, continue with further logic
+
         axios
             .post("/forgot/resetPassword", {
+              // Send the email and password to the backend
               emailTo: this.emailTo,
               password: this.password,
             })
             .then((response) => {
-              this.errorMessage = response.data;
-              console.log(this.errorMessage);
+              console.log(response);
               alert("Password reset successful!");
               this.$router.push("/login");
             })
