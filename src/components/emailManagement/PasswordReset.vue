@@ -39,14 +39,13 @@ export default {
       console.log("Password reset in progress...");
 
       if (this.password.trim().length < 8) {
-        this.errorMessage = "Password must be at least 8 characters long.";
+        return this.errorMessage = "Password must be at least 8 characters long.";
 
       } else if (!/\d/.test(this.password)) {
-        this.errorMessage = "Password must contain at least one number.";
+        return this.errorMessage = "Password must contain at least one number.";
 
       } else if (!/[!@#$%^&*]/.test(this.password)) {
-        this.errorMessage = "Password must contain at least one special character.";
-
+        return this.errorMessage = "Password must contain at least one special character.";
       } else {
         this.errorMessage = "";
         // Password meets all requirements, continue with further logic
